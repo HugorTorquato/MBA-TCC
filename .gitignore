@@ -37,3 +37,4 @@ CMakeFiles/
 *.cmake
 CMakeCache.txt
 api_server
+my_tests
