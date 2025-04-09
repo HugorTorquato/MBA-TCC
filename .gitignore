@@ -33,3 +33,7 @@
 
 # Cmake files
 build/
+CMakeFiles/
+*.cmake
+CMakeCache.txt
+api_server
