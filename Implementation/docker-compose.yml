@@ -16,7 +16,7 @@ services:
     ports:
       - "8080:8080"
     command:
-      bash -c "mkdir -p build && cd build && cmake .. && make -j$(nproc) && ./api_server"
+      tail -f /dev/null
 
   cpp-api:
     build:
