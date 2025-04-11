@@ -1,0 +1,9 @@
+build/
+.git/
+*.o
+*.a
+*.so
+.vscode/
+*.log
+*.md
+*.swp
