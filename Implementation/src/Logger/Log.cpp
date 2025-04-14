@@ -12,6 +12,8 @@ Logger::Logger() {
 
 Logger& Logger::getInstance()
 {
+    // Static local variable -> object created in the first time it passes here
+    // and on all other calls, the initialization will be skipped.
     static Logger instance;
     return instance;
 }

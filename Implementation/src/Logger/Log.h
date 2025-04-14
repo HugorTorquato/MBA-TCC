@@ -10,10 +10,13 @@
 class Logger
 {
 
-    private:
+    private: // Meyers’ Singleton
         Logger();
+
         Logger(const Logger&) = delete;
-        Logger& operator=(const Logger&) = delete;
+        Logger& operator=( Logger const& ) = delete;
+        Logger( Logger&& ) = delete;
+        Logger& operator=( Logger&& ) = delete;
 
     public:
         static Logger& getInstance();
