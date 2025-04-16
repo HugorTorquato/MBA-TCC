@@ -1,7 +1,7 @@
 #include <crow.h>
 
-#include "../includes/api/v1/GeneralInfo.h"
 #include "Logger/Log.h"
+#include "api/v1/GeneralInfo.h"
 
 int main()
 {
