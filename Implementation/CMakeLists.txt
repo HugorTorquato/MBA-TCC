@@ -8,11 +8,13 @@ find_package(Boost REQUIRED)
 find_package(GTest REQUIRED)
 
 # Include all .cpp source files from src/
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE HEADERS "${CMAKE_SOURCE_DIR}/src/*.h")
 # Include the code under test here and all sources that it will test
 file(GLOB_RECURSE TEST_SOURCES 
-    "unitTests/*.cpp" # unit test definitions
-    "src/Logger/*.cpp" # Logger source code under test
+    "${CMAKE_SOURCE_DIR}/unitTests/*.cpp") # unit test definitions
+file(GLOB_RECURSE TEST_SOURCES_TO_TEST  
+    "${CMAKE_SOURCE_DIR}/src/Logger/*.cpp" # Logger source code under test
     )
 
 # Link Crow and Boost
@@ -32,11 +34,18 @@ target_link_libraries(api_server PRIVATE Boost::boost)
 
 # Build the unit tests
 # add_executable(my_tests unitTests/my_test.cpp)
-add_executable(my_tests ${TEST_SOURCES})
+add_executable(my_tests ${TEST_SOURCES} ${TEST_SOURCES_TO_TEST})
 target_link_libraries(my_tests PRIVATE GTest::gtest GTest::gmock GTest::gtest_main pthread)
     #Faz o link com:
     #GTest::gtest → Biblioteca principal do GTest
     #GTest::gmock → Biblioteca do Google Mock
     #GTest::gtest_main → Fornece o main() pronto
     #pthread → Threading POSIX necessário para o GTest funcionar corretamente
+
+# Add a custom target to format the code
+add_custom_target(
+    format
+    COMMAND clang-format -i ${SOURCES} ${HEADERS} ${TEST_SOURCES}
+    COMMENT "Formatting all C++ source and header files"
+)
 

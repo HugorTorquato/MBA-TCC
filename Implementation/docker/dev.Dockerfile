@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
-    g++ cmake git libboost-all-dev libasio-dev \
+    g++ cmake clang-format git libboost-all-dev libasio-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Crow
