@@ -9,6 +9,11 @@ find_package(GTest REQUIRED)
 
 # Include all .cpp source files from src/
 file(GLOB_RECURSE SOURCES "src/*.cpp")
+# Include the code under test here and all sources that it will test
+file(GLOB_RECURSE TEST_SOURCES 
+    "unitTests/*.cpp" # unit test definitions
+    "src/Logger/*.cpp" # Logger source code under test
+    )
 
 # Link Crow and Boost
 include_directories(
@@ -26,10 +31,12 @@ target_link_libraries(api_server PRIVATE Boost::boost)
     # usar Boost com componentes binários (filesystem, system...), seria diferente.
 
 # Build the unit tests
-add_executable(my_tests unitTests/my_test.cpp)
+# add_executable(my_tests unitTests/my_test.cpp)
+add_executable(my_tests ${TEST_SOURCES})
 target_link_libraries(my_tests PRIVATE GTest::gtest GTest::gmock GTest::gtest_main pthread)
     #Faz o link com:
     #GTest::gtest → Biblioteca principal do GTest
     #GTest::gmock → Biblioteca do Google Mock
     #GTest::gtest_main → Fornece o main() pronto
     #pthread → Threading POSIX necessário para o GTest funcionar corretamente
+

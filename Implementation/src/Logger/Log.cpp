@@ -10,6 +10,9 @@ Logger::Logger() {
     file << "Log start\n";
 };
 
+// The keyword static here is incorrect in the .cpp file — static inside
+//  a source file makes the function have internal linkage, so it's invisible 
+//  to the linker when used elsewhere.
 Logger& Logger::getInstance()
 {
     // Static local variable -> object created in the first time it passes here
