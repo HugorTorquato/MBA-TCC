@@ -49,3 +49,13 @@ add_custom_target(
     COMMENT "Formatting all C++ source and header files"
 )
 
+#-------------------------------------------------------------------------
+# Dependency to download files from git
+find_package(CURL REQUIRED)
+
+# Include libcurl headers
+include_directories(${CURL_INCLUDE_DIRS})
+
+# For api_server, link libcurl
+target_link_libraries(api_server PRIVATE ${CURL_LIBRARIES})
+#-------------------------------------------------------------------------
