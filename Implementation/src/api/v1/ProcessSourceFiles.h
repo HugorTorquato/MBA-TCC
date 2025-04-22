@@ -20,11 +20,15 @@ class ProcessSourceFiles
             .methods("POST"_method)(
                 [](const crow::request& req)
                 {
+                    Logger::getInstance().log("Accessing /api/v1/process route.");
                     auto body = crow::json::load(req.body);
 
                     if (!body) return crow::response(400, "Invalid JSON");
 
                     std::string git_url = body["url"].s();
+
+                    // Create a class here to handle this and make it testable...
+                    // The route is just a bridge... and not suppose to have logic in here
 
                     return crow::response("Received GitHub URL: " + git_url);
                 });

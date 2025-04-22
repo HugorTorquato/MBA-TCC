@@ -15,6 +15,7 @@ file(GLOB_RECURSE TEST_SOURCES
     "${CMAKE_SOURCE_DIR}/unitTests/*.cpp") # unit test definitions
 file(GLOB_RECURSE TEST_SOURCES_TO_TEST  
     "${CMAKE_SOURCE_DIR}/src/Logger/*.cpp" # Logger source code under test
+    "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/*.cpp" # ProcessSourceFiles source code under test
     )
 
 # Link Crow and Boost
