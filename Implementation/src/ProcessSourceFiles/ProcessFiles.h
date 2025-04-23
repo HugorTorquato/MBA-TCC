@@ -2,7 +2,9 @@
 
 #include <string>
 
-class DownloadFiles
+#include "IProcessFiles.h"
+
+class DownloadFiles : public IDownloadFiles
 {
    private:
     DownloadFiles() = delete;
@@ -10,7 +12,7 @@ class DownloadFiles
    public:
     explicit DownloadFiles(const std::string& originalURL);
 
-    std::string getOriginalURL();
+    std::string getOriginalURL() override;
 
    private:
     std::string m_originalURL;

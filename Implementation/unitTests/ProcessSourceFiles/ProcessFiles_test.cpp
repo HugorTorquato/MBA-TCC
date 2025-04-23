@@ -1,6 +1,17 @@
 #include "../../src/ProcessSourceFiles/ProcessFiles.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+#include <string>
+
+#include "../../src/ProcessSourceFiles/IProcessFiles.h"
+
+class DownloadFilesMocker : public IDownloadFiles
+{
+   public:
+    MOCK_METHOD(std::string, getOriginalURL, (), (override));
+};
 
 class DownloadFilesTest : public ::testing::Test
 {
