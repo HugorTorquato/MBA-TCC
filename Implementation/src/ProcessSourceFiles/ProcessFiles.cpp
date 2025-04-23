@@ -21,7 +21,8 @@ bool urlExists(const std::string& githubUrl)
     return true;
 #endif
 
-    CURL* curl = curl_easy_init();
+    CurlRAII curlWrapper;
+    CURL* curl = curlWrapper.get();
     if (!curl)
     {
         // TODO: Update it to log error.
@@ -31,8 +32,8 @@ bool urlExists(const std::string& githubUrl)
 
     long http_code = 0;
     curl_easy_setopt(curl, CURLOPT_URL, githubUrl.c_str());  // Define the request URL
-    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);  // We only want headers - Don't donlaod body
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "crow-api-agent");  // Dfine user agent, required
+    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);  // We only want headers - Don't downlaod body
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "crow-api-agent");  // Define user agent, required
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);           // Follow if redirect
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);                 // timeout
 
@@ -41,7 +42,6 @@ bool urlExists(const std::string& githubUrl)
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE,
                           &http_code);  // request the responsecode 200, 404 ...
 
-    curl_easy_cleanup(curl);    // release used memory
     return (http_code == 200);  // Only return true if success
 }
 
@@ -111,8 +111,6 @@ void DownloadFiles::parseURL()
 
     std::regex pattern(githubRegexpExpr);
     std::smatch match;
-
-    std::cerr << "DownloadFiles::parseURL : " << m_originalURL << std::endl;
 
     if (std::regex_match(m_originalURL, match, pattern))
     {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <curl/curl.h>
+
 #include <string>
 
 #include "IProcessFiles.h"
@@ -10,6 +12,26 @@ struct GitHubUrlInfo
     std::string m_path;
     std::string m_repo;
     std::string m_user;
+};
+
+class CurlRAII
+{
+   public:
+    CurlRAII() : curl(curl_easy_init()) {}
+    ~CurlRAII()
+    {
+        if (curl)
+        {
+            curl_easy_cleanup(curl);
+        }
+    }
+    CURL* get() const
+    {
+        return curl;
+    }
+
+   private:
+    CURL* curl;
 };
 
 class DownloadFiles : public IDownloadFiles
