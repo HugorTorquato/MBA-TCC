@@ -12,8 +12,14 @@ class DownloadFilesTest : public ::testing::Test
     // Create mocks if needs to download things
     std::string testURL = "https://github.com/hugomdq/my-cool-repo/tree/main/src";
     std::string testURLNotValid = "https://BLA.com/hugomdq/my-cool-repo/tree/main/src";
-    std::string testURLToFileToFile = "https://github.com/user/repo/blob/branch/path/to/file.cpp";
-    std::string testURLToFileToFolder = "https://github.com/user/repo/tree/branch/path/to/folder";
+    std::string testURLToFile = "https://github.com/user/repo/blob/branch/path/to/file.cpp";
+    std::string testURLToFolder = "https://github.com/user/repo/tree/branch/path/to/folder";
+
+    std::string branch = "branch";
+    std::string pathtofolder = "path/to/folder";
+    std::string pathtofile = "path/to/file.cpp";
+    std::string repo = "repo";
+    std::string user = "user";
 };
 
 TEST_F(DownloadFilesTest, ValidateConstructorWithASimpleTestURL)
@@ -29,11 +35,59 @@ TEST_F(DownloadFilesTest, EmptyURLStringPassedToTheExplicityThrowsInvalidArgumen
 TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder)
 {
     EXPECT_TRUE(DownloadFiles(testURL).isUrlFromGitHub());
-    EXPECT_TRUE(DownloadFiles(testURLToFileToFile).isUrlFromGitHub());
-    EXPECT_TRUE(DownloadFiles(testURLToFileToFolder).isUrlFromGitHub());
+    EXPECT_TRUE(DownloadFiles(testURLToFile).isUrlFromGitHub());
+    EXPECT_TRUE(DownloadFiles(testURLToFolder).isUrlFromGitHub());
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsANotValidGitHubUrl)
 {
     EXPECT_FALSE(DownloadFiles(testURLNotValid).isUrlFromGitHub());
+}
+
+TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfNotValidURL)
+{
+    EXPECT_FALSE(DownloadFiles(testURLNotValid).isFolder());
+}
+
+TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsTrueIfValidURLFolder)
+{
+    EXPECT_TRUE(DownloadFiles(testURLToFolder).isFolder());
+}
+
+TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfValidURLFile)
+{
+    EXPECT_FALSE(DownloadFiles(testURLToFile).isFolder());
+}
+
+TEST_F(DownloadFilesTest, DoNotParseUrlIfNotFromGitHub)
+{
+    DownloadFiles downlaodFilesObj(testURLNotValid);
+    downlaodFilesObj.parseURL();
+
+    EXPECT_EQ(downlaodFilesObj.getBranch(), "");
+    EXPECT_EQ(downlaodFilesObj.getPath(), "");
+    EXPECT_EQ(downlaodFilesObj.getRepo(), "");
+    EXPECT_EQ(downlaodFilesObj.getUser(), "");
+}
+
+TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFolder)
+{
+    DownloadFiles downlaodFilesObj(testURLToFolder);
+    downlaodFilesObj.parseURL();
+
+    EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
+    EXPECT_EQ(downlaodFilesObj.getPath(), pathtofolder);
+    EXPECT_EQ(downlaodFilesObj.getRepo(), repo);
+    EXPECT_EQ(downlaodFilesObj.getUser(), user);
+}
+
+TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFile)
+{
+    DownloadFiles downlaodFilesObj(testURLToFile);
+    downlaodFilesObj.parseURL();
+
+    EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
+    EXPECT_EQ(downlaodFilesObj.getPath(), pathtofile);
+    EXPECT_EQ(downlaodFilesObj.getRepo(), repo);
+    EXPECT_EQ(downlaodFilesObj.getUser(), user);
 }

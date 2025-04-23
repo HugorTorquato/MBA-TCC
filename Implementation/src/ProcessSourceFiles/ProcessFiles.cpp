@@ -2,6 +2,7 @@
 
 #include <curl/curl.h>
 
+#include <iostream>
 #include <regex>
 #include <stdexcept>
 #include <string>
@@ -44,10 +45,9 @@ bool urlExists(const std::string& githubUrl)
     return (http_code == 200);  // Only return true if success
 }
 
-bool isUrlGitHubFolderOrFile(const std::string& githubUrl)
+bool isUrlGitHubFolderOrFile(const std::string& githubUrl, const std::string& githubRegexpExpr)
 {
-    std::regex github_url_pattern(
-        R"(https:\/\/github\.com\/[^\/]+\/[^\/]+\/(tree|blob)\/[^\/]+\/?.+)");
+    std::regex github_url_pattern(githubRegexpExpr);
     return std::regex_match(githubUrl, github_url_pattern);
 }
 }  // namespace
@@ -71,8 +71,55 @@ bool DownloadFiles::isUrlFromGitHub()
 {
     const std::string url = getOriginalURL();
 
-    if (!isUrlGitHubFolderOrFile(url)) return false;
+    if (!isUrlGitHubFolderOrFile(url, githubRegexpExpr)) return false;
     if (!urlExists(url)) return false;
 
     return true;
+}
+
+bool DownloadFiles::isFolder()
+{
+    if (!isUrlFromGitHub())
+    {
+        Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!");
+        return false;
+    }
+    std::regex github_url_pattern(R""(.*tree.*)"");
+    return std::regex_match(m_originalURL, github_url_pattern);
+}
+
+std::string DownloadFiles::getBranch()
+{
+    return m_gitubUrlInfo.m_branch;
+}
+std::string DownloadFiles::getPath()
+{
+    return m_gitubUrlInfo.m_path;
+}
+std::string DownloadFiles::getRepo()
+{
+    return m_gitubUrlInfo.m_repo;
+}
+std::string DownloadFiles::getUser()
+{
+    return m_gitubUrlInfo.m_user;
+}
+
+void DownloadFiles::parseURL()
+{
+    if (!isUrlFromGitHub()) return;
+
+    std::regex pattern(githubRegexpExpr);
+    std::smatch match;
+
+    std::cerr << "DownloadFiles::parseURL : " << m_originalURL << std::endl;
+
+    if (std::regex_match(m_originalURL, match, pattern))
+    {
+        GitHubUrlInfo info;
+        m_gitubUrlInfo.m_user = match[1].str();
+        m_gitubUrlInfo.m_repo = match[2].str();
+        m_gitubUrlInfo.m_branch = match[4].str();
+        m_gitubUrlInfo.m_path = match[6].matched ? match[6].str() : "";
+    }
 }
