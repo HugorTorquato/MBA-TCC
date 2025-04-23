@@ -37,11 +37,15 @@ target_link_libraries(api_server PRIVATE Boost::boost)
 # add_executable(my_tests unitTests/my_test.cpp)
 add_executable(my_tests ${TEST_SOURCES} ${TEST_SOURCES_TO_TEST})
 target_link_libraries(my_tests PRIVATE GTest::gtest GTest::gmock GTest::gtest_main pthread)
+
     #Faz o link com:
     #GTest::gtest → Biblioteca principal do GTest
     #GTest::gmock → Biblioteca do Google Mock
     #GTest::gtest_main → Fornece o main() pronto
     #pthread → Threading POSIX necessário para o GTest funcionar corretamente
+    #CURL_LIBRARIES -> using curl into the tests
+#define a macro like UNIT_TEST only in your test target, and check it in code.
+target_compile_definitions(my_tests PRIVATE UNIT_TEST)
 
 # Add a custom target to format the code
 add_custom_target(

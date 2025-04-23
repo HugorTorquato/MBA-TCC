@@ -14,6 +14,8 @@ class DownloadFiles : public IDownloadFiles
 
     std::string getOriginalURL() override;
 
+    bool isUrlFromGitHub() override;
+
    private:
     std::string m_originalURL;
 };
