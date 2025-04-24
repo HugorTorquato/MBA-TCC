@@ -38,3 +38,78 @@ CMakeFiles/
 CMakeCache.txt
 api_server
 my_tests
+
+
+
+
+
+
+#For python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+env.bak/
+venv.bak/
+
+# pipenv / poetry
+Pipfile.lock
+poetry.lock
+
+# Pytest
+.cache/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# mypy / type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm / VSCode / Jupyter
+.idea/
+.vscode/
+*.ipynb_checkpoints
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing output
+htmlcov/
+coverage/
