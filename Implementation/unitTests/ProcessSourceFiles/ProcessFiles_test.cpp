@@ -14,6 +14,11 @@ class DownloadFilesTest : public ::testing::Test
     std::string testURLNotValid = "https://BLA.com/hugomdq/my-cool-repo/tree/main/src";
     std::string testURLToFile = "https://github.com/user/repo/blob/branch/path/to/file.cpp";
     std::string testURLToFolder = "https://github.com/user/repo/tree/branch/path/to/folder";
+    std::string customEmptyUrl = "";
+    std::string customMissingagumentsUrl =
+        "https://github.com//repo123/tree/branch321/path123321/to/folder";
+    std::string customUrl =
+        "https://github.com/torquato/repo123/tree/branch321/path123321/to/folder";
 
     std::string branch = "branch";
     std::string pathtofolder = "path/to/folder";
@@ -29,7 +34,7 @@ TEST_F(DownloadFilesTest, ValidateConstructorWithASimpleTestURL)
 
 TEST_F(DownloadFilesTest, EmptyURLStringPassedToTheExplicityThrowsInvalidArgumentException)
 {
-    EXPECT_THROW(DownloadFiles("").getOriginalURL(), std::invalid_argument);
+    EXPECT_THROW(DownloadFiles(customEmptyUrl).getOriginalURL(), std::invalid_argument);
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder)
@@ -90,4 +95,34 @@ TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFile)
     EXPECT_EQ(downlaodFilesObj.getPath(), pathtofile);
     EXPECT_EQ(downlaodFilesObj.getRepo(), repo);
     EXPECT_EQ(downlaodFilesObj.getUser(), user);
+}
+
+TEST_F(DownloadFilesTest, RetreveExpectedEndointFromParsedInputUrl)
+{
+    GitHubUrlInfo urlInfo{.m_branch = "branch321",
+                          .m_path = "path123321/to/folder",
+                          .m_repo = "repo123",
+                          .m_user = "torquato"};
+
+    DownloadFiles downlaodFilesObj(customUrl);
+    downlaodFilesObj.parseURL();
+
+    std::string expectedEndpoint = "https://api.github.com/repos/" + urlInfo.m_user + "/" +
+                                   urlInfo.m_repo + "/contents/" + urlInfo.m_path +
+                                   "?ref=" + urlInfo.m_branch;
+
+    EXPECT_EQ(downlaodFilesObj.getEndpointToListFilesFromGitHub(), expectedEndpoint);
+}
+
+TEST_F(DownloadFilesTest, ThrowInvaldArgumentExceptionIfNotValidEndpoint)
+{
+    GitHubUrlInfo urlInfo{.m_branch = "branch321",
+                          .m_path = "path123321/to/folder",
+                          .m_repo = "repo123",
+                          .m_user = "torquato"};
+
+    DownloadFiles downlaodFilesObj(customMissingagumentsUrl);
+    downlaodFilesObj.parseURL();
+
+    EXPECT_THROW(downlaodFilesObj.listGitHubContentFromURL(), std::invalid_argument);
 }

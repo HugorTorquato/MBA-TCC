@@ -47,11 +47,14 @@ class DownloadFiles : public IDownloadFiles
     std::string getPath() override;
     std::string getRepo() override;
     std::string getUser() override;
+    std::string getEndpointToListFilesFromGitHub() override;
 
     bool isUrlFromGitHub() override;
     bool isFolder() override;
 
     void parseURL() override;
+
+    std::string listGitHubContentFromURL();
 
    private:
     std::string m_originalURL;
