@@ -19,10 +19,24 @@ bool isUrlGitHubFolderOrFile(const std::string& githubUrl, const std::string& gi
     std::regex github_url_pattern(githubRegexpExpr);
     return std::regex_match(githubUrl, github_url_pattern);
 }
+
+// Callback to store the response string ( Transform this to function header )
+size_t writeToString(void* contents, size_t size, size_t nmemb, void* userp)
+{
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+bool errorWithUrlInfoMember(const GitHubUrlInfo& gitubUrlInfo)
+{
+    return gitubUrlInfo.m_branch.empty() || gitubUrlInfo.m_path.empty() ||
+           gitubUrlInfo.m_repo.empty() || gitubUrlInfo.m_user.empty();
+}
 }  // namespace
 
-DownloadFiles::DownloadFiles(const std::string& originalURL, IHttpClient& httpClient)
-    : m_originalURL(originalURL), m_httpClient(httpClient)
+DownloadFiles::DownloadFiles(const std::string& originalURL,
+                             std::unique_ptr<IHttpClient> httpClient)
+    : m_originalURL(originalURL), m_httpClient(std::move(httpClient))
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
@@ -34,7 +48,12 @@ DownloadFiles::DownloadFiles(const std::string& originalURL, IHttpClient& httpCl
 bool DownloadFiles::isValidUrl()
 {
     std::string response;
-    return m_httpClient.getResponseFronUrl(m_originalURL, response);
+    if (!m_httpClient)
+    {
+        Logger::getInstance().log("[DownloadFiles::isValidUrl] Error with HTTP Client");
+        return false;
+    }
+    return m_httpClient->getResponseFronUrl(m_originalURL, response);
 }
 
 std::string DownloadFiles::getOriginalURL()
@@ -45,9 +64,7 @@ std::string DownloadFiles::getOriginalURL()
 // TODO: Implement API return based on input and this verification
 bool DownloadFiles::isUrlFromGitHub()
 {
-    const std::string url = getOriginalURL();
-
-    if (!isUrlGitHubFolderOrFile(url, githubRegexpExpr)) return false;
+    if (!isUrlGitHubFolderOrFile(m_originalURL, githubRegexpExpr)) return false;
     if (!isValidUrl()) return false;
 
     return true;
@@ -57,7 +74,7 @@ bool DownloadFiles::isFolder()
 {
     if (!isUrlFromGitHub())
     {
-        Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!");
+        Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!!");
         return false;
     }
     std::regex github_url_pattern(R""(.*tree.*)"");
@@ -83,7 +100,12 @@ std::string DownloadFiles::getUser()
 
 void DownloadFiles::parseURL()
 {
-    if (!isUrlFromGitHub()) return;
+    if (!isUrlFromGitHub())
+    {
+        Logger::getInstance().log("[DownloadFiles::parseURL] Error with URL!!! URL : " +
+                                  m_originalURL);
+        return;
+    }
 
     std::regex pattern(githubRegexpExpr);
     std::smatch match;
@@ -104,67 +126,31 @@ std::string DownloadFiles::getEndpointToListFilesFromGitHub()
            "/contents/" + m_gitubUrlInfo.m_path + "?ref=" + m_gitubUrlInfo.m_branch;
 }
 
-// based on the parsed URL, i need to create the github request to list folders and files
-
-namespace
-{
-// Step 1: Callback to store the response string ( Transform this to function header )
-size_t writeToString(void* contents, size_t size, size_t nmemb, void* userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
-
-bool errorWithUrlInfoMember(const GitHubUrlInfo& gitubUrlInfo)
-{
-    return gitubUrlInfo.m_branch.empty() || gitubUrlInfo.m_path.empty() ||
-           gitubUrlInfo.m_repo.empty() || gitubUrlInfo.m_user.empty();
-}
-}  // namespace
-
-// TODO: Better way to implement this curl requests
 std::string DownloadFiles::listGitHubContentFromURL()
 {
+    parseURL();
     const std::string endpointToListFiles = getEndpointToListFilesFromGitHub();
     if (endpointToListFiles.empty() || errorWithUrlInfoMember(m_gitubUrlInfo))
     {
-        Logger::getInstance().log(
+        const std::string errorMessage =
             "[ProcessFiles][listGitHubContentFromURL] Error with endpoint!!! "
             " endpointToListFiles:  " +
             endpointToListFiles + " gitubUrlInfo.m_branch:" + m_gitubUrlInfo.m_branch +
-            " gitubUrlInfo.m_path:" + m_gitubUrlInfo.m_path + " gitubUrlInfo.m_repo:" +
-            m_gitubUrlInfo.m_repo + " gitubUrlInfo.m_user:" + m_gitubUrlInfo.m_user);
-        throw std::invalid_argument("[ProcessFiles][listGitHubContentFromURL] URL cannot be empty");
+            " gitubUrlInfo.m_path:" + m_gitubUrlInfo.m_path +
+            " gitubUrlInfo.m_repo:" + m_gitubUrlInfo.m_repo +
+            " gitubUrlInfo.m_user:" + m_gitubUrlInfo.m_user;
+        Logger::getInstance().log(errorMessage);
+        throw std::invalid_argument(errorMessage);
         return "";
     }
 
-    return "";
-
-    // CurlRAII curlWrapper;
-    // CURL* curl = curlWrapper.get();
-    // if (!curl)
-    // {
-    //     // TODO: Update it to log error.
-    //     Logger::getInstance().log("[ProcessFiles][urlExists] Error with curl!!!");
-    //     return;
-    // }
-
-    // long http_code = 0;
-    // std::string response_data;
-
-    // curl_easy_setopt(curl, CURLOPT_URL, endpointToListFiles);  // Define the request URL
-    // curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToString); // Callback
-    // curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_data);    // Where to write
-    // curl_easy_setopt(curl, CURLOPT_USERAGENT, "crow-api-agent");
-    // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);           // Follow redirects
-    // curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);                 // Timeout in 10s
-
-    // CURLcode res = curl_easy_perform(curl);  // Execute the request
-    // if (res != CURLE_OK)
-    // {
-    //     Logger::getInstance().log("[ProcessFiles][listGitHubContentFromURL] Error with curl!!!
-    //     %s",
-    //                                 curl_easy_strerror(res).c_str());
-    //     return;
-    // }
+    std::string response;
+    if (!m_httpClient)
+    {
+        Logger::getInstance().log(
+            "[DownloadFiles::listGitHubContentFromURL] Error with HTTP Client");
+        return response;
+    }
+    m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString);
+    return response;
 }

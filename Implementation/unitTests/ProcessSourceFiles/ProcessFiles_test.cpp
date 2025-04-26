@@ -33,7 +33,7 @@ class MockHttpClient : public IHttpClient
         m_shouldSucceed = shouldSucceed;
     }
 
-    void setMockResponse(bool mockResponse)
+    void setMockResponse(const std::string& mockResponse)
     {
         m_mockResponse = mockResponse;
     }
@@ -44,7 +44,7 @@ class DownloadFilesTest : public ::testing::Test
    protected:
     // Can't be a real one because it's unit test not integration.
     // Create mocks if needs to download things
-    std::string testURL = "https://github.com/hugomdq/my-cool-repo/tree/main/src";
+    std::string testURL = "https://github.com/HugorTorquato/MBA-TCC/tree/main/Implementation/src";
     std::string testURLNotValid = "https://BLA.com/hugomdq/my-cool-repo/tree/main/src";
     std::string testURLToFile = "https://github.com/user/repo/blob/branch/path/to/file.cpp";
     std::string testURLToFolder = "https://github.com/user/repo/tree/branch/path/to/folder";
@@ -77,45 +77,76 @@ class DownloadFilesTest : public ::testing::Test
 TEST_F(DownloadFilesTest, ValidateConstructorWithASimpleTestURL)
 {
     // Must dereference the pointer
-    EXPECT_EQ(DownloadFiles(testURL, *mockClient).getOriginalURL(), testURL);
+    EXPECT_EQ(DownloadFiles(testURL, std::move(mockClient)).getOriginalURL(), testURL);
 }
 
 TEST_F(DownloadFilesTest, EmptyURLStringPassedToTheExplicityThrowsInvalidArgumentException)
 {
-    EXPECT_THROW(DownloadFiles(customEmptyUrl, *mockClient).getOriginalURL(),
+    EXPECT_THROW(DownloadFiles(customEmptyUrl, std::move(mockClient)).getOriginalURL(),
                  std::invalid_argument);
 }
 
-TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder)
+TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURL)
 {
-    EXPECT_TRUE(DownloadFiles(testURL, *mockClient).isUrlFromGitHub());
-    EXPECT_TRUE(DownloadFiles(testURLToFile, *mockClient).isUrlFromGitHub());
-    EXPECT_TRUE(DownloadFiles(testURLToFolder, *mockClient).isUrlFromGitHub());
+    EXPECT_TRUE(DownloadFiles(testURL, std::move(mockClient)).isUrlFromGitHub());
+}
+
+TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURLToFile)
+{
+    EXPECT_TRUE(DownloadFiles(testURLToFile, std::move(mockClient)).isUrlFromGitHub());
+}
+
+TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURLToFolder)
+{
+    EXPECT_TRUE(DownloadFiles(testURLToFolder, std::move(mockClient)).isUrlFromGitHub());
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsANotValidGitHubUrl)
 {
-    EXPECT_FALSE(DownloadFiles(testURLNotValid, *mockClient).isUrlFromGitHub());
+    EXPECT_FALSE(DownloadFiles(testURLNotValid, std::move(mockClient)).isUrlFromGitHub());
+}
+
+TEST_F(DownloadFilesTest, ValidUrlReturnsTrue)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_TRUE(downlaodFilesObj.isValidUrl());
+}
+
+TEST_F(DownloadFilesTest, InvalidUrlReturnsFalse)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_FALSE(downlaodFilesObj.isValidUrl());
+}
+
+TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURLNotValid, std::move(mockClient));
+
+    EXPECT_FALSE(downlaodFilesObj.isUrlFromGitHub());
 }
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfNotValidURL)
 {
-    EXPECT_FALSE(DownloadFiles(testURLNotValid, *mockClient).isFolder());
+    EXPECT_FALSE(DownloadFiles(testURLNotValid, std::move(mockClient)).isFolder());
 }
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsTrueIfValidURLFolder)
 {
-    EXPECT_TRUE(DownloadFiles(testURLToFolder, *mockClient).isFolder());
+    EXPECT_TRUE(DownloadFiles(testURLToFolder, std::move(mockClient)).isFolder());
 }
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfValidURLFile)
 {
-    EXPECT_FALSE(DownloadFiles(testURLToFile, *mockClient).isFolder());
+    EXPECT_FALSE(DownloadFiles(testURLToFile, std::move(mockClient)).isFolder());
 }
 
 TEST_F(DownloadFilesTest, DoNotParseUrlIfNotFromGitHub)
 {
-    DownloadFiles downlaodFilesObj(testURLNotValid, *mockClient);
+    DownloadFiles downlaodFilesObj(testURLNotValid, std::move(mockClient));
     downlaodFilesObj.parseURL();
 
     EXPECT_EQ(downlaodFilesObj.getBranch(), "");
@@ -126,7 +157,7 @@ TEST_F(DownloadFilesTest, DoNotParseUrlIfNotFromGitHub)
 
 TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFolder)
 {
-    DownloadFiles downlaodFilesObj(testURLToFolder, *mockClient);
+    DownloadFiles downlaodFilesObj(testURLToFolder, std::move(mockClient));
     downlaodFilesObj.parseURL();
 
     EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
@@ -137,7 +168,7 @@ TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFolder)
 
 TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFile)
 {
-    DownloadFiles downlaodFilesObj(testURLToFile, *mockClient);
+    DownloadFiles downlaodFilesObj(testURLToFile, std::move(mockClient));
     downlaodFilesObj.parseURL();
 
     EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
@@ -153,7 +184,7 @@ TEST_F(DownloadFilesTest, RetreveExpectedEndointFromParsedInputUrl)
                           .m_repo = "repo123",
                           .m_user = "torquato"};
 
-    DownloadFiles downlaodFilesObj(customUrl, *mockClient);
+    DownloadFiles downlaodFilesObj(customUrl, std::move(mockClient));
     downlaodFilesObj.parseURL();
 
     std::string expectedEndpoint = "https://api.github.com/repos/" + urlInfo.m_user + "/" +
@@ -170,31 +201,17 @@ TEST_F(DownloadFilesTest, ThrowInvaldArgumentExceptionIfNotValidEndpoint)
                           .m_repo = "repo123",
                           .m_user = "torquato"};
 
-    DownloadFiles downlaodFilesObj(customMissingagumentsUrl, *mockClient);
+    DownloadFiles downlaodFilesObj(customMissingagumentsUrl, std::move(mockClient));
     downlaodFilesObj.parseURL();
 
     EXPECT_THROW(downlaodFilesObj.listGitHubContentFromURL(), std::invalid_argument);
 }
 
-TEST_F(DownloadFilesTest, ValidUrlReturnsTrue)
+TEST_F(DownloadFilesTest, RetrieveEmptyGitHubListOfFiles)
 {
-    DownloadFiles downlaodFilesObj(testURL, *mockClient);
+    const std::string expectedResponse = "";
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.isValidUrl());
-}
-
-TEST_F(DownloadFilesTest, InvalidUrlReturnsFalse)
-{
-    mockClient->setShouldSucceed(false);
-    DownloadFiles downlaodFilesObj(testURL, *mockClient);
-
-    EXPECT_FALSE(downlaodFilesObj.isValidUrl());
-}
-
-TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
-{
-    mockClient->setShouldSucceed(false);
-    DownloadFiles downlaodFilesObj(testURLNotValid, *mockClient);
-
-    EXPECT_FALSE(downlaodFilesObj.isUrlFromGitHub());
+    EXPECT_EQ(downlaodFilesObj.listGitHubContentFromURL(), expectedResponse);
 }

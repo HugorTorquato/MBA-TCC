@@ -7,7 +7,7 @@
 class CurlHttpClient : public IHttpClient
 {
    public:
-    CurlHttpClient() = default;
+    CurlHttpClient();
     ~CurlHttpClient();
 
     // CURL* getHttpClient() const;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "IProcessFiles.h"
@@ -19,7 +20,7 @@ class DownloadFiles : public IDownloadFiles
     DownloadFiles() = delete;
 
    public:
-    explicit DownloadFiles(const std::string& originalURL, IHttpClient& httpClient);
+    explicit DownloadFiles(const std::string& originalURL, std::unique_ptr<IHttpClient> httpClient);
 
     std::string getOriginalURL() override;
     std::string getBranch() override;
@@ -39,7 +40,8 @@ class DownloadFiles : public IDownloadFiles
    private:
     std::string m_originalURL;
     GitHubUrlInfo m_gitubUrlInfo;
-    IHttpClient& m_httpClient;
+    // IHttpClient& m_httpClient;
+    std::unique_ptr<IHttpClient> m_httpClient;
 
     const std::string githubRegexpExpr =
         R"(https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/(tree|blob)\/([^\/]+)(\/(.*))?)";

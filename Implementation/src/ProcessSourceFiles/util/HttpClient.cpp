@@ -1,7 +1,9 @@
 #include "HttpClient.h"
 
 #include <curl/curl.h>
+#include <curl/easy.h>
 
+#include <stdexcept>
 #include <string>
 
 #include "../../Logger/Log.h"
@@ -23,6 +25,16 @@ size_t writeToStringCallback(void* contents, size_t size, size_t nmemb, void* us
 }
 }  // namespace
 
+CurlHttpClient::CurlHttpClient() : m_curl(curl_easy_init())
+{
+    if (!m_curl)
+    {
+        Logger::getInstance().log("[CurlHttpClient] Failed to initialize CURL");
+        throw std::runtime_error("Failed to initialize CURL");
+    }
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+}
+
 CurlHttpClient::~CurlHttpClient()
 {
     if (m_curl)
@@ -35,7 +47,7 @@ bool CurlHttpClient::getResponseFronUrl(
     const std::string& url, std::string& response,
     std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback)
 {
-    m_curl = curl_easy_init();
+    Logger::getInstance().log("[CurlHttpClient::getResponseFronUrl] Fetching URL: " + url);
 
     if (!m_curl) return false;
 
