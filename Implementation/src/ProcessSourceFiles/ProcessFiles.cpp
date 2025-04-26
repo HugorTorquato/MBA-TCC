@@ -1,13 +1,11 @@
 #include "ProcessFiles.h"
 
-#include <curl/curl.h>
-
-#include <iostream>
 #include <regex>
 #include <stdexcept>
 #include <string>
 
 #include "../Logger/Log.h"
+#include "util/IHttpClient.h"
 
 namespace
 {
@@ -15,36 +13,6 @@ namespace
 // - Sequence, one api to post the URL and another to get if URL is valid
 // - Maybe set as internal API.... just to test this
 // - With the new wrapper i can unit test this passing the curl wrapper as a parameter to mock
-bool urlExists(const std::string& githubUrl)
-{
-#ifdef UNIT_TEST
-    // Requires external dependencies that could cause noise into the unit tests
-    return true;
-#endif
-
-    CurlRAII curlWrapper;
-    CURL* curl = curlWrapper.get();
-    if (!curl)
-    {
-        // TODO: Update it to log error.
-        Logger::getInstance().log("[ProcessFiles][urlExists] Error with curl!!!");
-        return false;
-    }
-
-    long http_code = 0;
-    curl_easy_setopt(curl, CURLOPT_URL, githubUrl.c_str());  // Define the request URL
-    curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);  // We only want headers - Don't downlaod body
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "crow-api-agent");  // Define user agent, required
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);           // Follow if redirect
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);                 // timeout
-
-    CURLcode res = curl_easy_perform(curl);  // Execute the request
-    if (res == CURLE_OK)
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE,
-                          &http_code);  // request the responsecode 200, 404 ...
-
-    return (http_code == 200);  // Only return true if success
-}
 
 bool isUrlGitHubFolderOrFile(const std::string& githubUrl, const std::string& githubRegexpExpr)
 {
@@ -53,13 +21,26 @@ bool isUrlGitHubFolderOrFile(const std::string& githubUrl, const std::string& gi
 }
 }  // namespace
 
-DownloadFiles::DownloadFiles(const std::string& originalURL) : m_originalURL(originalURL)
+DownloadFiles::DownloadFiles(const std::string& originalURL, IHttpClient& httpClient)
+    : m_originalURL(originalURL), m_httpClient(httpClient)
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
     {
         throw std::invalid_argument("URL cannot be empty");
     }
+}
+
+bool DownloadFiles::isValidUrl()
+{
+#ifdef UNIT_TEST
+    // Requires external dependencies that could cause noise into the unit tests
+    return true;
+#endif
+
+    std::string response;
+
+    return m_httpClient.getResponseFronUrl(m_originalURL, response);
 }
 
 std::string DownloadFiles::getOriginalURL()
@@ -73,7 +54,7 @@ bool DownloadFiles::isUrlFromGitHub()
     const std::string url = getOriginalURL();
 
     if (!isUrlGitHubFolderOrFile(url, githubRegexpExpr)) return false;
-    if (!urlExists(url)) return false;
+    if (!isValidUrl()) return false;
 
     return true;
 }

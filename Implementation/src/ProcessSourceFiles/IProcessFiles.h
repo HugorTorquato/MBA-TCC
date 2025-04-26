@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "util/IHttpClient.h"
+
 class IDownloadFiles
 {
    public:
@@ -15,6 +17,7 @@ class IDownloadFiles
     virtual std::string getEndpointToListFilesFromGitHub() = 0;
 
     virtual bool isUrlFromGitHub() = 0;
+    virtual bool isValidUrl() = 0;
     virtual bool isFolder() = 0;
 
     virtual void parseURL() = 0;
