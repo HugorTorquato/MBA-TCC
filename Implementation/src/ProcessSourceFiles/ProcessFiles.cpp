@@ -33,13 +33,7 @@ DownloadFiles::DownloadFiles(const std::string& originalURL, IHttpClient& httpCl
 
 bool DownloadFiles::isValidUrl()
 {
-#ifdef UNIT_TEST
-    // Requires external dependencies that could cause noise into the unit tests
-    return true;
-#endif
-
     std::string response;
-
     return m_httpClient.getResponseFronUrl(m_originalURL, response);
 }
 

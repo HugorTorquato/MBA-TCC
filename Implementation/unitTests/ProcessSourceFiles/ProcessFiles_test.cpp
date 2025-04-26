@@ -27,6 +27,16 @@ class MockHttpClient : public IHttpClient
         response = m_mockResponse;
         return m_shouldSucceed;
     }
+
+    void setShouldSucceed(bool shouldSucceed)
+    {
+        m_shouldSucceed = shouldSucceed;
+    }
+
+    void setMockResponse(bool mockResponse)
+    {
+        m_mockResponse = mockResponse;
+    }
 };
 
 class DownloadFilesTest : public ::testing::Test
@@ -164,4 +174,27 @@ TEST_F(DownloadFilesTest, ThrowInvaldArgumentExceptionIfNotValidEndpoint)
     downlaodFilesObj.parseURL();
 
     EXPECT_THROW(downlaodFilesObj.listGitHubContentFromURL(), std::invalid_argument);
+}
+
+TEST_F(DownloadFilesTest, ValidUrlReturnsTrue)
+{
+    DownloadFiles downlaodFilesObj(testURL, *mockClient);
+
+    EXPECT_TRUE(downlaodFilesObj.isValidUrl());
+}
+
+TEST_F(DownloadFilesTest, InvalidUrlReturnsFalse)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURL, *mockClient);
+
+    EXPECT_FALSE(downlaodFilesObj.isValidUrl());
+}
+
+TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURLNotValid, *mockClient);
+
+    EXPECT_FALSE(downlaodFilesObj.isUrlFromGitHub());
 }
