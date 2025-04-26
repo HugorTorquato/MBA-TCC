@@ -7,3 +7,17 @@ build/
 *.log
 *.md
 *.swp
+
+# Docker
+*.pid
+*.log
+*.tar
+*.gz
+*.img
+*.container
+Dockerfile.*
+docker-compose*.yml
+*.db
+
+# Ignore any volumes or bind mounts
+volumes/

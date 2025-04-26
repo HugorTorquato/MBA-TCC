@@ -1,6 +1,10 @@
 #include <crow.h>
 
+#include <memory>
+
 #include "../../Logger/Log.h"
+#include "../../ProcessSourceFiles/ProcessFiles.h"
+#include "../../ProcessSourceFiles/util/HttpClient.h"
 
 class ProcessSourceFiles
 {
@@ -31,6 +35,24 @@ class ProcessSourceFiles
                     // The route is just a bridge... and not suppose to have logic in here
 
                     return crow::response("Received GitHub URL: " + git_url);
+                });
+
+        CROW_ROUTE(app, "/api/v1/listFilesInUrl")
+            .methods("POST"_method)(
+                [](const crow::request& req)
+                {
+                    Logger::getInstance().log("Accessing /api/v1/listFilesInUrl route.");
+                    auto body = crow::json::load(req.body);
+
+                    if (!body) return crow::response(400, "Invalid JSON");
+
+                    const std::string git_url = body["url"].s();
+
+                    // Create a class here to handle this and make it testable...
+                    // The route is just a bridge... and not suppose to have logic in here
+                    DownloadFiles downoadFiles(git_url, std::make_unique<CurlHttpClient>());
+
+                    return crow::response(downoadFiles.listGitHubContentFromURL());
                 });
     }
 };

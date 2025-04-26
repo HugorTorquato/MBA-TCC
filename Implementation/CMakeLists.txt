@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Find Crow (Assuming it's installed)
 find_package(Boost REQUIRED)
 find_package(GTest REQUIRED)
+find_package(CURL REQUIRED)
 
 # Include all .cpp source files from src/
 file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
@@ -28,7 +29,7 @@ include_directories(
 
 # Build the API server
 add_executable(api_server ${SOURCES})
-target_link_libraries(api_server PRIVATE Boost::boost)
+target_link_libraries(api_server PRIVATE Boost::boost CURL::libcurl)
     # Faz o link do executável api_server com a biblioteca Boost. Aqui 
     # está usando o componente Boost::boost, que é apenas os headers. Se 
     # usar Boost com componentes binários (filesystem, system...), seria diferente.
@@ -36,7 +37,7 @@ target_link_libraries(api_server PRIVATE Boost::boost)
 # Build the unit tests
 # add_executable(my_tests unitTests/my_test.cpp)
 add_executable(my_tests ${TEST_SOURCES} ${TEST_SOURCES_TO_TEST})
-target_link_libraries(my_tests PRIVATE GTest::gtest GTest::gmock GTest::gtest_main pthread)
+target_link_libraries(my_tests PRIVATE GTest::gtest GTest::gmock GTest::gtest_main pthread CURL::libcurl)
 
     #Faz o link com:
     #GTest::gtest → Biblioteca principal do GTest
