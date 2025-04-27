@@ -3,7 +3,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <stdexcept>
 #include <string>
+
+#include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
 
 class MockHttpClient : public IHttpClient
 {
@@ -279,6 +282,42 @@ TEST_F(DownloadFilesTest, downloadFakeFolderStructureFromGitHub)
     ]
     )";
 
+    mockClient->setShouldSucceed(true);
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+}
+
+TEST_F(DownloadFilesTest, downloadFakeInvalidstringConversionToJsonFolderStructureFromGitHub)
+{
+    const std::string expectedResponse = R"({[{"name": "File1.cpp"}]})";
+    mockClient->setShouldSucceed(true);
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_THROW(downlaodFilesObj.downloadURLContentIntoTempFolder(), std::runtime_error);
+}
+
+TEST_F(DownloadFilesTest, downloadFakeEmptyFolderStructureFromGitHub)
+{
+    const std::string expectedResponse = R"("BLA")";
+    mockClient->setShouldSucceed(true);
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_THROW(downlaodFilesObj.downloadURLContentIntoTempFolder(), std::runtime_error);
+}
+
+TEST_F(DownloadFilesTest, recursivelyProcessJsonResponse)
+{
+    const std::string expectedResponse = R"(
+    [
+        {"name": "File1.cpp"},
+        {"name": "Folder1"},
+        {"name": "Folder2"}
+    ]
+    )";
     mockClient->setShouldSucceed(true);
     mockClient->setMockResponse(expectedResponse);
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));

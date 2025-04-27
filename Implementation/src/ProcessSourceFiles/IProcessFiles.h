@@ -2,7 +2,10 @@
 
 #include <string>
 
+#include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
 #include "util/IHttpClient.h"
+
+using json = nlohmann::json;
 
 class IDownloadFiles
 {
@@ -23,5 +26,6 @@ class IDownloadFiles
     virtual void parseURL() = 0;
 
     virtual std::string listGitHubContentFromURL() = 0;
+    virtual void recursivelyDownloadFilesPopulatingGraph(const json& parsed) = 0;
     virtual bool downloadURLContentIntoTempFolder() = 0;
 };
