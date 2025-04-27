@@ -21,4 +21,7 @@ class IDownloadFiles
     virtual bool isFolder() = 0;
 
     virtual void parseURL() = 0;
+
+    virtual std::string listGitHubContentFromURL() = 0;
+    virtual bool downloadURLContentIntoTempFolder() = 0;
 };

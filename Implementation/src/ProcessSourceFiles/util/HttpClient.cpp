@@ -75,3 +75,9 @@ bool CurlHttpClient::getResponseFronUrl(
     }
     return success;
 }
+
+void CurlHttpClient::downloadFile(
+    const std::string& url, const std::string& outputPath,
+    std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback)
+{
+}

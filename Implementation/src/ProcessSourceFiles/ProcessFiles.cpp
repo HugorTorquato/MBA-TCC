@@ -5,8 +5,10 @@
 #include <string>
 
 #include "../Logger/Log.h"
+#include "/app/includes/nlohmann/json.hpp"
 #include "util/IHttpClient.h"
 
+using json = nlohmann::json;
 namespace
 {
 // TODO: Implement API to test this....
@@ -128,8 +130,10 @@ std::string DownloadFiles::getEndpointToListFilesFromGitHub()
 
 std::string DownloadFiles::listGitHubContentFromURL()
 {
+    std::string response;
     parseURL();
     const std::string endpointToListFiles = getEndpointToListFilesFromGitHub();
+
     if (endpointToListFiles.empty() || errorWithUrlInfoMember(m_gitubUrlInfo))
     {
         const std::string errorMessage =
@@ -141,10 +145,9 @@ std::string DownloadFiles::listGitHubContentFromURL()
             " gitubUrlInfo.m_user:" + m_gitubUrlInfo.m_user;
         Logger::getInstance().log(errorMessage);
         throw std::invalid_argument(errorMessage);
-        return "";
+        return response;
     }
 
-    std::string response;
     if (!m_httpClient)
     {
         Logger::getInstance().log(
@@ -152,5 +155,38 @@ std::string DownloadFiles::listGitHubContentFromURL()
         return response;
     }
     m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString);
+    // Logger::getInstance().log(response);
     return response;
+}
+
+bool DownloadFiles::downloadURLContentIntoTempFolder()
+{
+    try
+    {
+        const std::string listedFilesFromGitHub = listGitHubContentFromURL();
+        json parsed = json::parse(listedFilesFromGitHub);
+        if (!parsed.is_array())
+        {
+            Logger::getInstance().log(
+                "[DownloadFiles::downloadURLContentIntoTempFolder] Error: "
+                "Response is not an array");
+            return false;
+        }
+
+        // Logic to go throu all files and folders and populate the graph
+        for (const auto& item : parsed)
+        {
+            std::string name = item.value("name", "");
+            Logger::getInstance().log("Name: " + name);
+        }
+    }
+    catch (const std::exception& e)
+    {
+        Logger::getInstance().log(
+            "[DownloadFiles::downloadURLContentIntoTempFolder] Error with JSON parsing: " +
+            std::string(e.what()));
+        return false;
+    }
+
+    return true;
 }

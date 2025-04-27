@@ -35,7 +35,8 @@ class DownloadFiles : public IDownloadFiles
 
     void parseURL() override;
 
-    std::string listGitHubContentFromURL();
+    std::string listGitHubContentFromURL() override;
+    bool downloadURLContentIntoTempFolder() override;
 
    private:
     std::string m_originalURL;

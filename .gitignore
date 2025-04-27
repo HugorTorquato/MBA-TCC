@@ -39,6 +39,8 @@ CMakeCache.txt
 api_server
 my_tests
 
+#Include folder
+Implementation/includes
 
 
 
