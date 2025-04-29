@@ -32,6 +32,13 @@ bool errorWithUrlInfoMember(const GitHubUrlInfo& gitubUrlInfo)
     return gitubUrlInfo.m_branch.empty() || gitubUrlInfo.m_path.empty() ||
            gitubUrlInfo.m_repo.empty() || gitubUrlInfo.m_user.empty();
 }
+
+json parseGitHubResponse(const std::string& response)
+{
+    auto parsed = json::parse(response);
+    if (!parsed.is_array()) throw std::invalid_argument("GitHub response must be an array.");
+    return parsed;
+}
 }  // namespace
 
 DownloadFiles::DownloadFiles(const std::string& originalURL,
@@ -100,19 +107,18 @@ std::string DownloadFiles::getUser()
     return m_gitubUrlInfo.m_user;
 }
 
-void DownloadFiles::parseURL()
+void DownloadFiles::parseURL(const std::string& url)
 {
     if (!isUrlFromGitHub())
     {
-        Logger::getInstance().log("[DownloadFiles::parseURL] Error with URL!!! URL : " +
-                                  m_originalURL);
+        Logger::getInstance().log("[DownloadFiles::parseURL] Error with URL!!! URL : " + url);
         return;
     }
 
     std::regex pattern(githubRegexpExpr);
     std::smatch match;
 
-    if (std::regex_match(m_originalURL, match, pattern))
+    if (std::regex_match(url, match, pattern))
     {
         GitHubUrlInfo info;
         m_gitubUrlInfo.m_user = match[1].str();
@@ -122,17 +128,19 @@ void DownloadFiles::parseURL()
     }
 }
 
-std::string DownloadFiles::getEndpointToListFilesFromGitHub()
+std::string DownloadFiles::getEndpointToListFilesFromGitHub(const std::string& url)
 {
+    parseURL(url);
     return "https://api.github.com/repos/" + m_gitubUrlInfo.m_user + "/" + m_gitubUrlInfo.m_repo +
            "/contents/" + m_gitubUrlInfo.m_path + "?ref=" + m_gitubUrlInfo.m_branch;
 }
 
-std::string DownloadFiles::listGitHubContentFromURL()
+std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::string>& url)
 {
     std::string response;
-    parseURL();
-    const std::string endpointToListFiles = getEndpointToListFilesFromGitHub();
+    std::string definedUrl = url ? *url : m_originalURL;
+
+    const std::string endpointToListFiles = getEndpointToListFilesFromGitHub(definedUrl);
 
     if (endpointToListFiles.empty() || errorWithUrlInfoMember(m_gitubUrlInfo))
     {
@@ -162,21 +170,23 @@ std::string DownloadFiles::listGitHubContentFromURL()
 void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(const json& parsed)
 {
     if (!parsed.is_array()) throw std::invalid_argument("Error Response is not an array!");
+
     // Logic to go throu all files and folders and populate the graph
     for (const auto& item : parsed)
     {
         std::string name = item.value("name", "");
         Logger::getInstance().log("Name: " + name);
     }
+
+    // add esges to the graph
 }
 
 bool DownloadFiles::downloadURLContentIntoTempFolder()
 {
     try
     {
-        const std::string listedFilesFromGitHub = listGitHubContentFromURL();
-        json parsed = json::parse(listedFilesFromGitHub);
-
+        const std::string listedFilesFromGitHub = listGitHubContentFromURL(std::nullopt);
+        json parsed = parseGitHubResponse(listedFilesFromGitHub);
         recursivelyDownloadFilesPopulatingGraph(parsed);
     }
     catch (const std::exception& e)
@@ -186,7 +196,6 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
             std::string(e.what());
         Logger::getInstance().log(errorMessage);
         throw std::runtime_error(errorMessage);
-        return false;
     }
 
     return true;

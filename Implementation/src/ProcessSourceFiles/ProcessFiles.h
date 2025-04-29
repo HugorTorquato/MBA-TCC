@@ -28,15 +28,15 @@ class DownloadFiles : public IDownloadFiles
     std::string getPath() override;
     std::string getRepo() override;
     std::string getUser() override;
-    std::string getEndpointToListFilesFromGitHub() override;
+    std::string getEndpointToListFilesFromGitHub(const std::string& url) override;
 
     bool isUrlFromGitHub() override;
     bool isValidUrl() override;
     bool isFolder() override;
 
-    void parseURL() override;
+    void parseURL(const std::string& url) override;
 
-    std::string listGitHubContentFromURL() override;
+    std::string listGitHubContentFromURL(const std::optional<std::string>& url) override;
     void recursivelyDownloadFilesPopulatingGraph(const json& parsed) override;
     bool downloadURLContentIntoTempFolder() override;
 

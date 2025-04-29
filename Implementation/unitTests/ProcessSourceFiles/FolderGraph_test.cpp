@@ -4,7 +4,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <stdexcept>
 #include <string>
 
 class FolderGraphTest : public ::testing::Test
@@ -12,6 +11,7 @@ class FolderGraphTest : public ::testing::Test
    protected:
 };
 
+// Create an empty graph	Ensure graph initializes correctly with no nodes.
 TEST_F(FolderGraphTest, testEmptyGraph)
 {
     // Create an empty FolderGraph
@@ -47,7 +47,6 @@ TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddChield)
     EXPECT_EQ(graph.getRoot()->children[0]->name, "child");
 }
 
-// Create an empty graph	Ensure graph initializes correctly with no nodes.
 // Add a node	Verify that adding a node works and node count increases.
 // Add an edge	Ensure edge creation works between two nodes.
 // Add duplicate nodes	Check if duplicate nodes are handled (ignored, replaced, or error).
