@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-#include "FolderGraph.h"
 #include "IProcessFiles.h"
 #include "util/IHttpClient.h"
 
@@ -37,7 +36,8 @@ class DownloadFiles : public IDownloadFiles
     void parseURL(const std::string& url) override;
 
     std::string listGitHubContentFromURL(const std::optional<std::string>& url) override;
-    void recursivelyDownloadFilesPopulatingGraph(const json& parsed) override;
+    void recursivelyDownloadFilesPopulatingGraph(
+        const json& parsed, const std::shared_ptr<ItemInFolder>& parent) override;
     bool downloadURLContentIntoTempFolder() override;
 
    private:

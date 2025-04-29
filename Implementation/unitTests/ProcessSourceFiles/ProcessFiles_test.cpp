@@ -326,3 +326,5 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponse)
 
     EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
 }
+
+// create test for downloadURLContentIntoTempFolder and recursivelyDownloadFilesPopulatingGraph

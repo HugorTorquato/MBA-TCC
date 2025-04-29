@@ -45,7 +45,7 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
                              std::unique_ptr<IHttpClient> httpClient)
     : m_originalURL(originalURL),
       m_httpClient(std::move(httpClient)),
-      m_folderGraph(FolderGraph("root"))
+      m_folderGraph(FolderGraph(std::make_shared<ItemInFolder>("root", "dir")))
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
@@ -167,13 +167,45 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
     return response;
 }
 
-void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(const json& parsed)
+void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
+    const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
 {
     if (!parsed.is_array()) throw std::invalid_argument("Error Response is not an array!");
 
-    // Logic to go throu all files and folders and populate the graph
+    // already received a parsed response, and need to create the graph
+    // Everything must be in the same loop to make it possible the DFS ( revise this concept )
+
     for (const auto& item : parsed)
     {
+        // create the dhield object to be added
+        std::shared_ptr<ItemInFolder> child =
+            std::make_shared<ItemInFolder>(item.value("name", ""), item.value("type", ""));
+
+        // adicionado child to the graph
+        m_folderGraph.addEdge(parent, child);
+
+        // check if the item is a file or folder, if folder call the function again
+        if (item.value("type", "") == "file")
+        {
+            // download the file
+            // const std::string downloadUrl = item.value("download_url", "");
+            // if (!downloadUrl.empty())
+            // {
+            //     m_httpClient->downloadFile(downloadUrl, item.value("name", ""), writeToString);
+            // }
+        }
+        else if (child->getType() == "dir")
+        {
+            // recursively call the function to get the content of the folder
+            const std::string folderUrl = item.value("url", "");
+            // TODO: Verify if is a valid url. Refactory isUrlFromGitHub() -> if not valid i can't
+            // call the list method!!! there is no validation there
+            const std::string listedFilesFromGitHub = listGitHubContentFromURL(folderUrl);
+            json parsedChild = parseGitHubResponse(listedFilesFromGitHub);
+
+            recursivelyDownloadFilesPopulatingGraph(parsedChild, child);
+        }
+
         std::string name = item.value("name", "");
         Logger::getInstance().log("Name: " + name);
     }
@@ -187,7 +219,7 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
     {
         const std::string listedFilesFromGitHub = listGitHubContentFromURL(std::nullopt);
         json parsed = parseGitHubResponse(listedFilesFromGitHub);
-        recursivelyDownloadFilesPopulatingGraph(parsed);
+        recursivelyDownloadFilesPopulatingGraph(parsed, m_folderGraph.getRoot());
     }
     catch (const std::exception& e)
     {

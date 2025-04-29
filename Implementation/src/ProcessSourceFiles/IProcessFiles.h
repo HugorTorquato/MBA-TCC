@@ -3,6 +3,7 @@
 #include <string>
 
 #include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
+#include "FolderGraph.h"
 #include "util/IHttpClient.h"
 
 using json = nlohmann::json;
@@ -26,6 +27,7 @@ class IDownloadFiles
     virtual void parseURL(const std::string& url) = 0;
 
     virtual std::string listGitHubContentFromURL(const std::optional<std::string>& url) = 0;
-    virtual void recursivelyDownloadFilesPopulatingGraph(const json& parsed) = 0;
+    virtual void recursivelyDownloadFilesPopulatingGraph(
+        const json& parsed, const std::shared_ptr<ItemInFolder>& parent) = 0;
     virtual bool downloadURLContentIntoTempFolder() = 0;
 };
