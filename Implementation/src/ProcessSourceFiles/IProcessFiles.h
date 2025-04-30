@@ -13,14 +13,16 @@ class IDownloadFiles
    public:
     virtual ~IDownloadFiles() = default;
 
-    virtual std::string getOriginalURL() = 0;
-    virtual std::string getBranch() = 0;
-    virtual std::string getPath() = 0;
-    virtual std::string getRepo() = 0;
-    virtual std::string getUser() = 0;
+    virtual std::string getOriginalURL() const = 0;
+    virtual std::string getBranch() const = 0;
+    virtual std::string getPath() const = 0;
+    virtual std::string getRepo() const = 0;
+    virtual std::string getUser() const = 0;
+    virtual FolderGraph getFolderGraph() const = 0;
     virtual std::string getEndpointToListFilesFromGitHub(const std::string& url) = 0;
 
     virtual bool isUrlFromGitHub() = 0;
+    virtual bool isUrlFromGitHub(const std::string& url) = 0;
     virtual bool isValidUrl() = 0;
     virtual bool isFolder() = 0;
 

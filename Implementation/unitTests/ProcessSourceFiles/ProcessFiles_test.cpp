@@ -3,8 +3,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <regex>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
 
@@ -13,6 +15,8 @@ class MockHttpClient : public IHttpClient
    private:
     bool m_shouldSucceed;
     std::string m_mockResponse;
+    std::vector<std::string> m_mockResponses;
+    unsigned currentIndex = 0;
 
    public:
     // Constructor to configure behavior
@@ -28,7 +32,14 @@ class MockHttpClient : public IHttpClient
         std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback) override
     {
         std::cout << "[MockHttpClient] Fetching URL: " << url << std::endl;
-        response = m_mockResponse;
+        if (m_mockResponses.empty())
+            response = m_mockResponse;
+        else if (currentIndex < m_mockResponses.size())
+            response = m_mockResponses[currentIndex++];
+        else
+            response = "{}";  // Default empty JSON
+
+        std::cout << "[MockHttpClient] Fetching response: " << response << std::endl;
         return m_shouldSucceed;
     }
 
@@ -46,6 +57,16 @@ class MockHttpClient : public IHttpClient
     void setMockResponse(const std::string& mockResponse)
     {
         m_mockResponse = mockResponse;
+    }
+
+    void includeInMockResponses(const std::string& mockResponse)
+    {
+        m_mockResponses.push_back(mockResponse);
+    }
+
+    void setCurrentIndex(unsigned index)
+    {
+        currentIndex = index;
     }
 };
 
@@ -80,7 +101,7 @@ class DownloadFilesTest : public ::testing::Test
         "path": "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp",
         "sha": "e69de29bb2d1d6434b8b29ae775ad8c5391",
         "size": 0,
-        "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder",
+        "url": "",
         "html_url": "https://github.com/HugorTorquato/MBA-TCC/blob/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp",
         "git_url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c5391",
         "download_url": "https://raw.githubusercontent.com/HugorTorquato/MBA-TCC/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp",
@@ -96,7 +117,7 @@ class DownloadFilesTest : public ::testing::Test
         "path": "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1",
         "sha": "48f33dcb5d6ca7dca35c1c9fa5eea4206c5fdcda",
         "size": 0,
-        "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1?ref=5---Download-gitHub-files-in-a-local-temp-folder",
+        "url": "",
         "html_url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1",
         "git_url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/trees/48f33dcb5d6ca7dca35c1c9fa5eea4206c5fdcda",
         "download_url": null,
@@ -112,7 +133,7 @@ class DownloadFilesTest : public ::testing::Test
         "path": "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2",
         "sha": "4d438c58d6ad07c1cc7f682628854a07d7a38ad7",
         "size": 0,
-        "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2?ref=5---Download-gitHub-files-in-a-local-temp-folder",
+        "url": "",
         "html_url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2",
         "git_url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/trees/4d438c58d6ad07c1cc7f682628854a07d7a38ad7",
         "download_url": null,
@@ -311,13 +332,11 @@ TEST_F(DownloadFilesTest, downloadFakeEmptyFolderStructureFromGitHub)
     EXPECT_THROW(downlaodFilesObj.downloadURLContentIntoTempFolder(), std::runtime_error);
 }
 
-TEST_F(DownloadFilesTest, recursivelyProcessJsonResponse)
+TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseMissingItemTypeShouldNotPopulateGraph)
 {
     const std::string expectedResponse = R"(
     [
-        {"name": "File1.cpp"},
-        {"name": "Folder1"},
-        {"name": "Folder2"}
+        {"name": "File1.cpp"}
     ]
     )";
     mockClient->setShouldSucceed(true);
@@ -325,6 +344,180 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponse)
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
     EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+
+    auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    EXPECT_EQ(root->getName(), "root");
+    EXPECT_TRUE(root->getChildren().empty());
 }
 
-// create test for downloadURLContentIntoTempFolder and recursivelyDownloadFilesPopulatingGraph
+TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGraph)
+{
+    const std::string expectedResponse = R"(
+    [
+        {"name": "File1.cpp", "type": "file"}
+    ]
+    )";
+    mockClient->setShouldSucceed(true);
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+
+    auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    EXPECT_EQ(root->getName(), "root");
+    EXPECT_EQ(root->getChildren().size(), 1);
+}
+
+TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseFolderWithInvalidURLShouldNotPopulateGraph)
+{
+    // const std::string expectedResponse = R"(
+    // [
+    //     {"name": "File1.cpp", "type": "file"},
+    //     {"name": "Folder1", "type": "dir", "url": "INVALID"}
+    // ]
+    // )";
+
+    const std::string expectedResponse = R"(
+    [
+        {"name": "File1.cpp", "type": "file"},
+        {"name": "Folder1", "type": "dir", "url": ""}
+    ]
+    )";
+    mockClient->setShouldSucceed(true);
+    mockClient->setMockResponse(expectedResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    EXPECT_EQ(root->getName(), "root");
+    EXPECT_EQ(root->getChildren().size(), 1);
+    EXPECT_EQ(root->getChildren()[0]->getName(), "File1.cpp");
+}
+
+TEST_F(DownloadFilesTest, MatchesBothApiAndWebUrls)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    std::regex github_url_pattern(downlaodFilesObj.getgithubRegexpExpr(RegexpTarget::GITHUB_API));
+
+    struct TestCase
+    {
+        std::string url;
+        std::string description;
+        std::vector<std::string> expectedGroups;  // capturing groups only
+    };
+
+    std::vector<TestCase> testCases = {
+        {"https://api.github.com/repos/user123/repoABC/contents/path/to/file.cpp?ref=main",
+         "API URL to file",
+         {"user123", "repoABC", "path/to/file.cpp", "main", "", "", "", "", ""}},
+        {"https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/"
+         "source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
+         "File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder",
+         "API URL with long branch name",
+         {"HugorTorquato", "MBA-TCC",
+          "Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
+          "EmptyProjectFoldeStructure/File1.cpp",
+          "5---Download-gitHub-files-in-a-local-temp-folder", "", "", "", "", ""}}};
+
+    for (const auto& test : testCases)
+    {
+        std::smatch match;
+        ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
+            << "Failed to match: " << test.url;
+    }
+}
+
+TEST_F(DownloadFilesTest, MatchesOnlyGitHubWebUrls)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    std::regex github_url_pattern(downlaodFilesObj.getgithubRegexpExpr(RegexpTarget::GITHUB));
+
+    struct TestCase
+    {
+        std::string url;
+        std::string description;
+        std::vector<std::string> expectedGroups;  // only the capturing groups
+    };
+
+    std::vector<TestCase> testCases = {
+        {"https://github.com/HugorTorquato/MBA-TCC/tree/main/Implementation/src",
+         "Web URL to folder (custom)",
+         {"HugorTorquato", "MBA-TCC", "tree", "main", "Implementation/src"}},
+        {"https://github.com/user/repo/blob/dev/path/to/file.cpp",
+         "Web URL to file",
+         {"user", "repo", "blob", "dev", "path/to/file.cpp"}},
+        {"https://github.com/user/repo/tree/main",
+         "Web URL without path",
+         {"user", "repo", "tree", "main", ""}}};
+
+    for (const auto& test : testCases)
+    {
+        std::smatch match;
+        ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
+            << "Failed to match: " << test.url;
+    }
+}
+
+TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
+{
+    const std::string firstLevelResponse = R"(
+    [
+        {"name": "Folder1", "type": "dir", "url":
+        "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder"}
+    ]
+    )";
+
+    const std::string secondLevelResponse = R"(
+    [
+        {"name": "FileInsideFolder1.cpp", "type": "file"}
+    ]
+    )";
+
+    // Way to add diferent responses to the mock, first and second
+    mockClient->setShouldSucceed(true);
+    mockClient->includeInMockResponses(firstLevelResponse);
+    mockClient->includeInMockResponses(secondLevelResponse);
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+
+    auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    EXPECT_EQ(root->getChildren().size(), 1);
+    EXPECT_EQ(root->getChildren()[0]->getName(), "Folder1");
+
+    auto child = downlaodFilesObj.getFolderGraph().getRoot()->getChildren()[0];
+    EXPECT_EQ(child->getChildren().size(), 1);
+    EXPECT_EQ(child->getChildren()[0]->getName(), "FileInsideFolder1.cpp");
+}
+
+TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolderAndFile)
+{
+    const std::string firstLevelResponse = R"(
+    [
+        {"name": "Folder1", "type": "dir", "url":
+        "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder"},
+        {"name": "File1.cpp", "type": "file"}
+    ]
+    )";
+
+    const std::string secondLevelResponse = R"(
+    [
+        {"name": "FileInsideFolder1.cpp", "type": "file"}
+    ]
+    )";
+
+    // Way to add diferent responses to the mock, first and second
+    mockClient->setShouldSucceed(true);
+    mockClient->includeInMockResponses(firstLevelResponse);
+    mockClient->includeInMockResponses(secondLevelResponse);
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+
+    auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    EXPECT_EQ(root->getChildren().size(), 2);
+}

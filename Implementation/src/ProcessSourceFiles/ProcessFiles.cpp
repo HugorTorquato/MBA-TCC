@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../Logger/Log.h"
+#include "FolderGraph.h"
 #include "util/IHttpClient.h"
 
 namespace
@@ -65,7 +66,7 @@ bool DownloadFiles::isValidUrl()
     return m_httpClient->getResponseFronUrl(m_originalURL, response);
 }
 
-std::string DownloadFiles::getOriginalURL()
+std::string DownloadFiles::getOriginalURL() const
 {
     return m_originalURL;
 }
@@ -73,8 +74,23 @@ std::string DownloadFiles::getOriginalURL()
 // TODO: Implement API return based on input and this verification
 bool DownloadFiles::isUrlFromGitHub()
 {
-    if (!isUrlGitHubFolderOrFile(m_originalURL, githubRegexpExpr)) return false;
-    if (!isValidUrl()) return false;
+    return isUrlFromGitHub(m_originalURL);
+}
+
+bool DownloadFiles::isUrlFromGitHub(const std::string& url)
+{
+    Logger::getInstance().log("url : " + url);
+    Logger::getInstance().log("H1");
+    if (url.empty()) return false;
+    Logger::getInstance().log("H2");
+    if (!isUrlGitHubFolderOrFile(
+            url, m_githubRegexpExpr))  // Tem um Bug Aqui, if oher URL than the original one... it
+                                       // fails... it's not generic
+                                       // if (!isUrlGitHubFolderOrFile(url, m_githubRegexpExpr) ||
+                                       //     !isUrlGitHubFolderOrFile(url, m_githubAPIRegexpExpr))
+        return false;
+    Logger::getInstance().log("H3");
+    // if (!isValidUrl()) return false; ; Redundant, already checked in the getResponseFronUrl()
 
     return true;
 }
@@ -90,32 +106,44 @@ bool DownloadFiles::isFolder()
     return std::regex_match(m_originalURL, github_url_pattern);
 }
 
-std::string DownloadFiles::getBranch()
+std::string DownloadFiles::getgithubRegexpExpr(RegexpTarget target) const
+{
+    if (target == RegexpTarget::GITHUB_API) return m_githubAPIRegexpExpr;
+    // else if (target == RegexpTarget::GITHUB)
+    return m_githubRegexpExpr;
+}
+std::string DownloadFiles::getBranch() const
 {
     return m_gitubUrlInfo.m_branch;
 }
-std::string DownloadFiles::getPath()
+std::string DownloadFiles::getPath() const
 {
     return m_gitubUrlInfo.m_path;
 }
-std::string DownloadFiles::getRepo()
+std::string DownloadFiles::getRepo() const
 {
     return m_gitubUrlInfo.m_repo;
 }
-std::string DownloadFiles::getUser()
+std::string DownloadFiles::getUser() const
 {
     return m_gitubUrlInfo.m_user;
 }
 
+FolderGraph DownloadFiles::getFolderGraph() const
+{
+    return m_folderGraph;
+}
+
 void DownloadFiles::parseURL(const std::string& url)
 {
+    // if (!isUrlFromGitHub(url))
     if (!isUrlFromGitHub())
     {
         Logger::getInstance().log("[DownloadFiles::parseURL] Error with URL!!! URL : " + url);
         return;
     }
 
-    std::regex pattern(githubRegexpExpr);
+    std::regex pattern(m_githubRegexpExpr);
     std::smatch match;
 
     if (std::regex_match(url, match, pattern))
@@ -162,64 +190,100 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
             "[DownloadFiles::listGitHubContentFromURL] Error with HTTP Client");
         return response;
     }
-    m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString);
+    if (!m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString)) return "";
     // Logger::getInstance().log(response);
     return response;
+}
+
+void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>& url,
+                                                const std::shared_ptr<ItemInFolder>& parent)
+{
+    if (auto listedFilesFromGitHub = listGitHubContentFromURL(url); !listedFilesFromGitHub.empty())
+    {
+        json parsed = parseGitHubResponse(listedFilesFromGitHub);
+        recursivelyDownloadFilesPopulatingGraph(parsed, parent);
+    }
 }
 
 void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
 {
-    if (!parsed.is_array()) throw std::invalid_argument("Error Response is not an array!");
-
-    // already received a parsed response, and need to create the graph
-    // Everything must be in the same loop to make it possible the DFS ( revise this concept )
+    if (!parsed.is_array())
+        throw std::invalid_argument(
+            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
+            "array!");
 
     for (const auto& item : parsed)
     {
-        // create the dhield object to be added
         std::shared_ptr<ItemInFolder> child =
             std::make_shared<ItemInFolder>(item.value("name", ""), item.value("type", ""));
 
-        // adicionado child to the graph
-        m_folderGraph.addEdge(parent, child);
-
-        // check if the item is a file or folder, if folder call the function again
-        if (item.value("type", "") == "file")
+        if (child->getType() == ItemEnumType::UNKNOWN)
         {
-            // download the file
-            // const std::string downloadUrl = item.value("download_url", "");
-            // if (!downloadUrl.empty())
-            // {
-            //     m_httpClient->downloadFile(downloadUrl, item.value("name", ""), writeToString);
+            Logger::getInstance().log(
+                "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid child, no type "
+                "defined");
+            return;
+        }
+
+        Logger::getInstance().log("Name1: " + child->getName());  // remove
+
+        if (child->getType() == ItemEnumType::SOURCEFILE)
+        {
+            // // try to download
+            // try {
+            //     // if (!downloadUrl.empty())
+            //     // {
+            //     //     m_httpClient->downloadFile(downloadUrl, item.value("name", ""),
+            //     writeToString);
+            //     // }
+            // } catch (declaration) {
+
             // }
+            m_folderGraph.addEdge(parent, child);
+            Logger::getInstance().log("Name2: " + child->getName());
         }
-        else if (child->getType() == "dir")
+        else if (child->getType() == ItemEnumType::DIR)
         {
-            // recursively call the function to get the content of the folder
             const std::string folderUrl = item.value("url", "");
-            // TODO: Verify if is a valid url. Refactory isUrlFromGitHub() -> if not valid i can't
-            // call the list method!!! there is no validation there
-            const std::string listedFilesFromGitHub = listGitHubContentFromURL(folderUrl);
-            json parsedChild = parseGitHubResponse(listedFilesFromGitHub);
 
-            recursivelyDownloadFilesPopulatingGraph(parsedChild, child);
+            if (folderUrl.empty() || !isUrlFromGitHub())
+            {
+                Logger::getInstance().log(
+                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid folder URL, "
+                    "folder " +
+                    child->getName() + " will not be included in the folder graph : " + folderUrl);
+                continue;
+            }
+
+            m_folderGraph.addEdge(parent, child);
+            Logger::getInstance().log("Name3: " + child->getName());
+
+            callRecursiveDoenloadMethod(folderUrl, child);  // child passa a ser o parent
+
+            // if (auto listedFilesFromGitHub = listGitHubContentFromURL(folderUrl);
+            //     !listedFilesFromGitHub.empty())
+            // {
+            //     json parsedChild = parseGitHubResponse(listedFilesFromGitHub);
+
+            //     // recursivelyDownloadFilesPopulatingGraph(parsedChild, child); //child passa a
+            //     ser o parent
+            // }
+            // Create temp local folder
         }
 
-        std::string name = item.value("name", "");
-        Logger::getInstance().log("Name: " + name);
+        // std::string name = item.value("name", "");
+        // Logger::getInstance().log("Name: " + name);
     }
 
-    // add esges to the graph
+    // must have a stop condition
 }
 
 bool DownloadFiles::downloadURLContentIntoTempFolder()
 {
     try
     {
-        const std::string listedFilesFromGitHub = listGitHubContentFromURL(std::nullopt);
-        json parsed = parseGitHubResponse(listedFilesFromGitHub);
-        recursivelyDownloadFilesPopulatingGraph(parsed, m_folderGraph.getRoot());
+        callRecursiveDoenloadMethod(std::nullopt, m_folderGraph.getRoot());
     }
     catch (const std::exception& e)
     {

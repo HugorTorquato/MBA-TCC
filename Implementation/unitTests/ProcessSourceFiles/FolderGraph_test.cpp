@@ -19,7 +19,7 @@ TEST_F(FolderGraphTest, testEmptyGraph)
     FolderGraph graph(root);
 
     // Check if the root node is created correctly
-    EXPECT_EQ(graph.getRoot()->getName(), "empty");
+    EXPECT_EQ(graph.getRoot()->getName(), "root");
     EXPECT_TRUE(graph.getRoot()->getChildren().empty());
 }
 

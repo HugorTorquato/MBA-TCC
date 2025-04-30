@@ -4,6 +4,13 @@
 #include <string>
 #include <vector>
 
+enum ItemEnumType
+{
+    SOURCEFILE,
+    DIR,
+    UNKNOWN
+};
+
 class ItemInFolder
 {
    public:
@@ -14,12 +21,12 @@ class ItemInFolder
     void addChild(const std::string& childName, const std::string& type);
 
     std::string getName() const;
-    std::string getType() const;  // TODO: create an enum for this
+    ItemEnumType getType() const;
     std::vector<std::shared_ptr<ItemInFolder>>& getChildren();
 
    private:
     std::string m_name;
-    std::string m_type;
+    ItemEnumType m_type;
     std::vector<std::shared_ptr<ItemInFolder>> m_children;
 };
 

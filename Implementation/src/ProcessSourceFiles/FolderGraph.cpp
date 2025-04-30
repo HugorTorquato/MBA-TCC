@@ -1,10 +1,21 @@
 #include "FolderGraph.h"
 
+#include <cstring>
 #include <memory>
 
-ItemInFolder::ItemInFolder(const std::string& name, const std::string& type)
-    : m_name(name), m_type(type)
+#include "../Logger/Log.h"
+
+ItemInFolder::ItemInFolder(const std::string& name, const std::string& type) : m_name(name)
 {
+    if (type == "dir")
+        m_type = ItemEnumType::DIR;
+    else if (type == "file")
+        m_type = ItemEnumType::SOURCEFILE;
+    else
+    {
+        m_type = ItemEnumType::UNKNOWN;
+        Logger::getInstance().log("Warning: Unknown item type: " + type);
+    }
 }
 
 void ItemInFolder::addChild(const std::shared_ptr<ItemInFolder>& child)
@@ -21,7 +32,7 @@ std::string ItemInFolder::getName() const
 {
     return m_name;
 }
-std::string ItemInFolder::getType() const
+ItemEnumType ItemInFolder::getType() const
 {
     return m_type;
 }
