@@ -57,6 +57,7 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
 
 bool DownloadFiles::isValidUrl()
 {
+    // Be vary carrefully when using it. It calls an api to see if it is valid. May generate overhead and slowness
     std::string response;
     if (!m_httpClient)
     {
@@ -90,8 +91,6 @@ bool DownloadFiles::isUrlFromGitHub(const std::string& url)
                                        //     !isUrlGitHubFolderOrFile(url, m_githubAPIRegexpExpr))
         return false;
     Logger::getInstance().log("H3");
-    // if (!isValidUrl()) return false; ; Redundant, already checked in the getResponseFronUrl()
-
     return true;
 }
 
@@ -296,3 +295,6 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
 
     return true;
 }
+
+
+// TODO: iF there is string representing something it's wring... create a class for that
