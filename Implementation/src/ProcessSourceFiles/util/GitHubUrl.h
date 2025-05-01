@@ -18,6 +18,9 @@ class GitHubUrlInfo : public IRepoURL
     std::string getRegexp() const override;
 
     void parseURL(const std::string& url) override;
+    bool isFromGtHub() const override;
+    bool isFromGtHub(const std::string& url) const override;
+    bool isFolder(const std::string& url) const override;
 
    private:
     std::string m_branch;
@@ -25,4 +28,5 @@ class GitHubUrlInfo : public IRepoURL
     std::string m_repo;
     std::string m_user;
     std::string m_egexp;
+    std::string m_url;
 };

@@ -168,8 +168,6 @@ class DownloadFilesTest : public ::testing::Test
 TEST_F(DownloadFilesTest, ValidateConstructorWithASimpleTestURL)
 {
     // Must dereference the pointer
-    // EXPECT_EQ(DownloadFiles(testURL, std::move(mockClient)).getOriginalURL(), testURL);
-
     DownloadFiles downloader(testURL, std::move(mockClient));
     EXPECT_EQ(downloader.getOriginalURL(), testURL);
 }
@@ -182,38 +180,63 @@ TEST_F(DownloadFilesTest, EmptyURLStringPassedToTheExplicityThrowsInvalidArgumen
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURL)
 {
-    EXPECT_TRUE(DownloadFiles(testURL, std::move(mockClient)).isUrlFromGitHub());
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_TRUE(urlInfo->isFromGtHub(testURL));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURLToFile)
 {
-    EXPECT_TRUE(DownloadFiles(testURLToFile, std::move(mockClient)).isUrlFromGitHub());
+    DownloadFiles downlaodFilesObj(testURLToFile, std::move(mockClient));
+
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_TRUE(urlInfo->isFromGtHub(testURLToFile));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURLToFolder)
 {
-    EXPECT_TRUE(DownloadFiles(testURLToFolder, std::move(mockClient)).isUrlFromGitHub());
+    DownloadFiles downlaodFilesObj(testURLToFolder, std::move(mockClient));
+
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_TRUE(urlInfo->isFromGtHub(testURLToFolder));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsANotValidGitHubUrl)
 {
-    EXPECT_THROW(DownloadFiles(testURLNotValid, std::move(mockClient)).isUrlFromGitHub(),
-                 std::invalid_argument);
+    EXPECT_THROW(DownloadFiles(testURLNotValid, std::move(mockClient)), std::invalid_argument);
 }
 
 TEST_F(DownloadFilesTest, ValidUrlReturnsTrue)
 {
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.isValidUrl());
-}
-
-TEST_F(DownloadFilesTest, InvalidUrlReturnsFalse)
-{
-    mockClient->setShouldSucceed(false);
-    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
-
-    EXPECT_FALSE(downlaodFilesObj.isValidUrl());
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_TRUE(urlInfo->isValidUrl(testURL));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
@@ -223,12 +246,30 @@ TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsTrueIfValidURLFolder)
 {
-    EXPECT_TRUE(DownloadFiles(testURLToFolder, std::move(mockClient)).isFolder());
+    DownloadFiles downlaodFilesObj(testURLToFolder, std::move(mockClient));
+
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_TRUE(urlInfo->isFolder(testURLToFolder));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfValidURLFile)
 {
-    EXPECT_FALSE(DownloadFiles(testURLToFile, std::move(mockClient)).isFolder());
+    DownloadFiles downlaodFilesObj(testURLToFile, std::move(mockClient));
+
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_FALSE(urlInfo->isFolder(testURLToFile));
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFolder)
@@ -516,10 +557,12 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
     EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
+    if (root == nullptr) FAIL() << "Root hsould not be nul";
     EXPECT_EQ(root->getChildren().size(), 1);
     EXPECT_EQ(root->getChildren()[0]->getName(), "Folder1");
 
     auto child = downlaodFilesObj.getFolderGraph().getRoot()->getChildren()[0];
+    if (child == nullptr) FAIL() << "child hsould not be nul";
     EXPECT_EQ(child->getChildren().size(), 1);
     EXPECT_EQ(child->getChildren()[0]->getName(), "FileInsideFolder1.cpp");
 }

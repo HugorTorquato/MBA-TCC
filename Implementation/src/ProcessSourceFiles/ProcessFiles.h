@@ -29,10 +29,7 @@ class DownloadFiles : public IDownloadFiles
     std::string getEndpointToListFilesFromGitHub(const std::string& url) override;
     IRepoURL* getUrlInfo() const override;
 
-    bool isUrlFromGitHub() override;
-    bool isUrlFromGitHub(const std::string& url) override;
-    bool isValidUrl() override;
-    bool isFolder() override;
+    bool verifyIfValidEndpointByCallingIt() override;
 
     std::string listGitHubContentFromURL(const std::optional<std::string>& url) override;
     void recursivelyDownloadFilesPopulatingGraph(

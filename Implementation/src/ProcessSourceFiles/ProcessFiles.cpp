@@ -18,12 +18,6 @@ namespace
 // - Maybe set as internal API.... just to test this
 // - With the new wrapper i can unit test this passing the curl wrapper as a parameter to mock
 
-bool isUrlGitHubFolderOrFile(const std::string& githubUrl, const std::string& githubRegexpExpr)
-{
-    std::regex github_url_pattern(githubRegexpExpr);
-    return std::regex_match(githubUrl, github_url_pattern);
-}
-
 // Callback to store the response string ( Transform this to function header )
 size_t writeToString(void* contents, size_t size, size_t nmemb, void* userp)
 {
@@ -65,7 +59,7 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
     }
 }
 
-bool DownloadFiles::isValidUrl()
+bool DownloadFiles::verifyIfValidEndpointByCallingIt()
 {
     // Be vary carrefully when using it. It calls an api to see if it is valid. May generate
     // overhead and slowness
@@ -83,38 +77,16 @@ std::string DownloadFiles::getOriginalURL() const
     return m_originalURL;
 }
 
-// TODO: Implement API return based on input and this verification
-bool DownloadFiles::isUrlFromGitHub()
-{
-    return isUrlFromGitHub(m_originalURL);
-}
-
-bool DownloadFiles::isUrlFromGitHub(const std::string& url)
-{
-    Logger::getInstance().log("url : " + url);
-    Logger::getInstance().log("H1");
-    if (url.empty()) return false;
-    Logger::getInstance().log("H2");
-    // Tem um Bug Aqui, if oher URL than the original one... it
-    if (!isUrlGitHubFolderOrFile(url, m_urlInfo->getRegexp()))
-        // fails... it's not generic
-        // if (!isUrlGitHubFolderOrFile(url, m_githubRegexpExpr) ||
-        //     !isUrlGitHubFolderOrFile(url, m_githubAPIRegexpExpr))
-        return false;
-    Logger::getInstance().log("H3");
-    return true;
-}
-
-bool DownloadFiles::isFolder()
-{
-    if (!isUrlFromGitHub())
-    {
-        Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!!");
-        return false;
-    }
-    std::regex github_url_pattern(R""(.*tree.*)"");
-    return std::regex_match(m_originalURL, github_url_pattern);
-}
+// bool DownloadFiles::isFolder()
+// {
+//     if (!isUrlFromGitHub())
+//     {
+//         Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!!");
+//         return false;
+//     }
+//     std::regex github_url_pattern(R""(.*tree.*)"");
+//     return std::regex_match(m_originalURL, github_url_pattern);
+// }
 
 // std::string DownloadFiles::getgithubRegexpExpr(RegexpTarget target) const
 // {
@@ -190,6 +162,7 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
     return response;
 }
 
+// TODO: No need to be in the class.. can be unnamedsace
 void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>& url,
                                                 const std::shared_ptr<ItemInFolder>& parent)
 {
@@ -221,7 +194,9 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
             return;
         }
 
-        Logger::getInstance().log("Name1: " + child->getName());  // remove
+        Logger::getInstance().log(
+            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Name: " +
+            child->getName());  // remove
 
         if (child->getType() == ItemEnumType::SOURCEFILE)
         {
@@ -242,7 +217,10 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
         {
             const std::string folderUrl = item.value("url", "");
 
-            if (folderUrl.empty() || !isUrlFromGitHub())
+            // auto repoUrl = RepoURLFactory::createRepoURL(folderUrl);
+
+            // if (repoUrl && !repoUrl->isFromGtHub())
+            if (!RepoURLFactory::isFromGtHub(folderUrl))
             {
                 Logger::getInstance().log(
                     "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid folder URL, "

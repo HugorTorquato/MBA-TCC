@@ -23,10 +23,7 @@ class IDownloadFiles
     virtual std::string getEndpointToListFilesFromGitHub(const std::string& url) = 0;
     virtual const IRepoURL* getUrlInfo() const = 0;
 
-    virtual bool isUrlFromGitHub() = 0;
-    virtual bool isUrlFromGitHub(const std::string& url) = 0;
-    virtual bool isValidUrl() = 0;
-    virtual bool isFolder() = 0;
+    virtual bool verifyIfValidEndpointByCallingIt() = 0;
 
     virtual std::string listGitHubContentFromURL(const std::optional<std::string>& url) = 0;
     virtual void recursivelyDownloadFilesPopulatingGraph(
