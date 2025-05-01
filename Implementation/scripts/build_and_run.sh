@@ -5,11 +5,11 @@ rm -rf ../build
 mkdir ../build
 cd ../build
 
-echo "<> Running CMake..."
-cmake ..
+# echo "<> Running CMake..."
+# cmake ..
 
-# echo "<> Use ASAN (AddressSanitizer) to catch the exact location:..."
-# cmake -DCMAKE_CXX_FLAGS="-fsanitize=address -g" ..
+echo "<> Use ASAN (AddressSanitizer) to catch the exact location:..."
+cmake -DCMAKE_CXX_FLAGS="-fsanitize=address -g" ..
 
 echo "<> Running Auto-format..."
 make format

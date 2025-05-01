@@ -1,4 +1,6 @@
 #include "../../src/ProcessSourceFiles/ProcessFiles.h"
+// #include "../../src/ProcessSourceFiles/util/GitHubUrlAPI.h"
+// #include "../../src/ProcessSourceFiles/util/GitHubUrl.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -75,6 +77,8 @@ class DownloadFilesTest : public ::testing::Test
    protected:
     // Can't be a real one because it's unit test not integration.
     // Create mocks if needs to download things
+    const std::string testApiURL =
+        "https://api.github.com/repos/user123/repoABC/contents/path/to/file.cpp?ref=main";
     const std::string testURL =
         "https://github.com/HugorTorquato/MBA-TCC/tree/main/Implementation/src";
     const std::string testURLNotValid = "https://BLA.com/hugomdq/my-cool-repo/tree/main/src";
@@ -164,7 +168,10 @@ class DownloadFilesTest : public ::testing::Test
 TEST_F(DownloadFilesTest, ValidateConstructorWithASimpleTestURL)
 {
     // Must dereference the pointer
-    EXPECT_EQ(DownloadFiles(testURL, std::move(mockClient)).getOriginalURL(), testURL);
+    // EXPECT_EQ(DownloadFiles(testURL, std::move(mockClient)).getOriginalURL(), testURL);
+
+    DownloadFiles downloader(testURL, std::move(mockClient));
+    EXPECT_EQ(downloader.getOriginalURL(), testURL);
 }
 
 TEST_F(DownloadFilesTest, EmptyURLStringPassedToTheExplicityThrowsInvalidArgumentException)
@@ -190,7 +197,8 @@ TEST_F(DownloadFilesTest, VerifyIfUrlIsAValidGitHubUrlFileOrFolder_testURLToFold
 
 TEST_F(DownloadFilesTest, VerifyIfUrlIsANotValidGitHubUrl)
 {
-    EXPECT_FALSE(DownloadFiles(testURLNotValid, std::move(mockClient)).isUrlFromGitHub());
+    EXPECT_THROW(DownloadFiles(testURLNotValid, std::move(mockClient)).isUrlFromGitHub(),
+                 std::invalid_argument);
 }
 
 TEST_F(DownloadFilesTest, ValidUrlReturnsTrue)
@@ -210,15 +218,7 @@ TEST_F(DownloadFilesTest, InvalidUrlReturnsFalse)
 
 TEST_F(DownloadFilesTest, InvalidUrlReturnsFalseForDifferentUrlFromGitHubSource)
 {
-    mockClient->setShouldSucceed(false);
-    DownloadFiles downlaodFilesObj(testURLNotValid, std::move(mockClient));
-
-    EXPECT_FALSE(downlaodFilesObj.isUrlFromGitHub());
-}
-
-TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfNotValidURL)
-{
-    EXPECT_FALSE(DownloadFiles(testURLNotValid, std::move(mockClient)).isFolder());
+    EXPECT_THROW(DownloadFiles(testURLNotValid, std::move(mockClient)), std::invalid_argument);
 }
 
 TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsTrueIfValidURLFolder)
@@ -231,45 +231,54 @@ TEST_F(DownloadFilesTest, VerfyIfFolderOrFileIsFalseIfValidURLFile)
     EXPECT_FALSE(DownloadFiles(testURLToFile, std::move(mockClient)).isFolder());
 }
 
-TEST_F(DownloadFilesTest, DoNotParseUrlIfNotFromGitHub)
-{
-    DownloadFiles downlaodFilesObj(testURLNotValid, std::move(mockClient));
-    downlaodFilesObj.parseURL(downlaodFilesObj.getOriginalURL());
-
-    EXPECT_EQ(downlaodFilesObj.getBranch(), "");
-    EXPECT_EQ(downlaodFilesObj.getPath(), "");
-    EXPECT_EQ(downlaodFilesObj.getRepo(), "");
-    EXPECT_EQ(downlaodFilesObj.getUser(), "");
-}
-
 TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFolder)
 {
     DownloadFiles downlaodFilesObj(testURLToFolder, std::move(mockClient));
-    downlaodFilesObj.parseURL(testURLToFolder);
 
-    EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
-    EXPECT_EQ(downlaodFilesObj.getPath(), pathtofolder);
-    EXPECT_EQ(downlaodFilesObj.getRepo(), repo);
-    EXPECT_EQ(downlaodFilesObj.getUser(), user);
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_EQ(downlaodFilesObj.getBranch(), "branch");
+        EXPECT_EQ(downlaodFilesObj.getPath(), "path/to/folder");
+        EXPECT_EQ(downlaodFilesObj.getRepo(), "repo");
+        EXPECT_EQ(downlaodFilesObj.getUser(), "user");
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, RetrieveGitHubUrlInfoFromUrlWithFile)
 {
     DownloadFiles downlaodFilesObj(testURLToFile, std::move(mockClient));
-    downlaodFilesObj.parseURL(testURLToFile);
 
-    EXPECT_EQ(downlaodFilesObj.getBranch(), branch);
-    EXPECT_EQ(downlaodFilesObj.getPath(), pathtofile);
-    EXPECT_EQ(downlaodFilesObj.getRepo(), repo);
-    EXPECT_EQ(downlaodFilesObj.getUser(), user);
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
+    {
+        EXPECT_EQ(downlaodFilesObj.getBranch(), "branch");
+        EXPECT_EQ(downlaodFilesObj.getPath(), "path/to/file.cpp");
+        EXPECT_EQ(downlaodFilesObj.getRepo(), "repo");
+        EXPECT_EQ(downlaodFilesObj.getUser(), "user");
+    }
+    else
+    {
+        FAIL() << "URL info is null";
+    }
 }
 
 TEST_F(DownloadFilesTest, RetreveExpectedEndointFromParsedInputUrl)
 {
-    GitHubUrlInfo urlInfo{.m_branch = "branch321",
-                          .m_path = "path123321/to/folder",
-                          .m_repo = "repo123",
-                          .m_user = "torquato"};
+    struct APIUrlInfo
+    {
+        std::string m_branch;
+        std::string m_path;
+        std::string m_repo;
+        std::string m_user;
+    };
+
+    APIUrlInfo urlInfo{.m_branch = "branch321",
+                       .m_path = "path123321/to/folder",
+                       .m_repo = "repo123",
+                       .m_user = "torquato"};
 
     DownloadFiles downlaodFilesObj(customUrl, std::move(mockClient));
     // downlaodFilesObj.parseURL(downlaodFilesObj.getOriginalURL());
@@ -284,10 +293,18 @@ TEST_F(DownloadFilesTest, RetreveExpectedEndointFromParsedInputUrl)
 
 TEST_F(DownloadFilesTest, ThrowInvaldArgumentExceptionIfNotValidEndpoint)
 {
-    GitHubUrlInfo urlInfo{.m_branch = "branch321",
-                          .m_path = "path123321/to/folder",
-                          .m_repo = "repo123",
-                          .m_user = "torquato"};
+    struct WebUrlInfo
+    {
+        std::string m_branch;
+        std::string m_path;
+        std::string m_repo;
+        std::string m_user;
+    };
+
+    WebUrlInfo urlInfo{.m_branch = "branch321",
+                       .m_path = "path123321/to/folder",
+                       .m_repo = "repo123",
+                       .m_user = "torquato"};
 
     DownloadFiles downlaodFilesObj(customMissingagumentsUrl, std::move(mockClient));
 
@@ -394,37 +411,45 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseFolderWithInvalidURLShou
     EXPECT_EQ(root->getChildren()[0]->getName(), "File1.cpp");
 }
 
-TEST_F(DownloadFilesTest, MatchesBothApiAndWebUrls)
+TEST_F(DownloadFilesTest, MatchesOnlyGitHubApiUrls)
 {
-    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    DownloadFiles downlaodFilesObj(testApiURL, std::move(mockClient));
 
-    std::regex github_url_pattern(downlaodFilesObj.getgithubRegexpExpr(RegexpTarget::GITHUB_API));
-
-    struct TestCase
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
     {
-        std::string url;
-        std::string description;
-        std::vector<std::string> expectedGroups;  // capturing groups only
-    };
+        std::regex github_url_pattern(urlInfo->getRegexp());
 
-    std::vector<TestCase> testCases = {
-        {"https://api.github.com/repos/user123/repoABC/contents/path/to/file.cpp?ref=main",
-         "API URL to file",
-         {"user123", "repoABC", "path/to/file.cpp", "main", "", "", "", "", ""}},
-        {"https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/"
-         "source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
-         "File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder",
-         "API URL with long branch name",
-         {"HugorTorquato", "MBA-TCC",
-          "Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
-          "EmptyProjectFoldeStructure/File1.cpp",
-          "5---Download-gitHub-files-in-a-local-temp-folder", "", "", "", "", ""}}};
+        struct TestCase
+        {
+            std::string url;
+            std::string description;
+            std::vector<std::string> expectedGroups;  // capturing groups only
+        };
 
-    for (const auto& test : testCases)
+        std::vector<TestCase> testCases = {
+            {"https://api.github.com/repos/user123/repoABC/contents/path/to/file.cpp?ref=main",
+             "API URL to file",
+             {"user123", "repoABC", "path/to/file.cpp", "main", "", "", "", "", ""}},
+            {"https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/"
+             "observability/"
+             "source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
+             "File1.cpp?ref=5---Download-gitHub-files-in-a-local-temp-folder",
+             "API URL with long branch name",
+             {"HugorTorquato", "MBA-TCC",
+              "Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
+              "EmptyProjectFoldeStructure/File1.cpp",
+              "5---Download-gitHub-files-in-a-local-temp-folder", "", "", "", "", ""}}};
+
+        for (const auto& test : testCases)
+        {
+            std::smatch match;
+            ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
+                << "Failed to match: " << test.url;
+        }
+    }
+    else
     {
-        std::smatch match;
-        ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
-            << "Failed to match: " << test.url;
+        FAIL() << "URL info is null";
     }
 }
 
@@ -432,31 +457,37 @@ TEST_F(DownloadFilesTest, MatchesOnlyGitHubWebUrls)
 {
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    std::regex github_url_pattern(downlaodFilesObj.getgithubRegexpExpr(RegexpTarget::GITHUB));
-
-    struct TestCase
+    if (auto urlInfo = downlaodFilesObj.getUrlInfo(); urlInfo != nullptr)
     {
-        std::string url;
-        std::string description;
-        std::vector<std::string> expectedGroups;  // only the capturing groups
-    };
+        std::regex github_url_pattern(urlInfo->getRegexp());
+        struct TestCase
+        {
+            std::string url;
+            std::string description;
+            std::vector<std::string> expectedGroups;  // only the capturing groups
+        };
 
-    std::vector<TestCase> testCases = {
-        {"https://github.com/HugorTorquato/MBA-TCC/tree/main/Implementation/src",
-         "Web URL to folder (custom)",
-         {"HugorTorquato", "MBA-TCC", "tree", "main", "Implementation/src"}},
-        {"https://github.com/user/repo/blob/dev/path/to/file.cpp",
-         "Web URL to file",
-         {"user", "repo", "blob", "dev", "path/to/file.cpp"}},
-        {"https://github.com/user/repo/tree/main",
-         "Web URL without path",
-         {"user", "repo", "tree", "main", ""}}};
+        std::vector<TestCase> testCases = {
+            {"https://github.com/HugorTorquato/MBA-TCC/tree/main/Implementation/src",
+             "Web URL to folder (custom)",
+             {"HugorTorquato", "MBA-TCC", "tree", "main", "Implementation/src"}},
+            {"https://github.com/user/repo/blob/dev/path/to/file.cpp",
+             "Web URL to file",
+             {"user", "repo", "blob", "dev", "path/to/file.cpp"}},
+            {"https://github.com/user/repo/tree/main",
+             "Web URL without path",
+             {"user", "repo", "tree", "main", ""}}};
 
-    for (const auto& test : testCases)
+        for (const auto& test : testCases)
+        {
+            std::smatch match;
+            ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
+                << "Failed to match: " << test.url;
+        }
+    }
+    else
     {
-        std::smatch match;
-        ASSERT_TRUE(std::regex_match(test.url, match, github_url_pattern))
-            << "Failed to match: " << test.url;
+        FAIL() << "URL info is null";
     }
 }
 

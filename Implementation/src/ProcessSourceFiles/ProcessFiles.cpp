@@ -1,12 +1,15 @@
 #include "ProcessFiles.h"
 
+#include <memory>
 #include <regex>
 #include <stdexcept>
 #include <string>
 
 #include "../Logger/Log.h"
 #include "FolderGraph.h"
+#include "RepoURLFactory.h"
 #include "util/IHttpClient.h"
+#include "util/IRepoURL.h"
 
 namespace
 {
@@ -28,10 +31,10 @@ size_t writeToString(void* contents, size_t size, size_t nmemb, void* userp)
     return size * nmemb;
 }
 
-bool errorWithUrlInfoMember(const GitHubUrlInfo& gitubUrlInfo)
+bool errorWithUrlInfoMember(const IRepoURL& urlInfo)
 {
-    return gitubUrlInfo.m_branch.empty() || gitubUrlInfo.m_path.empty() ||
-           gitubUrlInfo.m_repo.empty() || gitubUrlInfo.m_user.empty();
+    return urlInfo.getBranch().empty() || urlInfo.getPath().empty() || urlInfo.getRepo().empty() ||
+           urlInfo.getUser().empty();
 }
 
 json parseGitHubResponse(const std::string& response)
@@ -53,11 +56,19 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
     {
         throw std::invalid_argument("URL cannot be empty");
     }
+
+    m_urlInfo = RepoURLFactory::createRepoURL(originalURL);
+
+    if (!m_urlInfo)
+    {
+        throw std::invalid_argument("Invalid URL");
+    }
 }
 
 bool DownloadFiles::isValidUrl()
 {
-    // Be vary carrefully when using it. It calls an api to see if it is valid. May generate overhead and slowness
+    // Be vary carrefully when using it. It calls an api to see if it is valid. May generate
+    // overhead and slowness
     std::string response;
     if (!m_httpClient)
     {
@@ -84,11 +95,11 @@ bool DownloadFiles::isUrlFromGitHub(const std::string& url)
     Logger::getInstance().log("H1");
     if (url.empty()) return false;
     Logger::getInstance().log("H2");
-    if (!isUrlGitHubFolderOrFile(
-            url, m_githubRegexpExpr))  // Tem um Bug Aqui, if oher URL than the original one... it
-                                       // fails... it's not generic
-                                       // if (!isUrlGitHubFolderOrFile(url, m_githubRegexpExpr) ||
-                                       //     !isUrlGitHubFolderOrFile(url, m_githubAPIRegexpExpr))
+    // Tem um Bug Aqui, if oher URL than the original one... it
+    if (!isUrlGitHubFolderOrFile(url, m_urlInfo->getRegexp()))
+        // fails... it's not generic
+        // if (!isUrlGitHubFolderOrFile(url, m_githubRegexpExpr) ||
+        //     !isUrlGitHubFolderOrFile(url, m_githubAPIRegexpExpr))
         return false;
     Logger::getInstance().log("H3");
     return true;
@@ -105,27 +116,29 @@ bool DownloadFiles::isFolder()
     return std::regex_match(m_originalURL, github_url_pattern);
 }
 
-std::string DownloadFiles::getgithubRegexpExpr(RegexpTarget target) const
-{
-    if (target == RegexpTarget::GITHUB_API) return m_githubAPIRegexpExpr;
-    // else if (target == RegexpTarget::GITHUB)
-    return m_githubRegexpExpr;
-}
+// std::string DownloadFiles::getgithubRegexpExpr(RegexpTarget target) const
+// {
+//     if (target == RegexpTarget::GITHUB_API)
+//         return m_githubAPIRegexpExpr;
+//     else if (target == RegexpTarget::GITHUB)
+//         return m_urlInfo->getRegexp();
+// }
+
 std::string DownloadFiles::getBranch() const
 {
-    return m_gitubUrlInfo.m_branch;
+    return m_urlInfo->getBranch();
 }
 std::string DownloadFiles::getPath() const
 {
-    return m_gitubUrlInfo.m_path;
+    return m_urlInfo->getPath();
 }
 std::string DownloadFiles::getRepo() const
 {
-    return m_gitubUrlInfo.m_repo;
+    return m_urlInfo->getRepo();
 }
 std::string DownloadFiles::getUser() const
 {
-    return m_gitubUrlInfo.m_user;
+    return m_urlInfo->getUser();
 }
 
 FolderGraph DownloadFiles::getFolderGraph() const
@@ -133,33 +146,17 @@ FolderGraph DownloadFiles::getFolderGraph() const
     return m_folderGraph;
 }
 
-void DownloadFiles::parseURL(const std::string& url)
+IRepoURL* DownloadFiles::getUrlInfo() const
 {
-    // if (!isUrlFromGitHub(url))
-    if (!isUrlFromGitHub())
-    {
-        Logger::getInstance().log("[DownloadFiles::parseURL] Error with URL!!! URL : " + url);
-        return;
-    }
-
-    std::regex pattern(m_githubRegexpExpr);
-    std::smatch match;
-
-    if (std::regex_match(url, match, pattern))
-    {
-        GitHubUrlInfo info;
-        m_gitubUrlInfo.m_user = match[1].str();
-        m_gitubUrlInfo.m_repo = match[2].str();
-        m_gitubUrlInfo.m_branch = match[4].str();
-        m_gitubUrlInfo.m_path = match[6].matched ? match[6].str() : "";
-    }
+    return m_urlInfo.get();
 }
 
 std::string DownloadFiles::getEndpointToListFilesFromGitHub(const std::string& url)
 {
-    parseURL(url);
-    return "https://api.github.com/repos/" + m_gitubUrlInfo.m_user + "/" + m_gitubUrlInfo.m_repo +
-           "/contents/" + m_gitubUrlInfo.m_path + "?ref=" + m_gitubUrlInfo.m_branch;
+    // Since i'm receiving an url here, i need to creae a new loal object to parse it correctly.
+    auto urlInfo = RepoURLFactory::createRepoURL(url);
+    return "https://api.github.com/repos/" + urlInfo->getUser() + "/" + urlInfo->getRepo() +
+           "/contents/" + urlInfo->getPath() + "?ref=" + urlInfo->getBranch();
 }
 
 std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::string>& url)
@@ -169,15 +166,14 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
 
     const std::string endpointToListFiles = getEndpointToListFilesFromGitHub(definedUrl);
 
-    if (endpointToListFiles.empty() || errorWithUrlInfoMember(m_gitubUrlInfo))
+    if (endpointToListFiles.empty() || (m_urlInfo && errorWithUrlInfoMember(*m_urlInfo)))
     {
         const std::string errorMessage =
             "[ProcessFiles][listGitHubContentFromURL] Error with endpoint!!! "
             " endpointToListFiles:  " +
-            endpointToListFiles + " gitubUrlInfo.m_branch:" + m_gitubUrlInfo.m_branch +
-            " gitubUrlInfo.m_path:" + m_gitubUrlInfo.m_path +
-            " gitubUrlInfo.m_repo:" + m_gitubUrlInfo.m_repo +
-            " gitubUrlInfo.m_user:" + m_gitubUrlInfo.m_user;
+            endpointToListFiles + " gitubUrlInfo.m_branch:" + getBranch() +
+            " gitubUrlInfo.m_path:" + getPath() + " gitubUrlInfo.m_repo:" + getRepo() +
+            " gitubUrlInfo.m_user:" + getUser();
         Logger::getInstance().log(errorMessage);
         throw std::invalid_argument(errorMessage);
         return response;
@@ -295,6 +291,5 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
 
     return true;
 }
-
 
 // TODO: iF there is string representing something it's wring... create a class for that
