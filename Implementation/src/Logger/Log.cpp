@@ -4,7 +4,7 @@
 #include <iostream>
 // #include <string>
 
-#define CERRlOGS 1
+#define CERRlOGS 0
 
 Logger::Logger()
 {

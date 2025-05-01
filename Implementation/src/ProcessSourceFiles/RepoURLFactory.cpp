@@ -21,10 +21,10 @@ std::unique_ptr<IRepoURL> RepoURLFactory::createRepoURL(const std::string& url)
     }
 }
 
-bool RepoURLFactory::isFromGtHub(const std::string& url){
+bool RepoURLFactory::isFromGtHub(const std::string& url)
+{
     Logger::getInstance().log("[RepoURLFactory::isFromGtHub] Evaluating : " + url);
-    if(url.empty())
-        return false;
+    if (url.empty()) return false;
 
     if (url.find("api.github.com") != std::string::npos)
     {

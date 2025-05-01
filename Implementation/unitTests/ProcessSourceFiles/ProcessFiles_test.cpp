@@ -33,7 +33,7 @@ class MockHttpClient : public IHttpClient
         const std::string& url, std::string& response,
         std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback) override
     {
-        std::cout << "[MockHttpClient] Fetching URL: " << url << std::endl;
+        // std::cout << "[MockHttpClient] Fetching URL: " << url << std::endl;
         if (m_mockResponses.empty())
             response = m_mockResponse;
         else if (currentIndex < m_mockResponses.size())
@@ -41,7 +41,7 @@ class MockHttpClient : public IHttpClient
         else
             response = "{}";  // Default empty JSON
 
-        std::cout << "[MockHttpClient] Fetching response: " << response << std::endl;
+        // std::cout << "[MockHttpClient] Fetching response: " << response << std::endl;
         return m_shouldSucceed;
     }
 
