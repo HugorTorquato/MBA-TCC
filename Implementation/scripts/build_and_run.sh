@@ -8,6 +8,9 @@ cd ../build
 echo "<> Running CMake..."
 cmake ..
 
+# echo "<> Use ASAN (AddressSanitizer) to catch the exact location:..."
+# cmake -DCMAKE_CXX_FLAGS="-fsanitize=address -g" ..
+
 echo "<> Running Auto-format..."
 make format
 
