@@ -43,6 +43,25 @@ void verifyErrorWithCurlResponse(const CURLcode& res)
         throw std::runtime_error("Error with curl: " + std::string(curl_easy_strerror(res)));
     }
 }
+
+struct curl_slist* defineHeaders()
+{
+    // Load GitHub token from environment
+    const char* tokenEnv = std::getenv("GITHUB_TOKEN");
+    std::string token = tokenEnv ? tokenEnv : "";
+
+    // Logger::getInstance().log("[CurlHttpClient::defineHeaders] Token: " +
+    //                           token);  // For debugging purposes
+
+    struct curl_slist* headers = nullptr;
+    if (!token.empty())
+    {
+        headers = curl_slist_append(headers, ("Authorization: token " + token).c_str());
+        headers = curl_slist_append(headers, "Accept: application/vnd.github+json");
+    }
+
+    return headers;
+}
 }  // namespace
 
 CurlHttpClient::CurlHttpClient() : m_curl(curl_easy_init())
@@ -70,7 +89,9 @@ bool CurlHttpClient::getResponseFronUrl(
     Logger::getInstance().log("[CurlHttpClient::getResponseFronUrl] Fetching URL: " + url);
 
     if (!m_curl) return false;
+    auto headers = defineHeaders();
 
+    curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, writeCallback.value_or(writeToStringCallback));
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, &response);
@@ -106,6 +127,9 @@ bool CurlHttpClient::downloadFile(
         throw std::runtime_error("Failed to open file: " + outputPath);
     }
 
+    auto headers = defineHeaders();
+
+    curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, writeCallback.value_or(writeToFileCallback));
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, file);

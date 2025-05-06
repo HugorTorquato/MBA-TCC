@@ -115,3 +115,6 @@ Thumbs.db
 # Testing output
 htmlcov/
 coverage/
+
+.env
+/app/temp
