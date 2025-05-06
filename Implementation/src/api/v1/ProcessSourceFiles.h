@@ -52,7 +52,8 @@ class ProcessSourceFiles
                     // The route is just a bridge... and not suppose to have logic in here
                     DownloadFiles downoadFiles(git_url, std::make_unique<CurlHttpClient>());
 
-                    return crow::response(downoadFiles.listGitHubContentFromURL(std::nullopt));
+                    return crow::response(
+                        downoadFiles.listGitHubContentFromURL(downoadFiles.getOriginalURL()));
                 });
 
         CROW_ROUTE(app, "/api/v1/downloadFilesInUrl")
@@ -70,7 +71,8 @@ class ProcessSourceFiles
                     // The route is just a bridge... and not suppose to have logic in here
                     DownloadFiles downoadFiles(git_url, std::make_unique<CurlHttpClient>());
 
-                    return crow::response(downoadFiles.downloadURLContentIntoTempFolder());
+                    int response = downoadFiles.downloadURLContentIntoTempFolder() ? 200 : 500;
+                    return crow::response(response);
                 });
     }
 };

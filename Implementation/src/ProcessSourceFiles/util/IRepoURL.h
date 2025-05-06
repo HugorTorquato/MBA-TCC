@@ -21,4 +21,5 @@ class IRepoURL
     virtual bool isFromGtHub() const = 0;  // Use the original url passed to create the object
     virtual bool isFromGtHub(const std::string& url) const = 0;
     virtual bool isFolder(const std::string& url) const = 0;
+    virtual bool isApi() const = 0;
 };

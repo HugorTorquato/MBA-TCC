@@ -21,6 +21,7 @@ class GitHubAPIUrlInfo : public IRepoURL
     bool isFromGtHub() const override;
     bool isFromGtHub(const std::string& url) const override;
     bool isFolder(const std::string& url) const override;
+    bool isApi() const override;
 
    private:
     std::string m_branch;

@@ -6,7 +6,7 @@
 
 std::unique_ptr<IRepoURL> RepoURLFactory::createRepoURL(const std::string& url)
 {
-    Logger::getInstance().log("[RepoURLFactory::createRepoURL]Creating RepoURL for: " + url);
+    Logger::getInstance().log("[RepoURLFactory::createRepoURL] Creating RepoURL for: " + url);
     if (url.find("api.github.com") != std::string::npos)
     {
         return std::make_unique<GitHubAPIUrlInfo>(url);

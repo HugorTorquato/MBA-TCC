@@ -50,6 +50,11 @@ bool GitHubAPIUrlInfo::isFromGtHub(const std::string& url) const
     return !url.empty() && isValidUrl(url);
 }
 
+bool GitHubAPIUrlInfo::isApi() const
+{
+    return true;
+}
+
 void GitHubAPIUrlInfo::parseURL(const std::string& url)
 {
     Logger::getInstance().log("[GitHubAPIUrlInfo::parseURL] url : " + url);
@@ -69,7 +74,6 @@ void GitHubAPIUrlInfo::parseURL(const std::string& url)
         m_branch = match[4].str();
         m_path = match[6].matched ? match[6].str() : "";
     }
-    Logger::getInstance().log("H1");
 }
 
 bool GitHubAPIUrlInfo::isFolder(const std::string& url) const

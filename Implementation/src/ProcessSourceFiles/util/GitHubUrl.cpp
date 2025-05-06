@@ -47,6 +47,11 @@ bool GitHubUrlInfo::isFromGtHub(const std::string& url) const
     return !url.empty() && isValidUrl(url);
 }
 
+bool GitHubUrlInfo::isApi() const
+{
+    return false;
+}
+
 void GitHubUrlInfo::parseURL(const std::string& url)
 {
     Logger::getInstance().log("[GitHubUrlInfo::parseURL] url : " + url);
