@@ -59,6 +59,14 @@ void validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(
         throw std::invalid_argument(errorMessage);
     }
 }
+
+// TODO: Make it more generic, becauase can be other types for other languages
+bool isCppSourceFile(const std::string& fileName)
+{
+    Logger::getInstance().log("[DownloadFiles::isCppSourceFile] fileName: " + fileName);
+    return fileName.find(".cpp") != std::string::npos || fileName.find(".h") != std::string::npos ||
+           fileName.find(".hpp") != std::string::npos;
+}
 }  // namespace
 
 DownloadFiles::DownloadFiles(const std::string& originalURL,
@@ -188,80 +196,73 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
 
     for (const auto& item : parsed)
     {
-        std::shared_ptr<ItemInFolder> child =
-            std::make_shared<ItemInFolder>(item.value("name", ""), item.value("type", ""));
+        const std::string name = item.value("name", "");
+        const std::string typeStr = item.value("type", "");
 
-        if (child->getType() == ItemEnumType::UNKNOWN)
+        std::shared_ptr<ItemInFolder> child = std::make_shared<ItemInFolder>(name, typeStr);
+
+        switch (child->getType())
         {
-            Logger::getInstance().log(
-                "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid child, no type "
-                "defined");
-            continue;
-        }
-
-        Logger::getInstance().log(
-            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Name: " +
-            child->getName());  // remove
-
-        if (child->getType() == ItemEnumType::SOURCEFILE)
-        {
-            try
+            case SOURCEFILE:
             {
-                auto downloadUrl = item.value("download_url", "");
-                if (!downloadUrl.empty())
+                try
                 {
-                    m_httpClient->downloadFile(downloadUrl, m_tempFolder + item.value("path", ""),
-                                               writeToString);
+                    const std::string downloadUrl = item.value("download_url", "");
+                    const std::string path = item.value("path", "");
+
+                    if (!downloadUrl.empty() && isCppSourceFile(child->getName()))
+                    {
+                        m_httpClient->downloadFile(downloadUrl, m_tempFolder + path, writeToString);
+                    }
                 }
+                catch (const std::exception& e)
+                {
+                    Logger::getInstance().log(
+                        "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error "
+                        "downloading "
+                        "file: " +
+                        std::string(e.what()));
+                }
+
+                m_folderGraph.addEdge(parent, child);
+                Logger::getInstance().log("SOURCEFILE Name: " + child->getName());
+                break;
             }
-            catch (const std::exception& e)
+            case DIR:
+            {
+                // No need to create the folders because wehn downloading the files, the folders are
+                // created
+
+                const std::string folderUrl = item.value("url", "");
+
+                if (!RepoURLFactory::isFromGtHub(folderUrl))
+                {
+                    Logger::getInstance().log(
+                        "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid folder "
+                        "URL, "
+                        "folder " +
+                        child->getName() +
+                        " will not be included in the folder graph : " + folderUrl);
+                    continue;
+                }
+
+                m_folderGraph.addEdge(parent, child);
+                Logger::getInstance().log("DIR Name: " + child->getName());
+
+                callRecursiveDoenloadMethod(folderUrl, child);  // child passa a ser o parent
+                break;
+            }
+            case UNKNOWN:
+            default:
             {
                 Logger::getInstance().log(
-                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error downloading "
-                    "file: " +
-                    std::string(e.what()));
+                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Default child, no "
+                    "type "
+                    "defined");
+                break;
             }
-
-            m_folderGraph.addEdge(parent, child);
-            Logger::getInstance().log("Name2: " + child->getName());
         }
-        else if (child->getType() == ItemEnumType::DIR)
-        {
-            const std::string folderUrl = item.value("url", "");
-
-            // auto repoUrl = RepoURLFactory::createRepoURL(folderUrl);
-
-            // if (repoUrl && !repoUrl->isFromGtHub())
-            if (!RepoURLFactory::isFromGtHub(folderUrl))
-            {
-                Logger::getInstance().log(
-                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid folder URL, "
-                    "folder " +
-                    child->getName() + " will not be included in the folder graph : " + folderUrl);
-                continue;
-            }
-
-            m_folderGraph.addEdge(parent, child);
-            Logger::getInstance().log("Name3: " + child->getName());
-
-            callRecursiveDoenloadMethod(folderUrl, child);  // child passa a ser o parent
-
-            // if (auto listedFilesFromGitHub = listGitHubContentFromURL(folderUrl);
-            //     !listedFilesFromGitHub.empty())
-            // {
-            //     json parsedChild = parseGitHubResponse(listedFilesFromGitHub);
-
-            //     // recursivelyDownloadFilesPopulatingGraph(parsedChild, child); //child passa a
-            //     ser o parent
-            // }
-            // Create temp local folder
-        }
-
-        // std::string name = item.value("name", "");
-        // Logger::getInstance().log("Name: " + name);
     }
-
-    // must have a stop condition
 }
 
 bool DownloadFiles::downloadURLContentIntoTempFolder()

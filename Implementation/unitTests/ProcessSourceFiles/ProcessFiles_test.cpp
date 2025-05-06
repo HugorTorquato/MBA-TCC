@@ -675,3 +675,87 @@ TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningOneFile)
 }
 
 // Implement tests for folder now
+TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiThrowsExceptionIfNotValidURL)
+{
+    const json expectedResponse = json::parse(R"(
+    [
+        {"name": "Folder1", "type": "dir", "url": "BLA", "path": "Folder1"}
+    ]
+    )");
+
+    EXPECT_TRUE(expectedResponse.is_array());
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    EXPECT_THROW(downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(
+                     expectedResponse, downlaodFilesObj.getFolderGraph().getRoot()),
+                 std::invalid_argument);
+}
+
+TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningFilesAndNotAndEmtyFolder)
+{
+    const json expectedResponse = json::parse(R"(
+    [
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File1.cpp"},
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File2.cpp"},
+        {"name": "Folder1", "type": "dir", "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c5391", "path": "Folder2"}
+    ]
+    )");
+
+    EXPECT_TRUE(expectedResponse.is_array());
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(
+        expectedResponse, downlaodFilesObj.getFolderGraph().getRoot());
+
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File1.cpp"));
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File2.cpp"));
+    EXPECT_FALSE(fs::exists(tempFolder + "Folder2"));  // Don't create folders, only with files
+}
+
+TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningFilesAndOneFolderWithFile)
+{
+    const json expectedResponse = json::parse(R"(
+    [
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File1.cpp"},
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File2.cpp"},
+        {"name": "Folder1", "type": "dir", "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c5391", "path": "Folder2"},
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder2/File1.cpp"}
+    ]
+    )");
+
+    EXPECT_TRUE(expectedResponse.is_array());
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(
+        expectedResponse, downlaodFilesObj.getFolderGraph().getRoot());
+
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File1.cpp"));
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File2.cpp"));
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder2"));  // Don't create folders, only with files
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder2/File1.cpp"));
+}
+
+TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningOnlyValidFilesAndFolders)
+{
+    const json expectedResponse = json::parse(R"(
+    [
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File1.cpp"},
+        {"name": "File1.App", "type": "file", "download_url": "BLA", "path": "Folder1/File2.App"},
+        {"name": "Folder1", "type": "dir", "url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c5391", "path": "Folder2"}
+    ]
+    )");
+
+    EXPECT_TRUE(expectedResponse.is_array());
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(
+        expectedResponse, downlaodFilesObj.getFolderGraph().getRoot());
+
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File1.cpp"));
+    EXPECT_FALSE(fs::exists(tempFolder + "Folder1/File2.App"));  // .App not supported
+    EXPECT_FALSE(fs::exists(tempFolder + "Folder2"));  // Don't create folders, only with files
+}
