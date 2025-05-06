@@ -15,7 +15,7 @@ class CurlHttpClient : public IHttpClient
         const std::string& url, std::string& response,
         std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback) override;
 
-    void downloadFile(
+    bool downloadFile(
         const std::string& url, const std::string& outputPath,
         std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback) override;
 
