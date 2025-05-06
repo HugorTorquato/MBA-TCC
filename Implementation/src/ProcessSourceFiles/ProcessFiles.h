@@ -25,6 +25,7 @@ class DownloadFiles : public IDownloadFiles
     std::string getPath() const override;
     std::string getRepo() const override;
     std::string getUser() const override;
+    std::string getTempFolder() const override;
     FolderGraph getFolderGraph() const override;
     std::string getEndpointToListFilesFromGitHub(const std::string& url) override;
     IRepoURL* getUrlInfo() const override;
@@ -45,4 +46,6 @@ class DownloadFiles : public IDownloadFiles
     std::unique_ptr<IRepoURL> m_urlInfo;
     FolderGraph m_folderGraph;
     std::unique_ptr<IHttpClient> m_httpClient;
+
+    const std::string m_tempFolder = "/app/temp/";
 };

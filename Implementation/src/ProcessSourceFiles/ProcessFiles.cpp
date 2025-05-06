@@ -37,6 +37,28 @@ json parseGitHubResponse(const std::string& response)
     if (!parsed.is_array()) throw std::invalid_argument("GitHub response must be an array.");
     return parsed;
 }
+
+void validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(
+    const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
+{
+    if (!parsed.is_array())
+    {
+        std::string errorMessage =
+            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
+            "array! PrsedJson is not an array!";
+        Logger::getInstance().log(errorMessage);
+        throw std::invalid_argument(errorMessage);
+    }
+
+    if (!parent)
+    {
+        std::string errorMessage =
+            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
+            "array! Parent pointer is not valid";
+        Logger::getInstance().log(errorMessage);
+        throw std::invalid_argument(errorMessage);
+    }
+}
 }  // namespace
 
 DownloadFiles::DownloadFiles(const std::string& originalURL,
@@ -77,25 +99,6 @@ std::string DownloadFiles::getOriginalURL() const
     return m_originalURL;
 }
 
-// bool DownloadFiles::isFolder()
-// {
-//     if (!isUrlFromGitHub())
-//     {
-//         Logger::getInstance().log("[DownloadFiles::isFolder] Not a valid path !!!");
-//         return false;
-//     }
-//     std::regex github_url_pattern(R""(.*tree.*)"");
-//     return std::regex_match(m_originalURL, github_url_pattern);
-// }
-
-// std::string DownloadFiles::getgithubRegexpExpr(RegexpTarget target) const
-// {
-//     if (target == RegexpTarget::GITHUB_API)
-//         return m_githubAPIRegexpExpr;
-//     else if (target == RegexpTarget::GITHUB)
-//         return m_urlInfo->getRegexp();
-// }
-
 std::string DownloadFiles::getBranch() const
 {
     return m_urlInfo->getBranch();
@@ -111,6 +114,11 @@ std::string DownloadFiles::getRepo() const
 std::string DownloadFiles::getUser() const
 {
     return m_urlInfo->getUser();
+}
+
+std::string DownloadFiles::getTempFolder() const
+{
+    return m_tempFolder;
 }
 
 FolderGraph DownloadFiles::getFolderGraph() const
@@ -176,10 +184,7 @@ void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>
 void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
 {
-    if (!parsed.is_array())
-        throw std::invalid_argument(
-            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
-            "array!");
+    validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(parsed, parent);
 
     for (const auto& item : parsed)
     {
@@ -191,7 +196,7 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
             Logger::getInstance().log(
                 "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid child, no type "
                 "defined");
-            return;
+            continue;
         }
 
         Logger::getInstance().log(
@@ -200,16 +205,23 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
 
         if (child->getType() == ItemEnumType::SOURCEFILE)
         {
-            // // try to download
-            // try {
-            //     // if (!downloadUrl.empty())
-            //     // {
-            //     //     m_httpClient->downloadFile(downloadUrl, item.value("name", ""),
-            //     writeToString);
-            //     // }
-            // } catch (declaration) {
+            try
+            {
+                auto downloadUrl = item.value("download_url", "");
+                if (!downloadUrl.empty())
+                {
+                    m_httpClient->downloadFile(downloadUrl, m_tempFolder + item.value("path", ""),
+                                               writeToString);
+                }
+            }
+            catch (const std::exception& e)
+            {
+                Logger::getInstance().log(
+                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error downloading "
+                    "file: " +
+                    std::string(e.what()));
+            }
 
-            // }
             m_folderGraph.addEdge(parent, child);
             Logger::getInstance().log("Name2: " + child->getName());
         }

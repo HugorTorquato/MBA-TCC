@@ -19,6 +19,8 @@ std::unique_ptr<IRepoURL> RepoURLFactory::createRepoURL(const std::string& url)
     {
         throw std::invalid_argument("Unsupported URL");
     }
+
+    return nullptr;
 }
 
 bool RepoURLFactory::isFromGtHub(const std::string& url)
@@ -40,4 +42,6 @@ bool RepoURLFactory::isFromGtHub(const std::string& url)
     {
         throw std::invalid_argument("Unsupported URL");
     }
+
+    return false;
 }

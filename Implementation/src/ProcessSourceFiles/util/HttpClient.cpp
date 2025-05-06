@@ -119,4 +119,5 @@ bool CurlHttpClient::downloadFile(
 
     Logger::getInstance().log("[CurlHttpClient::downloadFile] File downloaded successfully to: " +
                               outputPath);
+    return (res == CURLE_OK);
 }

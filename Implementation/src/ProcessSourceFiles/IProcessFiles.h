@@ -19,6 +19,7 @@ class IDownloadFiles
     virtual std::string getPath() const = 0;
     virtual std::string getRepo() const = 0;
     virtual std::string getUser() const = 0;
+    virtual std::string getTempFolder() const = 0;
     virtual FolderGraph getFolderGraph() const = 0;
     virtual std::string getEndpointToListFilesFromGitHub(const std::string& url) = 0;
     virtual const IRepoURL* getUrlInfo() const = 0;

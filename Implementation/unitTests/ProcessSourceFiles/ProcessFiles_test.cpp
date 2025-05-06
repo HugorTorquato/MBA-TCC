@@ -5,12 +5,16 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <filesystem>
+#include <fstream>  // Required for std::ofstream
 #include <regex>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
+
+namespace fs = std::filesystem;
 
 class MockHttpClient : public IHttpClient
 {
@@ -19,6 +23,9 @@ class MockHttpClient : public IHttpClient
     std::string m_mockResponse;
     std::vector<std::string> m_mockResponses;
     unsigned currentIndex = 0;
+
+    std::string m_fileToDownload;
+    std::string m_filecontent;
 
    public:
     // Constructor to configure behavior
@@ -45,10 +52,27 @@ class MockHttpClient : public IHttpClient
         return m_shouldSucceed;
     }
 
-    void downloadFile(
+    bool downloadFile(
         const std::string& url, const std::string& outputPath,
         std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback) override
     {
+        // Simulate downloading a file by just returning true
+        // std::cout << "[MockHttpClient] Downloading file from URL: " << url
+        //           << " to output path: " << outputPath << std::endl;
+
+        fs::create_directories(fs::path(outputPath).parent_path());
+
+        // Create and write to the file
+        std::ofstream outFile(outputPath);
+        if (!outFile)
+        {
+            throw std::runtime_error("Failed to create file: " + outputPath);
+        }
+
+        outFile << m_filecontent;
+        outFile.close();
+
+        return m_shouldSucceed;
     }
 
     void setShouldSucceed(bool shouldSucceed)
@@ -69,6 +93,11 @@ class MockHttpClient : public IHttpClient
     void setCurrentIndex(unsigned index)
     {
         currentIndex = index;
+    }
+
+    void setFilecontent(const std::string& content)
+    {
+        m_filecontent = content;
     }
 };
 
@@ -153,6 +182,7 @@ class DownloadFilesTest : public ::testing::Test
 
    protected:
     std::unique_ptr<MockHttpClient> mockClient;  // Member to persist across tests
+    const std::string tempFolder = "/app/temp/";
 
     void SetUp() override
     {
@@ -162,6 +192,7 @@ class DownloadFilesTest : public ::testing::Test
     void TearDown() override
     {
         // No need to clean mockClient, std::unique_ptr<> handles it.
+        fs::remove_all(tempFolder);
     }
 };
 
@@ -595,3 +626,52 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolderAndFile)
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
     EXPECT_EQ(root->getChildren().size(), 2);
 }
+
+TEST_F(DownloadFilesTest, throwInvaldArgumentIfParsedNotAnArray)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    json emptyJson = R"({})"_json;
+    EXPECT_THROW(downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(emptyJson, nullptr),
+                 std::invalid_argument);
+}
+
+TEST_F(DownloadFilesTest, throwInvaldArgumentIfNullParentPointer)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    json valdArrayJson = R"(
+    [
+        {"name": "File1.cpp", "type": "file"}
+    ]
+    )"_json;
+    EXPECT_THROW(downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(valdArrayJson, nullptr),
+                 std::invalid_argument);
+}
+
+TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningOneFile)
+{
+    // The reason expectedResponse.is_array() is returning false is because you're passing a string
+    // literal (inside R"( ... )") directly to the json constructor — so it parses it as a JSON
+    //  string, not as an actual JSON array. To fix this, you must parse the raw JSON string
+    // into a nlohmann::json object using json::parse.
+
+    const json expectedResponse = json::parse(R"(
+    [
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File1.cpp"},
+        {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "Folder1/File2.cpp"}
+    ]
+    )");
+
+    EXPECT_TRUE(expectedResponse.is_array());
+
+    mockClient->setFilecontent(tempFolder + "File1.cpp");
+
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+
+    downlaodFilesObj.recursivelyDownloadFilesPopulatingGraph(
+        expectedResponse, downlaodFilesObj.getFolderGraph().getRoot());
+
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File1.cpp"));
+    EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File2.cpp"));
+}
+
+// Implement tests for folder now
