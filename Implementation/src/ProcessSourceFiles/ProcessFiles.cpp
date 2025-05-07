@@ -71,14 +71,32 @@ bool isCppSourceFile(const std::string& fileName)
     return fileName.find(".cpp") != std::string::npos || fileName.find(".h") != std::string::npos ||
            fileName.find(".hpp") != std::string::npos;
 }
+
+std::shared_ptr<ItemInFolder> instantiateChidFromParsedJsonItem(const json& item)
+{
+    Logger::getInstance().log("[DownloadFiles::instantiateChidFromParsedJsonItem]");
+
+    const std::string name = item.value("name", "");
+    const std::string pathStr = item.value("path", "");
+    const unsigned int sizeInt = item.value("size", 0);
+    const std::string urlStr = item.value("url", "");
+    const std::string html_urlStr = item.value("html_url", "");
+    // TODO: Maybe it's better to use this instead of url
+    const std::string git_urlStr = item.value("git_url", "");
+    const std::string download_urlStr = item.value("download_url", "");
+    const std::string typeStr = item.value("type", "");
+
+    return std::make_shared<ItemInFolder>(name, pathStr, sizeInt, urlStr, html_urlStr, git_urlStr,
+                                          download_urlStr, typeStr);
+}
 }  // namespace
 
 DownloadFiles::DownloadFiles(const std::string& originalURL,
                              std::unique_ptr<IHttpClient> httpClient)
     : m_originalURL(originalURL),
       m_httpClient(std::move(httpClient)),
-      m_folderGraph(
-          FolderGraph(std::make_shared<ItemInFolder>("root", "", "0", "", "", "", "", "dir")))
+      m_folderGraph(FolderGraph(std::make_shared<ItemInFolder>(
+          "root", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr", "download_urlStr", "dir")))
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
@@ -161,6 +179,7 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
     Logger::getInstance().log("[ProcessFiles][listGitHubContentFromURL] definedUrl: " + definedUrl);
 
     const std::string endpointToListFiles = getEndpointToListFilesFromGitHub(definedUrl);
+
     Logger::getInstance().log("[ProcessFiles][listGitHubContentFromURL] endpointToListFiles: " +
                               endpointToListFiles);
 
@@ -199,24 +218,6 @@ void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>
         json parsed = parseGitHubResponse(listedFilesFromGitHub);
         recursivelyDownloadFilesPopulatingGraph(parsed, parent);
     }
-}
-
-std::shared_ptr<ItemInFolder> instantiateChidFromParsedJsonItem(const json& item)
-{
-    Logger::getInstance().log("[DownloadFiles::instantiateChidFromParsedJsonItem]");
-
-    const std::string name = item.value("name", "");
-    const std::string pathStr = item.value("path", "");
-    const std::string sizeStr = item.value("size", "");
-    const std::string urlStr = item.value("url", "");
-    const std::string html_urlStr = item.value("html_url", "");
-    // TODO: Maybe it's better to use this instead of url
-    const std::string git_urlStr = item.value("git_url", "");
-    const std::string download_urlStr = item.value("download_url", "");
-    const std::string typeStr = item.value("type", "");
-
-    return std::make_shared<ItemInFolder>(name, pathStr, sizeStr, urlStr, html_urlStr, git_urlStr,
-                                          download_urlStr, typeStr);
 }
 
 void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(

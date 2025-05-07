@@ -17,7 +17,7 @@ class ItemInFolder
    public:
     ItemInFolder() = delete;  // Can only initialize a node with a name
     // ItemInFolder(const std::string& name, const std::string& type);
-    ItemInFolder(const std::string& name, const std::string& path, const std::string& size,
+    ItemInFolder(const std::string& name, const std::string& path, const unsigned int size,
                  const std::string& url, const std::string& html_url, const std::string& git_url,
                  const std::string& download_url, const std::string& type);
 
@@ -35,7 +35,7 @@ class ItemInFolder
 
     void setName(const std::string& name);
     void setPath(const std::string& path);
-    void setSize(const std::string& size);
+    void setSize(const unsigned int size);
     void setUrl(const std::string& url);
     void setHtmlUrl(const std::string& gitUrl);
     void setGitUrl(const std::string& name);

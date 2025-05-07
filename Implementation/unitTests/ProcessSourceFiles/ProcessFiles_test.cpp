@@ -153,7 +153,7 @@ class DownloadFilesTest : public ::testing::Test
         "url": "",
         "html_url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1",
         "git_url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/trees/48f33dcb5d6ca7dca35c1c9fa5eea4206c5fdcda",
-        "download_url": null,
+        "download_url": "null",
         "type": "dir",
         "_links": {
             "self": "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1?ref=5---Download-gitHub-files-in-a-local-temp-folder",
@@ -169,7 +169,7 @@ class DownloadFilesTest : public ::testing::Test
         "url": "",
         "html_url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2",
         "git_url": "https://api.github.com/repos/HugorTorquato/MBA-TCC/git/trees/4d438c58d6ad07c1cc7f682628854a07d7a38ad7",
-        "download_url": null,
+        "download_url": "null",
         "type": "dir",
         "_links": {
             "self": "https://api.github.com/repos/HugorTorquato/MBA-TCC/contents/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2?ref=5---Download-gitHub-files-in-a-local-temp-folder",

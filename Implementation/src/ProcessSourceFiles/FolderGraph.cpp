@@ -6,12 +6,12 @@
 #include "../Logger/Log.h"
 
 ItemInFolder::ItemInFolder(const std::string& name, const std::string& path,
-                           const std::string& size, const std::string& url,
+                           const unsigned int size, const std::string& url,
                            const std::string& html_url, const std::string& git_url,
                            const std::string& download_url, const std::string& type)
     : m_name(name),
       m_path(std::filesystem::path(path)),
-      m_size(static_cast<unsigned int>(std::stoul(size))),
+      m_size(size),
       m_url(url),
       m_html_url(html_url),
       m_git_url(git_url),
@@ -84,9 +84,9 @@ void ItemInFolder::setPath(const std::string& path)
 {
     m_path = std::filesystem::path(path);
 }
-void ItemInFolder::setSize(const std::string& size)
+void ItemInFolder::setSize(const unsigned int size)
 {
-    m_size = static_cast<unsigned int>(std::stoul(size));
+    m_size = size;
 }
 void ItemInFolder::setUrl(const std::string& url)
 {

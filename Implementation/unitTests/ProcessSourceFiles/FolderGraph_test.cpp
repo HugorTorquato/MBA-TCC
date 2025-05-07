@@ -9,19 +9,18 @@
 class FolderGraphTest : public ::testing::Test
 {
    protected:
-    const std::shared_ptr<ItemInFolder> root =
-        instantiateChid("root", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
-                        "download_urlStr", "typeStr");
+    const std::shared_ptr<ItemInFolder> root = instantiateChid(
+        "root", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr", "download_urlStr", "typeStr");
 
     const std::shared_ptr<ItemInFolder> child1 =
-        instantiateChid("child1", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
+        instantiateChid("child1", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr",
                         "download_urlStr", "typeStr");
     const std::shared_ptr<ItemInFolder> child2 =
-        instantiateChid("child2", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
+        instantiateChid("child2", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr",
                         "download_urlStr", "typeStr");
 
     std::shared_ptr<ItemInFolder> instantiateChid(const std::string& name, const std::string& path,
-                                                  const std::string& size, const std::string& url,
+                                                  const unsigned int size, const std::string& url,
                                                   const std::string& html_url,
                                                   const std::string& git_url,
                                                   const std::string& download_url,
@@ -66,6 +65,29 @@ TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddChieldPassingTwochildre
     EXPECT_EQ(graph.getRoot()->getChildren().size(), 2);
     EXPECT_EQ(graph.getRoot()->getChildren()[0]->getName(), "child1");
     EXPECT_EQ(graph.getRoot()->getChildren()[1]->getName(), "child2");
+}
+
+TEST_F(FolderGraphTest, setAndRetreveNewRootInfo)
+{
+    FolderGraph graph(root);
+
+    graph.getRoot()->setName("Newroot");
+    graph.getRoot()->setPath("NewpathStr");
+    graph.getRoot()->setSize(1);
+    graph.getRoot()->setUrl("NewurlStr");
+    graph.getRoot()->setHtmlUrl("Newhtml_urlStr");
+    graph.getRoot()->setGitUrl("Newgit_urlStr");
+    graph.getRoot()->setDownloadUrl("Newdownload_urlStr");
+    graph.getRoot()->setType("NewtypeStr");
+
+    EXPECT_EQ(graph.getRoot()->getName(), "Newroot");
+    EXPECT_EQ(graph.getRoot()->getPath(), "NewpathStr");
+    EXPECT_EQ(graph.getRoot()->getSize(), 1);
+    EXPECT_EQ(graph.getRoot()->getUrl(), "NewurlStr");
+    EXPECT_EQ(graph.getRoot()->getHtmlUrl(), "Newhtml_urlStr");
+    EXPECT_EQ(graph.getRoot()->getGitUrl(), "Newgit_urlStr");
+    EXPECT_EQ(graph.getRoot()->getDownloadUrl(), "Newdownload_urlStr");
+    EXPECT_EQ(graph.getRoot()->getType(), ItemEnumType::UNKNOWN);
 }
 
 // Add a node	Verify that adding a node works and node count increases.
