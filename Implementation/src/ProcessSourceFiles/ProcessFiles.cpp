@@ -41,10 +41,13 @@ json parseGitHubResponse(const std::string& response)
 void validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(
     const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
 {
+    Logger::getInstance().log(
+        "[DownloadFiles::validateRecursivelyDownloadFilesPopulatingGraphEntryParameters]");
     if (!parsed.is_array())
     {
         std::string errorMessage =
-            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
+            "[DownloadFiles::validateRecursivelyDownloadFilesPopulatingGraphEntryParameters] Error "
+            "Response is not an "
             "array! PrsedJson is not an array!";
         Logger::getInstance().log(errorMessage);
         throw std::invalid_argument(errorMessage);
@@ -53,7 +56,8 @@ void validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(
     if (!parent)
     {
         std::string errorMessage =
-            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error Response is not an "
+            "[DownloadFiles::validateRecursivelyDownloadFilesPopulatingGraphEntryParameters] Error "
+            "Response is not an "
             "array! Parent pointer is not valid";
         Logger::getInstance().log(errorMessage);
         throw std::invalid_argument(errorMessage);
@@ -73,7 +77,8 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
                              std::unique_ptr<IHttpClient> httpClient)
     : m_originalURL(originalURL),
       m_httpClient(std::move(httpClient)),
-      m_folderGraph(FolderGraph(std::make_shared<ItemInFolder>("root", "dir")))
+      m_folderGraph(
+          FolderGraph(std::make_shared<ItemInFolder>("root", "", "0", "", "", "", "", "dir")))
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
@@ -196,6 +201,24 @@ void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>
     }
 }
 
+std::shared_ptr<ItemInFolder> instantiateChidFromParsedJsonItem(const json& item)
+{
+    Logger::getInstance().log("[DownloadFiles::instantiateChidFromParsedJsonItem]");
+
+    const std::string name = item.value("name", "");
+    const std::string pathStr = item.value("path", "");
+    const std::string sizeStr = item.value("size", "");
+    const std::string urlStr = item.value("url", "");
+    const std::string html_urlStr = item.value("html_url", "");
+    // TODO: Maybe it's better to use this instead of url
+    const std::string git_urlStr = item.value("git_url", "");
+    const std::string download_urlStr = item.value("download_url", "");
+    const std::string typeStr = item.value("type", "");
+
+    return std::make_shared<ItemInFolder>(name, pathStr, sizeStr, urlStr, html_urlStr, git_urlStr,
+                                          download_urlStr, typeStr);
+}
+
 void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     const json& parsed, const std::shared_ptr<ItemInFolder>& parent)
 {
@@ -204,15 +227,12 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
                               " parent: " + (parent ? parent->getName() : ""));
     validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(parsed, parent);
 
-    int count = 0;
-
     for (const auto& item : parsed)
     {
-        if (count > 8) break;
-        count++;
-        const std::string name = item.value("name", "");
-        const std::string typeStr = item.value("type", "");
-        std::shared_ptr<ItemInFolder> child = std::make_shared<ItemInFolder>(name, typeStr);
+        // const std::string name = item.value("name", "");
+        // const std::string typeStr = item.value("type", "");
+        // std::shared_ptr<ItemInFolder> child = std::make_shared<ItemInFolder>(name, typeStr);
+        std::shared_ptr<ItemInFolder> child = instantiateChidFromParsedJsonItem(item);
         Logger::getInstance().log("Processing : " + child->getName());
 
         switch (child->getType())

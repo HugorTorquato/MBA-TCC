@@ -9,59 +9,63 @@
 class FolderGraphTest : public ::testing::Test
 {
    protected:
-    const std::shared_ptr<ItemInFolder> root = std::make_shared<ItemInFolder>("root", "dir");
+    const std::shared_ptr<ItemInFolder> root =
+        instantiateChid("root", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
+                        "download_urlStr", "typeStr");
+
+    const std::shared_ptr<ItemInFolder> child1 =
+        instantiateChid("child1", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
+                        "download_urlStr", "typeStr");
+    const std::shared_ptr<ItemInFolder> child2 =
+        instantiateChid("child2", "pathStr", "sizeStr", "urlStr", "html_urlStr", "git_urlStr",
+                        "download_urlStr", "typeStr");
+
+    std::shared_ptr<ItemInFolder> instantiateChid(const std::string& name, const std::string& path,
+                                                  const std::string& size, const std::string& url,
+                                                  const std::string& html_url,
+                                                  const std::string& git_url,
+                                                  const std::string& download_url,
+                                                  const std::string& type)
+    {
+        return std::make_shared<ItemInFolder>(name, path, size, url, html_url, git_url,
+                                              download_url, type);
+    }
 };
-
-// Create an empty graph	Ensure graph initializes correctly with no nodes.
-TEST_F(FolderGraphTest, testEmptyGraph)
-{
-    // Create an empty FolderGraph
-    FolderGraph graph(root);
-
-    // Check if the root node is created correctly
-    EXPECT_EQ(graph.getRoot()->getName(), "root");
-    EXPECT_TRUE(graph.getRoot()->getChildren().empty());
-}
 
 TEST_F(FolderGraphTest, testCreateGraphWithRootNode)
 {
-    // Create a FolderGraph object with a root name
     FolderGraph graph(root);
 
-    // Check if the root node is created correctly
     EXPECT_EQ(graph.getRoot()->getName(), "root");
     EXPECT_TRUE(graph.getRoot()->getChildren().empty());
 }
 
-TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddChieldPassingChildName)
+TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddOneChild)
 {
     FolderGraph graph(root);
 
     EXPECT_EQ(graph.getRoot()->getName(), "root");
     EXPECT_TRUE(graph.getRoot()->getChildren().empty());
 
-    // Add a child to the root node
-    graph.addEdge(graph.getRoot(), "child", "dir");
+    graph.addEdge(graph.getRoot(), child1);
 
-    // Check if the child node is added correctly
     EXPECT_EQ(graph.getRoot()->getChildren().size(), 1);
-    EXPECT_EQ(graph.getRoot()->getChildren()[0]->getName(), "child");
+    EXPECT_EQ(graph.getRoot()->getChildren()[0]->getName(), "child1");
 }
 
-TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddChieldPassingChildObject)
+TEST_F(FolderGraphTest, testCreateGraphWithRootNodeAndAddChieldPassingTwochildren)
 {
     FolderGraph graph(root);
 
     EXPECT_EQ(graph.getRoot()->getName(), "root");
     EXPECT_TRUE(graph.getRoot()->getChildren().empty());
 
-    // Add a child to the root node
-    std::shared_ptr<ItemInFolder> child = std::make_shared<ItemInFolder>("child", "dir");
-    graph.addEdge(graph.getRoot(), child);
+    graph.addEdge(graph.getRoot(), child1);
+    graph.addEdge(graph.getRoot(), child2);
 
-    // Check if the child node is added correctly
-    EXPECT_EQ(graph.getRoot()->getChildren().size(), 1);
-    EXPECT_EQ(graph.getRoot()->getChildren()[0]->getName(), "child");
+    EXPECT_EQ(graph.getRoot()->getChildren().size(), 2);
+    EXPECT_EQ(graph.getRoot()->getChildren()[0]->getName(), "child1");
+    EXPECT_EQ(graph.getRoot()->getChildren()[1]->getName(), "child2");
 }
 
 // Add a node	Verify that adding a node works and node count increases.
