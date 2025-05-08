@@ -90,6 +90,47 @@ TEST_F(FolderGraphTest, setAndRetreveNewRootInfo)
     EXPECT_EQ(graph.getRoot()->getType(), ItemEnumType::UNKNOWN);
 }
 
+TEST_F(FolderGraphTest, valdateExtractPropertyBehaviorToRetreveValuesFromNode)
+{
+    FolderGraph graph(root);
+
+    EXPECT_EQ(std::get<std::string>(graph.extractProperty(graph.getRoot(), PropertySelector::Name)),
+              "root");
+    EXPECT_EQ(std::get<std::filesystem::path>(
+                  graph.extractProperty(graph.getRoot(), PropertySelector::Path)),
+              "pathStr");
+    EXPECT_EQ(
+        std::get<unsigned int>(graph.extractProperty(graph.getRoot(), PropertySelector::Size)), 0);
+    EXPECT_EQ(std::get<std::string>(graph.extractProperty(graph.getRoot(), PropertySelector::Url)),
+              "urlStr");
+    EXPECT_EQ(
+        std::get<std::string>(graph.extractProperty(graph.getRoot(), PropertySelector::HtmlUrl)),
+        "html_urlStr");
+    EXPECT_EQ(
+        std::get<std::string>(graph.extractProperty(graph.getRoot(), PropertySelector::GitUrl)),
+        "git_urlStr");
+    EXPECT_EQ(std::get<std::string>(
+                  graph.extractProperty(graph.getRoot(), PropertySelector::DownloadUrl)),
+              "download_urlStr");
+    EXPECT_EQ(
+        std::get<ItemEnumType>(graph.extractProperty(graph.getRoot(), PropertySelector::Type)),
+        ItemEnumType::UNKNOWN);
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfRootNodeGraph)
+{
+    FolderGraph graph(root);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN}  // Type == "typeStr"
+    };
+
+    const auto result = graph.dfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+    EXPECT_EQ(result[0], expectedVector[0]);
+}
+
 // Add a node	Verify that adding a node works and node count increases.
 // Add an edge	Ensure edge creation works between two nodes.
 // Add duplicate nodes	Check if duplicate nodes are handled (ignored, replaced, or error).

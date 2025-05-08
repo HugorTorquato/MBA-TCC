@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <variant>
 #include <vector>
 
 enum ItemEnumType
@@ -10,6 +11,18 @@ enum ItemEnumType
     SOURCEFILE,
     DIR,
     UNKNOWN
+};
+
+enum class PropertySelector
+{
+    Name,
+    Path,
+    Size,
+    Url,
+    HtmlUrl,
+    GitUrl,
+    DownloadUrl,
+    Type
 };
 
 class ItemInFolder
@@ -44,6 +57,7 @@ class ItemInFolder
 
     std::vector<std::shared_ptr<ItemInFolder>>& getChildren();
 
+    // TODO: Create a especialization for this string URL links.... so i can verify things there
    private:
     std::string m_name;
     std::filesystem::path m_path;
@@ -68,6 +82,15 @@ class FolderGraph
     void addEdge(std::shared_ptr<ItemInFolder> parent, const std::string& childName,
                  const std::string& type);
     void addEdge(std::shared_ptr<ItemInFolder> parent, const std::shared_ptr<ItemInFolder>& child);
+
+    using PropertyValue =
+        std::variant<std::string, std::filesystem::path, unsigned int, ItemEnumType>;
+    using NamedProperty = std::pair<std::string, PropertyValue>;
+
+    PropertyValue extractProperty(const std::shared_ptr<ItemInFolder>& node,
+                                  PropertySelector selector);
+    std::vector<FolderGraph::NamedProperty> dfsToJson(const std::shared_ptr<ItemInFolder>& node,
+                                                      PropertySelector selector);
 
    private:
     std::shared_ptr<ItemInFolder> m_root;

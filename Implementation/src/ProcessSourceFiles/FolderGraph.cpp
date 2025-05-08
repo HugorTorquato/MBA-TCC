@@ -5,6 +5,18 @@
 
 #include "../Logger/Log.h"
 
+namespace
+{
+ItemEnumType getItemTypeFromString(const std::string& type)
+{
+    if (type == "dir") return ItemEnumType::DIR;
+    if (type == "file") return ItemEnumType::SOURCEFILE;
+    Logger::getInstance().log("[FolderGraph][getItemTypeFromString] Warning: Unknown item type: " +
+                              type);
+    return ItemEnumType::UNKNOWN;
+}
+}  // namespace
+
 ItemInFolder::ItemInFolder(const std::string& name, const std::string& path,
                            const unsigned int size, const std::string& url,
                            const std::string& html_url, const std::string& git_url,
@@ -15,20 +27,11 @@ ItemInFolder::ItemInFolder(const std::string& name, const std::string& path,
       m_url(url),
       m_html_url(html_url),
       m_git_url(git_url),
-      m_download_url(download_url)
+      m_download_url(download_url),
+      m_type(getItemTypeFromString(type))
 {
     // Decided not to process JSON files in here...
     // need to receive the values already parsed or as str
-
-    if (type == "dir")
-        m_type = ItemEnumType::DIR;
-    else if (type == "file")
-        m_type = ItemEnumType::SOURCEFILE;
-    else
-    {
-        m_type = ItemEnumType::UNKNOWN;
-        Logger::getInstance().log("Warning: Unknown item type: " + type);
-    }
 }
 
 void ItemInFolder::addChild(const std::shared_ptr<ItemInFolder>& child)
@@ -46,30 +49,37 @@ std::string ItemInFolder::getName() const
 {
     return m_name;
 }
+
 std::filesystem::path ItemInFolder::getPath() const
 {
     return m_path;
 }
+
 unsigned int ItemInFolder::getSize() const
 {
     return m_size;
 }
+
 std::string ItemInFolder::getUrl() const
 {
     return m_url;
 }
+
 std::string ItemInFolder::getHtmlUrl() const
 {
     return m_html_url;
 }
+
 std::string ItemInFolder::getGitUrl() const
 {
     return m_git_url;
 }
+
 std::string ItemInFolder::getDownloadUrl() const
 {
     return m_download_url;
 }
+
 ItemEnumType ItemInFolder::getType() const
 {
     return m_type;
@@ -84,26 +94,32 @@ void ItemInFolder::setPath(const std::string& path)
 {
     m_path = std::filesystem::path(path);
 }
+
 void ItemInFolder::setSize(const unsigned int size)
 {
     m_size = size;
 }
+
 void ItemInFolder::setUrl(const std::string& url)
 {
     m_url = url;
 }
+
 void ItemInFolder::setHtmlUrl(const std::string& gitUrl)
 {
     m_html_url = gitUrl;
 }
+
 void ItemInFolder::setGitUrl(const std::string& name)
 {
     m_git_url = name;
 }
+
 void ItemInFolder::setDownloadUrl(const std::string& downloadUrl)
 {
     m_download_url = downloadUrl;
 }
+
 void ItemInFolder::setType(const std::string& type)
 {
     if (type == "dir")
@@ -113,7 +129,7 @@ void ItemInFolder::setType(const std::string& type)
     else
     {
         m_type = ItemEnumType::UNKNOWN;
-        Logger::getInstance().log("Warning: Unknown item type: " + type);
+        Logger::getInstance().log("[ItemInFolder::setType] Warning: Unknown item type: " + type);
     }
 }
 
@@ -148,4 +164,50 @@ void FolderGraph::addEdge(std::shared_ptr<ItemInFolder> parent,
                           const std::shared_ptr<ItemInFolder>& child)
 {
     parent->addChild(child);
+}
+
+FolderGraph::PropertyValue FolderGraph::extractProperty(const std::shared_ptr<ItemInFolder>& node,
+                                                        PropertySelector selector)
+{
+    switch (selector)
+    {
+        case PropertySelector::Name:
+            return node->getName();
+        case PropertySelector::Path:
+            return node->getPath();
+        case PropertySelector::Size:
+            return node->getSize();
+        case PropertySelector::Url:
+            return node->getUrl();
+        case PropertySelector::HtmlUrl:
+            return node->getHtmlUrl();
+        case PropertySelector::GitUrl:
+            return node->getGitUrl();
+        case PropertySelector::DownloadUrl:
+            return node->getDownloadUrl();
+        case PropertySelector::Type:
+            return node->getType();
+    }
+    throw std::invalid_argument("Unknown selector");
+}
+
+std::vector<FolderGraph::NamedProperty> FolderGraph::dfsToJson(
+    const std::shared_ptr<ItemInFolder>& node, PropertySelector selector)
+{
+    Logger::getInstance().log("[FolderGraph::dfsToJson] node: " + node->getName() +
+                              " selector: " + std::to_string(static_cast<int>(selector)));
+    if (!node) return {};
+
+    // vector would have folder path and the selected function
+    std::vector<FolderGraph::NamedProperty> result;
+    auto value = extractProperty(node, selector);
+
+    result.emplace_back(node->getName(), value);
+    for (const auto& child : node->getChildren())
+    {
+        Logger::getInstance().log("[FolderGraph::dfsToJson] child: " + child->getName());
+        auto childResult = dfsToJson(child, selector);
+        result.insert(result.end(), childResult.begin(), childResult.end());
+    }
+    return result;
 }

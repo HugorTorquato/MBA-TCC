@@ -95,8 +95,8 @@ DownloadFiles::DownloadFiles(const std::string& originalURL,
                              std::unique_ptr<IHttpClient> httpClient)
     : m_originalURL(originalURL),
       m_httpClient(std::move(httpClient)),
-      m_folderGraph(FolderGraph(std::make_shared<ItemInFolder>(
-          "root", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr", "download_urlStr", "dir")))
+      m_folderGraph(
+          FolderGraph(std::make_shared<ItemInFolder>("root", "", 0, "", "", "", "", "dir")))
 {
     // MUST call this constructor to instantiate this object.
     if (originalURL.empty())
