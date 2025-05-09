@@ -18,6 +18,12 @@ class FolderGraphTest : public ::testing::Test
     const std::shared_ptr<ItemInFolder> child2 =
         instantiateChid("child2", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr",
                         "download_urlStr", "typeStr");
+    const std::shared_ptr<ItemInFolder> child3 =
+        instantiateChid("child3", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr",
+                        "download_urlStr", "typeStr");
+    const std::shared_ptr<ItemInFolder> child4 =
+        instantiateChid("child4", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr",
+                        "download_urlStr", "typeStr");
 
     std::shared_ptr<ItemInFolder> instantiateChid(const std::string& name, const std::string& path,
                                                   const unsigned int size, const std::string& url,
@@ -117,7 +123,18 @@ TEST_F(FolderGraphTest, valdateExtractPropertyBehaviorToRetreveValuesFromNode)
         ItemEnumType::UNKNOWN);
 }
 
-TEST_F(FolderGraphTest, RetreveTypeOfRootNodeGraph)
+TEST_F(FolderGraphTest, RetreveEmptyVectorWithInvalidEntry)
+{
+    FolderGraph graph(root);
+
+    const auto resultDFS = graph.dfsToJson(nullptr, PropertySelector::Type);
+    const auto resultBFS = graph.dfsToJson(nullptr, PropertySelector::Type);
+
+    EXPECT_TRUE(resultDFS.empty());
+    EXPECT_TRUE(resultBFS.empty());
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfRootNodeGraphDFS)
 {
     FolderGraph graph(root);
 
@@ -129,6 +146,116 @@ TEST_F(FolderGraphTest, RetreveTypeOfRootNodeGraph)
 
     EXPECT_EQ(result.size(), expectedVector.size());
     EXPECT_EQ(result[0], expectedVector[0]);
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfGraphWithChildrenDFS)
+{
+    FolderGraph graph(root);
+    graph.addEdge(graph.getRoot(), child1);
+    graph.addEdge(graph.getRoot(), child2);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN},    // Type == "typeStr"
+        {"child1", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child2", ItemEnumType::UNKNOWN}   // Type == "typeStr"
+    };
+
+    const auto result = graph.dfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+
+    for (size_t i = 0; i < result.size(); ++i)
+    {
+        EXPECT_EQ(result[i], expectedVector[i]);
+    }
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfGraphWithChildren3layersDFS)
+{
+    FolderGraph graph(root);
+    graph.addEdge(graph.getRoot(), child1);
+    graph.addEdge(graph.getRoot(), child2);
+    graph.addEdge(graph.getRoot()->getChildren()[0], child3);
+    graph.addEdge(graph.getRoot()->getChildren()[0], child4);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN},    // Type == "typeStr"
+        {"child1", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child3", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child4", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child2", ItemEnumType::UNKNOWN}   // Type == "typeStr"
+    };
+
+    const auto result = graph.dfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+
+    for (size_t i = 0; i < result.size(); ++i)
+    {
+        EXPECT_EQ(result[i], expectedVector[i]);
+    }
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfRootNodeGraphBFS)
+{
+    FolderGraph graph(root);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN}  // Type == "typeStr"
+    };
+
+    const auto result = graph.bfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+    EXPECT_EQ(result[0], expectedVector[0]);
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfGraphWithChildrenBFS)
+{
+    FolderGraph graph(root);
+    graph.addEdge(graph.getRoot(), child1);
+    graph.addEdge(graph.getRoot(), child2);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN},    // Type == "typeStr"
+        {"child1", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child2", ItemEnumType::UNKNOWN}   // Type == "typeStr"
+    };
+
+    const auto result = graph.bfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+
+    for (size_t i = 0; i < result.size(); ++i)
+    {
+        EXPECT_EQ(result[i], expectedVector[i]);
+    }
+}
+
+TEST_F(FolderGraphTest, RetreveTypeOfGraphWithChildren3layersBFS)
+{
+    FolderGraph graph(root);
+    graph.addEdge(graph.getRoot(), child1);
+    graph.addEdge(graph.getRoot(), child2);
+    graph.addEdge(graph.getRoot()->getChildren()[0], child3);
+    graph.addEdge(graph.getRoot()->getChildren()[0], child4);
+
+    const std::vector<FolderGraph::NamedProperty> expectedVector = {
+        {"root", ItemEnumType::UNKNOWN},    // Type == "typeStr"
+        {"child1", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child2", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child3", ItemEnumType::UNKNOWN},  // Type == "typeStr"
+        {"child4", ItemEnumType::UNKNOWN}   // Type == "typeStr"
+    };
+
+    const auto result = graph.bfsToJson(graph.getRoot(), PropertySelector::Type);
+
+    EXPECT_EQ(result.size(), expectedVector.size());
+
+    for (size_t i = 0; i < result.size(); ++i)
+    {
+        EXPECT_EQ(result[i], expectedVector[i]);
+    }
 }
 
 // Add a node	Verify that adding a node works and node count increases.

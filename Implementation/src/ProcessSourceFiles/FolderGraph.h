@@ -91,6 +91,8 @@ class FolderGraph
                                   PropertySelector selector);
     std::vector<FolderGraph::NamedProperty> dfsToJson(const std::shared_ptr<ItemInFolder>& node,
                                                       PropertySelector selector);
+    std::vector<FolderGraph::NamedProperty> bfsToJson(const std::shared_ptr<ItemInFolder>& node,
+                                                      PropertySelector selector);
 
    private:
     std::shared_ptr<ItemInFolder> m_root;
