@@ -88,11 +88,11 @@ class FolderGraph
     using NamedProperty = std::pair<std::string, PropertyValue>;
 
     PropertyValue extractProperty(const std::shared_ptr<ItemInFolder>& node,
-                                  PropertySelector selector);
+                                  PropertySelector selector) const;
     std::vector<FolderGraph::NamedProperty> dfsToJson(const std::shared_ptr<ItemInFolder>& node,
-                                                      PropertySelector selector);
+                                                      PropertySelector selector) const;
     std::vector<FolderGraph::NamedProperty> bfsToJson(const std::shared_ptr<ItemInFolder>& node,
-                                                      PropertySelector selector);
+                                                      PropertySelector selector) const;
 
    private:
     std::shared_ptr<ItemInFolder> m_root;

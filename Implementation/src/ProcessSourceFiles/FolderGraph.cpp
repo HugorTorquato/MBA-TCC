@@ -17,10 +17,12 @@ ItemEnumType getItemTypeFromString(const std::string& type)
     return ItemEnumType::UNKNOWN;
 }
 
-template<typename T>
-std::vector<T> queueToVector(std::queue<T> q) {
+template <typename T>
+std::vector<T> queueToVector(std::queue<T> q)
+{
     std::vector<T> result;
-    while (!q.empty()) {
+    while (!q.empty())
+    {
         result.push_back(q.front());
         q.pop();
     }
@@ -178,7 +180,7 @@ void FolderGraph::addEdge(std::shared_ptr<ItemInFolder> parent,
 }
 
 FolderGraph::PropertyValue FolderGraph::extractProperty(const std::shared_ptr<ItemInFolder>& node,
-                                                        PropertySelector selector)
+                                                        PropertySelector selector) const
 {
     switch (selector)
     {
@@ -203,7 +205,7 @@ FolderGraph::PropertyValue FolderGraph::extractProperty(const std::shared_ptr<It
 }
 
 std::vector<FolderGraph::NamedProperty> FolderGraph::dfsToJson(
-    const std::shared_ptr<ItemInFolder>& node, PropertySelector selector)
+    const std::shared_ptr<ItemInFolder>& node, PropertySelector selector) const
 {
     // vector would have folder path and the selected function
     std::vector<FolderGraph::NamedProperty> result;
@@ -214,17 +216,23 @@ std::vector<FolderGraph::NamedProperty> FolderGraph::dfsToJson(
 
     result.emplace_back(node->getName(), extractProperty(node, selector));
 
+    Logger::getInstance().log("[FolderGraph::dfsToJson] child size: " +
+                              std::to_string(node->getChildren().size()));
+
     for (const auto& child : node->getChildren())
     {
         Logger::getInstance().log("[FolderGraph::dfsToJson] child: " + child->getName());
         auto childResult = dfsToJson(child, selector);
         result.insert(result.end(), childResult.begin(), childResult.end());
     }
+
+    Logger::getInstance().log("[FolderGraph::dfsToJson] result size: " +
+                              std::to_string(result.size()));
     return result;
 }
 
 std::vector<FolderGraph::NamedProperty> FolderGraph::bfsToJson(
-    const std::shared_ptr<ItemInFolder>& node, PropertySelector selector)
+    const std::shared_ptr<ItemInFolder>& node, PropertySelector selector) const
 {
     // vector would have folder path and the selected function
     std::vector<FolderGraph::NamedProperty> result;
@@ -240,14 +248,17 @@ std::vector<FolderGraph::NamedProperty> FolderGraph::bfsToJson(
 
     while (!queueNodes.empty())
     {
-        auto current = queueNodes.front(); // Take the fisrt element of the queue
+        auto current = queueNodes.front();  // Take the fisrt element of the queue
         queueNodes.pop();
 
         Logger::getInstance().log("[FolderGraph::dfsToJson] child: " + current->getName());
 
-        result.emplace_back(current->getName(), extractProperty(current, selector)); // already a FolderGraph::NamedProperty
-        
-        for (auto child : current->getChildren()) {
+        result.emplace_back(
+            current->getName(),
+            extractProperty(current, selector));  // already a FolderGraph::NamedProperty
+
+        for (auto child : current->getChildren())
+        {
             queueNodes.emplace(child);
         }
     }

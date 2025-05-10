@@ -89,6 +89,28 @@ std::shared_ptr<ItemInFolder> instantiateChidFromParsedJsonItem(const json& item
     return std::make_shared<ItemInFolder>(name, pathStr, sizeInt, urlStr, html_urlStr, git_urlStr,
                                           download_urlStr, typeStr);
 }
+
+json convertVectorWithNodeNameAndPath(const FolderGraph& folderGraph)
+{
+    Logger::getInstance().log("[ProcessFiles][convertVectorWithNodeNameAndPath] root path: " +
+                              folderGraph.getRoot()->getName());
+
+    auto result = folderGraph.dfsToJson(folderGraph.getRoot(), PropertySelector::Path);
+    json jsonResult = json::array();
+
+    for (const auto& item : result)
+    {
+        json jsonItem;
+        jsonItem["name"] = item.first;
+        jsonItem["path"] = std::get<std::filesystem::path>(item.second);
+        Logger::getInstance().log(
+            "[convertVectorWithNodeNameAndPath] name: " + item.first +
+            " path: " + static_cast<std::string>(std::get<std::filesystem::path>(item.second)));
+        jsonResult.push_back(jsonItem);
+    }
+
+    return jsonResult;
+}
 }  // namespace
 
 DownloadFiles::DownloadFiles(const std::string& originalURL,
@@ -304,6 +326,7 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
     try
     {
         callRecursiveDoenloadMethod(m_originalURL, m_folderGraph.getRoot());
+        auto res = convertVectorWithNodeNameAndPath(m_folderGraph);
     }
     catch (const std::exception& e)
     {
