@@ -50,7 +50,6 @@ def test_v1_listFilesInUrl_EmptyProjectFoldeStructure():
     ]
 
     for idx, (name, path) in enumerate(data.items()):
-        logger.info(f"Name: {name}, Path: {path}")
         
         # Assert that the current name and path match the expected values
         expected_name, expected_path = expected_order[idx]
@@ -60,3 +59,8 @@ def test_v1_listFilesInUrl_EmptyProjectFoldeStructure():
         # Additional checks to ensure types are correct
         assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
         assert isinstance(path, str), f"Expected string as path, got {type(path)}"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200 
