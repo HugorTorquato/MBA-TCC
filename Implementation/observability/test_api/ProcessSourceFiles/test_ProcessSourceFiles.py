@@ -1,6 +1,12 @@
+import logging
 import requests
+from configs.logging_config import configure_logging
 
 from configs.variables import *
+
+# Configure logging for tests
+configure_logging()
+logger = logging.getLogger("[ProcessSourceFilesTests]")
 
 def test_v1_listFilesInUrl_SimpleMainFile():
 
@@ -27,11 +33,30 @@ def test_v1_listFilesInUrl_EmptyProjectFoldeStructure():
     }
 
     response = requests.post(f"{BASE_URL}/api/v1/downloadFilesInUrl", json=input_json)
-    # data = response.json()
 
     assert response.status_code == 200  
 
-    # TODO: Improve this verification... still need to improve the graph... so let's focust there first and than come back here
+    data = response.json()
+    assert isinstance(data, dict), "Expected a dictionary response"
 
-    # for item in data:
-    #     assert item["type"] in {"file", "dir"}, f"Expected name (file, folder), but got {item['type']}"
+    expected_order = [
+        ("File1.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp"),
+        ("File1.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1/File1.cpp", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1/File1.cpp"),
+        ("File1.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2/File1.cpp", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2/File1.cpp"),
+        ("File2.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2/File2.cpp", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2/File2.cpp"),
+        ("Folder1:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder1"),
+        ("Folder2:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/Folder2"),
+        ("root:", "")
+    ]
+
+    for idx, (name, path) in enumerate(data.items()):
+        logger.info(f"Name: {name}, Path: {path}")
+        
+        # Assert that the current name and path match the expected values
+        expected_name, expected_path = expected_order[idx]
+        assert name == expected_name, f"Name - Expected {expected_name}, but got {name} at position {idx}"
+        assert path == expected_path, f"Path - Expected {expected_path}, but got {path} at position {idx}"
+
+        # Additional checks to ensure types are correct
+        assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
+        assert isinstance(path, str), f"Expected string as path, got {type(path)}"

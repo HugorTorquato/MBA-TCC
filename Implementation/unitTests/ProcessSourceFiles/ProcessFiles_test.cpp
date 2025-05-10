@@ -393,9 +393,10 @@ TEST_F(DownloadFilesTest, RetrieveEmptyGitHubListOfFiles)
 TEST_F(DownloadFilesTest, downloadFakeFolderStructureFromGitHub)
 {
     const std::string expectedResponse =
-        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"Implementation/"
-        "observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
-        "File1.cpp\"}]";
+        "{\"File1.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
+        "EmptyProjectFoldeStructure/File1.cpp\":\"Implementation/observability/"
+        "source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
+        "File1.cpp\",\"root:\":\"\"}";
     mockClient->setShouldSucceed(true);
     mockClient->setMockResponse(expectedRealResponse);
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
@@ -432,7 +433,7 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseMissingItemTypeShouldNot
     ]
     )";
 
-    const std::string expectedDownloadJSONResponse = R"([{"name":"root","path":""}])";
+    const std::string expectedDownloadJSONResponse = "{\"root:\":\"\"}";
 
     mockClient->setShouldSucceed(true);
     mockClient->setMockResponse(expectedResponse);
@@ -450,7 +451,7 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseMissingItemTypeShouldNot
 TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGraph)
 {
     const std::string expectedJsonResponse =
-        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"File1.cpp\"}]";
+        "{\"File1.cpp:File1.cpp\":\"File1.cpp\",\"root:\":\"\"}";
     const std::string expectedResponse = R"(
     [
         {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "File1.cpp"}
@@ -472,7 +473,7 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGra
 TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseFolderWithInvalidURLShouldNotPopulateGraph)
 {
     const std::string expectedJsonResponse =
-        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"File1.cpp\"}]";
+        "{\"File1.cpp:File1.cpp\":\"File1.cpp\",\"root:\":\"\"}";
     const std::string expectedResponse = R"(
     [
         {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "File1.cpp"},
@@ -575,8 +576,8 @@ TEST_F(DownloadFilesTest, MatchesOnlyGitHubWebUrls)
 TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
 {
     const std::string expectedJsonResponse =
-        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"Folder1\",\"path\":\"\"},{\"name\":"
-        "\"FileInsideFolder1.cpp\",\"path\":\"Folder1/FileInsideFolder1.cpp\"}]";
+        "{\"FileInsideFolder1.cpp:Folder1/FileInsideFolder1.cpp\":\"Folder1/"
+        "FileInsideFolder1.cpp\",\"Folder1:\":\"\",\"root:\":\"\"}";
     const std::string firstLevelResponse = R"(
     [
         {"name": "Folder1", "type": "dir", "url":
@@ -615,9 +616,9 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
 TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolderAndFile)
 {
     const std::string expectedJsonResponse =
-        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"Folder1\",\"path\":\"\"},{\"name\":"
-        "\"FileInsideFolder1.cpp\",\"path\":\"Folder1/"
-        "FileInsideFolder1.cpp\"},{\"name\":\"File1.cpp\",\"path\":\"Folder1/File1.cpp\"}]";
+        "{\"File1.cpp:Folder1/File1.cpp\":\"Folder1/File1.cpp\",\"FileInsideFolder1.cpp:Folder1/"
+        "FileInsideFolder1.cpp\":\"Folder1/"
+        "FileInsideFolder1.cpp\",\"Folder1:\":\"\",\"root:\":\"\"}";
     const std::string firstLevelResponse = R"(
     [
         {"name": "Folder1", "type": "dir", "url":

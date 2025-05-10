@@ -72,41 +72,69 @@ bool isCppSourceFile(const std::string& fileName)
            fileName.find(".hpp") != std::string::npos;
 }
 
+// TOOD: Maybe it can become a template, to be more generic
+std::string safeGetString(const json& item, const std::string& key)
+{
+    if (item.contains(key) && item[key].is_string())
+    {
+        return item[key];
+    }
+    return "";
+}
+
 std::shared_ptr<ItemInFolder> instantiateChidFromParsedJsonItem(const json& item)
 {
-    Logger::getInstance().log("[DownloadFiles::instantiateChidFromParsedJsonItem]");
+    Logger::getInstance().log("[DownloadFiles::instantiateChidFromParsedJsonItem] item : " +
+                              item.dump());
 
-    const std::string name = item.value("name", "");
-    const std::string pathStr = item.value("path", "");
-    const unsigned int sizeInt = item.value("size", 0);
-    const std::string urlStr = item.value("url", "");
-    const std::string html_urlStr = item.value("html_url", "");
-    // TODO: Maybe it's better to use this instead of url
-    const std::string git_urlStr = item.value("git_url", "");
-    const std::string download_urlStr = item.value("download_url", "");
-    const std::string typeStr = item.value("type", "");
+    const std::string name = safeGetString(item, "name");
+    const std::string pathStr = safeGetString(item, "path");
+    const unsigned int sizeInt = item.value("size", 0);  // size is okay as number
+    const std::string urlStr = safeGetString(item, "url");
+    const std::string html_urlStr = safeGetString(item, "html_url");
+    // TODO: Maybe it's better to use this instead of url ( to find and downlaod things )
+    const std::string git_urlStr = safeGetString(item, "git_url");
+    const std::string download_urlStr = safeGetString(item, "download_url");
+    const std::string typeStr = safeGetString(item, "type");
+
+    // const std::string name = safeGetString(item, "name");
+    // const std::string pathStr = item.value("path", "");
+    // const unsigned int sizeInt = item.value("size", 0);
+    // const std::string urlStr = item.value("url", "");
+    // const std::string html_urlStr = item.value("html_url", "");
+
+    // const std::string git_urlStr = item.value("git_url", "");
+    // const std::string download_urlStr = item.value("download_url", "");
+    // const std::string typeStr = item.value("type", "");
 
     return std::make_shared<ItemInFolder>(name, pathStr, sizeInt, urlStr, html_urlStr, git_urlStr,
                                           download_urlStr, typeStr);
 }
 
-json convertVectorWithNodeNameAndPath(const FolderGraph& folderGraph)
+json convertVectorWithNodeNameAndPathToJSON(const FolderGraph& folderGraph)
 {
-    Logger::getInstance().log("[ProcessFiles][convertVectorWithNodeNameAndPath] root path: " +
+    Logger::getInstance().log("[ProcessFiles][convertVectorWithNodeNameAndPathToJSON] root path: " +
                               folderGraph.getRoot()->getName());
 
     auto result = folderGraph.dfsToJson(folderGraph.getRoot(), PropertySelector::Path);
-    json jsonResult = json::array();
+    json jsonResult = json::object();
 
     for (const auto& item : result)
     {
-        json jsonItem;
-        jsonItem["name"] = item.first;
-        jsonItem["path"] = std::get<std::filesystem::path>(item.second);
-        Logger::getInstance().log(
-            "[convertVectorWithNodeNameAndPath] name: " + item.first +
-            " path: " + static_cast<std::string>(std::get<std::filesystem::path>(item.second)));
-        jsonResult.push_back(jsonItem);
+        // json jsonItem;
+        // jsonItem["name"] = item.first;
+        // jsonItem["path"] = std::get<std::filesystem::path>(item.second);
+        // Logger::getInstance().log(
+        //     "[convertVectorWithNodeNameAndPath] name: " + item.first +
+        //     " path: " + static_cast<std::string>(std::get<std::filesystem::path>(item.second)));
+        // jsonResult.push_back(jsonItem);
+        const std::string& name = item.first;
+        const std::string path = std::get<std::filesystem::path>(item.second).string();
+
+        Logger::getInstance().log("[convertVectorWithNodeNameAndPathToJSON] name: " + name +
+                                  " path: " + path);
+
+        jsonResult[name + ":" + path] = path;
     }
 
     return jsonResult;
@@ -336,7 +364,7 @@ json DownloadFiles::downloadURLContentIntoTempFolder()
     try
     {
         callRecursiveDoenloadMethod(m_originalURL, m_folderGraph.getRoot());
-        response = convertVectorWithNodeNameAndPath(m_folderGraph);
+        response = convertVectorWithNodeNameAndPathToJSON(m_folderGraph);
     }
     catch (const std::exception& e)
     {

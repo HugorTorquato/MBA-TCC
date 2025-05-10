@@ -71,8 +71,11 @@ class ProcessSourceFiles
                     // The route is just a bridge... and not suppose to have logic in here
                     DownloadFiles downoadFiles(git_url, std::make_unique<CurlHttpClient>());
 
-                    int response = downoadFiles.downloadURLContentIntoTempFolder() ? 200 : 500;
-                    return crow::response(response);
+                    json response = downoadFiles.downloadURLContentIntoTempFolder();
+
+                    Logger::getInstance().log(
+                        "[ProcessSourceFiles][downloadFilesInUrl] response: " + response.dump());
+                    return crow::response(response.dump());
                 });
     }
 };
