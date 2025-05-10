@@ -39,6 +39,8 @@ CMakeCache.txt
 api_server
 my_tests
 
+#Include folder
+Implementation/includes
 
 
 
@@ -113,3 +115,6 @@ Thumbs.db
 # Testing output
 htmlcov/
 coverage/
+
+.env
+/app/temp

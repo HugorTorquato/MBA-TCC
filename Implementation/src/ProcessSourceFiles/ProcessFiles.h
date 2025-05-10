@@ -6,12 +6,10 @@
 #include "IProcessFiles.h"
 #include "util/IHttpClient.h"
 
-struct GitHubUrlInfo
+enum RegexpTarget
 {
-    std::string m_branch;
-    std::string m_path;
-    std::string m_repo;
-    std::string m_user;
+    GITHUB_API,
+    GITHUB
 };
 
 class DownloadFiles : public IDownloadFiles
@@ -22,27 +20,32 @@ class DownloadFiles : public IDownloadFiles
    public:
     explicit DownloadFiles(const std::string& originalURL, std::unique_ptr<IHttpClient> httpClient);
 
-    std::string getOriginalURL() override;
-    std::string getBranch() override;
-    std::string getPath() override;
-    std::string getRepo() override;
-    std::string getUser() override;
-    std::string getEndpointToListFilesFromGitHub() override;
+    std::string getOriginalURL() const override;
+    std::string getBranch() const override;
+    std::string getPath() const override;
+    std::string getRepo() const override;
+    std::string getUser() const override;
+    std::string getTempFolder() const override;
+    FolderGraph getFolderGraph() const override;
+    std::string getEndpointToListFilesFromGitHub(const std::string& url) override;
+    IRepoURL* getUrlInfo() const override;
 
-    bool isUrlFromGitHub() override;
-    bool isValidUrl() override;
-    bool isFolder() override;
+    bool verifyIfValidEndpointByCallingIt() override;
 
-    void parseURL() override;
+    std::string listGitHubContentFromURL(const std::optional<std::string>& url) override;
+    void recursivelyDownloadFilesPopulatingGraph(
+        const json& parsed, const std::shared_ptr<ItemInFolder>& parent) override;
+    json downloadURLContentIntoTempFolder() override;
 
-    std::string listGitHubContentFromURL();
+    void callRecursiveDoenloadMethod(const std::optional<std::string>& url,
+                                     const std::shared_ptr<ItemInFolder>& parent);
+    // std::string getgithubRegexpExpr(RegexpTarget target) const;
 
    private:
     std::string m_originalURL;
-    GitHubUrlInfo m_gitubUrlInfo;
-    // IHttpClient& m_httpClient;
+    std::unique_ptr<IRepoURL> m_urlInfo;
+    FolderGraph m_folderGraph;
     std::unique_ptr<IHttpClient> m_httpClient;
 
-    const std::string githubRegexpExpr =
-        R"(https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/(tree|blob)\/([^\/]+)(\/(.*))?)";
+    const std::string m_tempFolder = "/app/temp/";
 };

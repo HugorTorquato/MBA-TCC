@@ -17,6 +17,8 @@ file(GLOB_RECURSE TEST_SOURCES
 file(GLOB_RECURSE TEST_SOURCES_TO_TEST  
     "${CMAKE_SOURCE_DIR}/src/Logger/*.cpp" # Logger source code under test
     "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/*.cpp" # ProcessSourceFiles source code under test
+    "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/util/*.cpp" # ProcessSourceFiles source code under test
+    "${CMAKE_SOURCE_DIR}/src/utils/util/*.cpp"
     )
 
 # Link Crow and Boost

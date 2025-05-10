@@ -6,7 +6,7 @@
 //     - Implement logic to limit the amount of memory of the logs. Like 5 files of 100 Mb.
 //     - Add log levels and types of logs for different sections
 //     - Make it thread safe ( when needed )
-//     - Implement Unit Tests for this class
+//     - Set option to not display any log
 class Logger
 {
    private:  // Meyers’ Singleton
