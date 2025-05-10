@@ -1,6 +1,4 @@
 #include "../../src/ProcessSourceFiles/ProcessFiles.h"
-// #include "../../src/ProcessSourceFiles/util/GitHubUrlAPI.h"
-// #include "../../src/ProcessSourceFiles/util/GitHubUrl.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -394,11 +392,16 @@ TEST_F(DownloadFilesTest, RetrieveEmptyGitHubListOfFiles)
 
 TEST_F(DownloadFilesTest, downloadFakeFolderStructureFromGitHub)
 {
+    const std::string expectedResponse =
+        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"Implementation/"
+        "observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/"
+        "File1.cpp\"}]";
     mockClient->setShouldSucceed(true);
     mockClient->setMockResponse(expectedRealResponse);
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+    EXPECT_EQ(response.dump(), expectedResponse);
 }
 
 TEST_F(DownloadFilesTest, downloadFakeInvalidstringConversionToJsonFolderStructureFromGitHub)
@@ -428,11 +431,16 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseMissingItemTypeShouldNot
         {"name": "File1.cpp"}
     ]
     )";
+
+    const std::string expectedDownloadJSONResponse = R"([{"name":"root","path":""}])";
+
     mockClient->setShouldSucceed(true);
     mockClient->setMockResponse(expectedResponse);
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+
+    EXPECT_EQ(response.dump(), expectedDownloadJSONResponse);
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
     EXPECT_EQ(root->getName(), "root");
@@ -441,6 +449,8 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseMissingItemTypeShouldNot
 
 TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGraph)
 {
+    const std::string expectedJsonResponse =
+        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"File1.cpp\"}]";
     const std::string expectedResponse = R"(
     [
         {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "File1.cpp"}
@@ -450,7 +460,9 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGra
     mockClient->setMockResponse(expectedResponse);
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+
+    EXPECT_EQ(response.dump(), expectedJsonResponse);
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
     EXPECT_EQ(root->getName(), "root");
@@ -459,13 +471,8 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseOneFileShouldPopulateGra
 
 TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseFolderWithInvalidURLShouldNotPopulateGraph)
 {
-    // const std::string expectedResponse = R"(
-    // [
-    //     {"name": "File1.cpp", "type": "file"},
-    //     {"name": "Folder1", "type": "dir", "url": "INVALID"}
-    // ]
-    // )";
-
+    const std::string expectedJsonResponse =
+        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"File1.cpp\",\"path\":\"File1.cpp\"}]";
     const std::string expectedResponse = R"(
     [
         {"name": "File1.cpp", "type": "file", "download_url": "BLA", "path": "File1.cpp"},
@@ -477,7 +484,9 @@ TEST_F(DownloadFilesTest, recursivelyProcessJsonResponseFolderWithInvalidURLShou
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+
+    EXPECT_EQ(response.dump(), expectedJsonResponse);
     EXPECT_EQ(root->getName(), "root");
     EXPECT_EQ(root->getChildren().size(), 1);
     // EXPECT_EQ(root->getChildren()[0]->getName(), "File1.cpp");
@@ -565,6 +574,9 @@ TEST_F(DownloadFilesTest, MatchesOnlyGitHubWebUrls)
 
 TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
 {
+    const std::string expectedJsonResponse =
+        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"Folder1\",\"path\":\"\"},{\"name\":"
+        "\"FileInsideFolder1.cpp\",\"path\":\"Folder1/FileInsideFolder1.cpp\"}]";
     const std::string firstLevelResponse = R"(
     [
         {"name": "Folder1", "type": "dir", "url":
@@ -585,7 +597,9 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
 
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+
+    EXPECT_EQ(response.dump(), expectedJsonResponse);
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
     if (root == nullptr) FAIL() << "Root hsould not be null";
@@ -600,6 +614,10 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolder)
 
 TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolderAndFile)
 {
+    const std::string expectedJsonResponse =
+        "[{\"name\":\"root\",\"path\":\"\"},{\"name\":\"Folder1\",\"path\":\"\"},{\"name\":"
+        "\"FileInsideFolder1.cpp\",\"path\":\"Folder1/"
+        "FileInsideFolder1.cpp\"},{\"name\":\"File1.cpp\",\"path\":\"Folder1/File1.cpp\"}]";
     const std::string firstLevelResponse = R"(
     [
         {"name": "Folder1", "type": "dir", "url":
@@ -621,7 +639,9 @@ TEST_F(DownloadFilesTest, recursivelyProcessFolderWithValidNestedFolderAndFile)
 
     DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
 
-    EXPECT_TRUE(downlaodFilesObj.downloadURLContentIntoTempFolder());
+    const auto response = downlaodFilesObj.downloadURLContentIntoTempFolder();
+
+    EXPECT_EQ(response.dump(), expectedJsonResponse);
 
     auto root = downlaodFilesObj.getFolderGraph().getRoot();
     EXPECT_EQ(root->getChildren().size(), 2);

@@ -262,4 +262,6 @@ std::vector<FolderGraph::NamedProperty> FolderGraph::bfsToJson(
             queueNodes.emplace(child);
         }
     }
+
+    return result;
 }

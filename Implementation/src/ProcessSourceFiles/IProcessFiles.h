@@ -29,5 +29,5 @@ class IDownloadFiles
     virtual std::string listGitHubContentFromURL(const std::optional<std::string>& url) = 0;
     virtual void recursivelyDownloadFilesPopulatingGraph(
         const json& parsed, const std::shared_ptr<ItemInFolder>& parent) = 0;
-    virtual bool downloadURLContentIntoTempFolder() = 0;
+    virtual json downloadURLContentIntoTempFolder() = 0;
 };

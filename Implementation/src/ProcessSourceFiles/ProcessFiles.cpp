@@ -319,14 +319,24 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     }
 }
 
-bool DownloadFiles::downloadURLContentIntoTempFolder()
+json DownloadFiles::downloadURLContentIntoTempFolder()
 {
     Logger::getInstance().log("[DownloadFiles::downloadURLContentIntoTempFolder] m_originalURL: " +
                               m_originalURL);
+
+    json response;
+
+    if (m_originalURL.empty())
+    {
+        Logger::getInstance().log(
+            "[DownloadFiles::downloadURLContentIntoTempFolder] Empty initial URL");
+        return response;
+    }
+
     try
     {
         callRecursiveDoenloadMethod(m_originalURL, m_folderGraph.getRoot());
-        auto res = convertVectorWithNodeNameAndPath(m_folderGraph);
+        response = convertVectorWithNodeNameAndPath(m_folderGraph);
     }
     catch (const std::exception& e)
     {
@@ -339,7 +349,7 @@ bool DownloadFiles::downloadURLContentIntoTempFolder()
 
     // Traverse the graph to return the list of downloaded files
 
-    return true;
+    return response;
 }
 
 // TODO: iF there is string representing something it's wring... create a class for that

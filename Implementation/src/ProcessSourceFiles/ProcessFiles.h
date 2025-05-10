@@ -35,7 +35,7 @@ class DownloadFiles : public IDownloadFiles
     std::string listGitHubContentFromURL(const std::optional<std::string>& url) override;
     void recursivelyDownloadFilesPopulatingGraph(
         const json& parsed, const std::shared_ptr<ItemInFolder>& parent) override;
-    bool downloadURLContentIntoTempFolder() override;
+    json downloadURLContentIntoTempFolder() override;
 
     void callRecursiveDoenloadMethod(const std::optional<std::string>& url,
                                      const std::shared_ptr<ItemInFolder>& parent);
