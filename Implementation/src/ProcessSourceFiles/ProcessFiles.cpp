@@ -276,13 +276,11 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     Logger::getInstance().log("[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] parsed: " +
                               std::to_string(parsed.size()) +
                               " parent: " + (parent ? parent->getName() : ""));
+
     validateRecursivelyDownloadFilesPopulatingGraphEntryParameters(parsed, parent);
 
     for (const auto& item : parsed)
     {
-        // const std::string name = item.value("name", "");
-        // const std::string typeStr = item.value("type", "");
-        // std::shared_ptr<ItemInFolder> child = std::make_shared<ItemInFolder>(name, typeStr);
         std::shared_ptr<ItemInFolder> child = instantiateChidFromParsedJsonItem(item);
         Logger::getInstance().log("Processing : " + child->getName());
 
@@ -374,8 +372,6 @@ json DownloadFiles::downloadURLContentIntoTempFolder()
         Logger::getInstance().log(errorMessage);
         throw std::runtime_error(errorMessage);
     }
-
-    // Traverse the graph to return the list of downloaded files
 
     return response;
 }
