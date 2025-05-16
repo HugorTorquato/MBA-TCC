@@ -284,65 +284,76 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
         std::shared_ptr<ItemInFolder> child = instantiateChidFromParsedJsonItem(item);
         Logger::getInstance().log("Processing : " + child->getName());
 
-        switch (child->getType())
+        processChildNode(item, child, parent);
+    }
+}
+
+void DownloadFiles::processChildNode(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                                     const std::shared_ptr<ItemInFolder>& parent)
+{
+    Logger::getInstance().log("[DownloadFiles::processChildNode] child: " + child->getName() +
+                              " parent: " + (parent ? parent->getName() : ""));
+    switch (child->getType())
+    {
+        case SOURCEFILE:
+            processSourceFile(item, child, parent);
+            break;
+        case DIR:
+            processDirectory(item, child, parent);
+            break;
+        case UNKNOWN:
+        default:
+            Logger::getInstance().log(
+                "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Default child, no "
+                "type defined");
+            break;
+    }
+}
+
+void DownloadFiles::processSourceFile(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                                      const std::shared_ptr<ItemInFolder>& parent)
+{
+    Logger::getInstance().log("[DownloadFiles::processSourceFile] child: " + child->getName() +
+                              " parent: " + (parent ? parent->getName() : ""));
+    try
+    {
+        const std::string downloadUrl = item.value("download_url", "");
+        const std::string path = item.value("path", "");
+
+        if (!downloadUrl.empty() && isCppSourceFile(child->getName()))
         {
-            case SOURCEFILE:
-            {
-                try
-                {
-                    const std::string downloadUrl = item.value("download_url", "");
-                    const std::string path = item.value("path", "");
-
-                    if (!downloadUrl.empty() && isCppSourceFile(child->getName()))
-                    {
-                        m_httpClient->downloadFile(downloadUrl, m_tempFolder + path, writeToString);
-                        m_folderGraph.addEdge(parent, child);
-                    }
-                }
-                catch (const std::exception& e)
-                {
-                    Logger::getInstance().log(
-                        "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Error "
-                        "download file: " +
-                        std::string(e.what()));
-                }
-
-                Logger::getInstance().log("SOURCEFILE Name: " + child->getName());
-                break;
-            }
-            case DIR:
-            {
-                // No need to create the folders because wehn downloading the files, the folders are
-                // created
-
-                const std::string folderUrl = item.value("url", "");
-
-                if (!RepoURLFactory::isFromGtHub(folderUrl))
-                {
-                    Logger::getInstance().log(
-                        "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Invalid folder "
-                        "URL, folder " +
-                        child->getName() +
-                        " will not be included in the folder graph : " + folderUrl);
-                    continue;
-                }
-
-                m_folderGraph.addEdge(parent, child);
-                Logger::getInstance().log("DIR Name: " + child->getName());
-
-                callRecursiveDoenloadMethod(folderUrl, child);  // bhid becomes parent
-                break;
-            }
-            case UNKNOWN:
-            default:
-            {
-                Logger::getInstance().log(
-                    "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Default child, no "
-                    "type defined");
-                break;
-            }
+            m_httpClient->downloadFile(downloadUrl, m_tempFolder + path, writeToString);
+            m_folderGraph.addEdge(parent, child);
         }
     }
+    catch (const std::exception& e)
+    {
+        Logger::getInstance().log("[DownloadFiles::processSourceFile] Error downloading file: " +
+                                  std::string(e.what()));
+    }
+
+    Logger::getInstance().log("SOURCEFILE Name: " + child->getName());
+}
+
+void DownloadFiles::processDirectory(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                                     const std::shared_ptr<ItemInFolder>& parent)
+{
+    Logger::getInstance().log("[DownloadFiles::processDirectory] child: " + child->getName() +
+                              " parent: " + (parent ? parent->getName() : ""));
+    const std::string folderUrl = item.value("url", "");
+
+    if (!RepoURLFactory::isFromGtHub(folderUrl))
+    {
+        Logger::getInstance().log("[DownloadFiles::processDirectory] Invalid folder URL, folder " +
+                                  child->getName() +
+                                  " will not be included in the folder graph : " + folderUrl);
+        return;
+    }
+
+    m_folderGraph.addEdge(parent, child);
+    Logger::getInstance().log("DIR Name: " + child->getName());
+
+    callRecursiveDoenloadMethod(folderUrl, child);  // child becomes parent
 }
 
 json DownloadFiles::downloadURLContentIntoTempFolder()

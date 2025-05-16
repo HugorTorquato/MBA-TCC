@@ -41,6 +41,13 @@ class DownloadFiles : public IDownloadFiles
                                      const std::shared_ptr<ItemInFolder>& parent);
     // std::string getgithubRegexpExpr(RegexpTarget target) const;
 
+    void processChildNode(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                          const std::shared_ptr<ItemInFolder>& parent);
+    void processSourceFile(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                           const std::shared_ptr<ItemInFolder>& parent);
+    void processDirectory(const json& item, const std::shared_ptr<ItemInFolder>& child,
+                          const std::shared_ptr<ItemInFolder>& parent);
+
    private:
     std::string m_originalURL;
     std::unique_ptr<IRepoURL> m_urlInfo;
