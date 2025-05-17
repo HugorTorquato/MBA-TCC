@@ -184,7 +184,7 @@ class DownloadFilesTest : public ::testing::Test
 
     void SetUp() override
     {
-        mockClient = std::make_unique<MockHttpClient>(true, "OK response from server");
+        mockClient = std::make_unique<MockHttpClient>(true, "");
     }
 
     void TearDown() override
@@ -779,4 +779,66 @@ TEST_F(DownloadFilesTest, mockSimpleDownloadFromGitHubApiReturningOnlyValidFiles
     EXPECT_TRUE(fs::exists(tempFolder + "Folder1/File1.cpp"));
     EXPECT_FALSE(fs::exists(tempFolder + "Folder1/File2.App"));  // .App not supported
     EXPECT_FALSE(fs::exists(tempFolder + "Folder2"));  // Don't create folders, only with files
+}
+
+// AI - Verify that the getTempFolder method returns the correct temporary folder path.
+TEST_F(DownloadFilesTest, GetTempFolderReturnsCorrectPath)
+{
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_EQ(downlaodFilesObj.getTempFolder(), tempFolder);
+}
+
+// AI - Ensure that the method correctly validates a valid endpoint by making a mock HTTP call.
+TEST_F(DownloadFilesTest, VerifyIfValidEndpointByCallingItReturnsTrueForValidEndpoint)
+{
+    mockClient->setShouldSucceed(true);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_TRUE(downlaodFilesObj.verifyIfValidEndpointByCallingIt());
+}
+
+// AI - Ensure that the method correctly validates a valid endpoint by making a mock HTTP call.
+TEST_F(DownloadFilesTest, VerifyIfValidEndpointByCallingItThrowsForInvalidEndpoint)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_FALSE(downlaodFilesObj.verifyIfValidEndpointByCallingIt());
+}
+
+// AI - Validate that the method correctly calls the recursive download logic for valid and invalid
+// URLs.
+TEST_F(DownloadFilesTest, CallRecursiveDownloadMethodWithValidURL)
+{
+    // auto parent = std::make_shared<ItemInFolder>("root");
+    const std::shared_ptr<ItemInFolder> parent = std::make_shared<ItemInFolder>(
+        "root", "pathStr", 0, "urlStr", "html_urlStr", "git_urlStr", "download_urlStr", "typeStr");
+    mockClient->setShouldSucceed(true);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_NO_THROW(downlaodFilesObj.callRecursiveDoenloadMethod(testURL, parent));
+}
+
+// AI - Validate that the method correctly calls the recursive download logic for valid and invalid
+// URLs.
+TEST_F(DownloadFilesTest, CallRecursiveDownloadMethodWithInvalidURL)
+{
+    mockClient->setShouldSucceed(false);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_THROW(downlaodFilesObj.callRecursiveDoenloadMethod(testURL, nullptr),
+                 std::invalid_argument);
+}
+
+// AI - Validate that the method correctly constructs the endpoint to list files from GitHub.
+TEST_F(DownloadFilesTest, GetEndpointToListFilesFromGitHub)
+{
+    DownloadFiles downlaodFilesObj(customUrl, std::move(mockClient));
+    std::string expectedEndpoint =
+        "https://api.github.com/repos/torquato/repo123/contents/path123321/to/folder?ref=branch321";
+    EXPECT_EQ(downlaodFilesObj.getEndpointToListFilesFromGitHub(customUrl), expectedEndpoint);
+}
+
+// AI - Ensure that the method correctly lists content from a valid GitHub URL.
+TEST_F(DownloadFilesTest, ListGitHubContentFromURL)
+{
+    mockClient->setMockResponse(expectedRealResponse);
+    DownloadFiles downlaodFilesObj(testURL, std::move(mockClient));
+    EXPECT_EQ(downlaodFilesObj.listGitHubContentFromURL(testURL), expectedRealResponse);
 }

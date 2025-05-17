@@ -1,12 +1,10 @@
 #include "ProcessFiles.h"
 
 #include <memory>
-#include <regex>
 #include <stdexcept>
 #include <string>
 
 #include "../Logger/Log.h"
-#include "FolderGraph.h"
 #include "RepoURLFactory.h"
 #include "util/IHttpClient.h"
 #include "util/IRepoURL.h"
@@ -253,7 +251,7 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
         return response;
     }
     if (!m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString)) return "";
-    // Logger::getInstance().log(response);
+    Logger::getInstance().log("[ProcessFiles][listGitHubContentFromURL] response: " + response);
     return response;
 }
 
@@ -261,6 +259,8 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
 void DownloadFiles::callRecursiveDoenloadMethod(const std::optional<std::string>& url,
                                                 const std::shared_ptr<ItemInFolder>& parent)
 {
+    if (!parent)
+        throw std::invalid_argument("[DownloadFiles::callRecursiveDoenloadMethod] Parent is null");
     Logger::getInstance().log("[DownloadFiles::callRecursiveDoenloadMethod] url: " +
                               (url ? *url : "") + " parent: " + (parent ? parent->getName() : ""));
     if (auto listedFilesFromGitHub = listGitHubContentFromURL(url); !listedFilesFromGitHub.empty())
@@ -291,8 +291,9 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
 void DownloadFiles::processChildNode(const json& item, const std::shared_ptr<ItemInFolder>& child,
                                      const std::shared_ptr<ItemInFolder>& parent)
 {
-    Logger::getInstance().log("[DownloadFiles::processChildNode] child: " + child->getName() +
-                              " parent: " + (parent ? parent->getName() : ""));
+    Logger::getInstance().log(
+        "[DownloadFiles::processChildNode] child: " + (child ? child->getName() : "") +
+        " parent: " + (parent ? parent->getName() : ""));
     switch (child->getType())
     {
         case SOURCEFILE:
