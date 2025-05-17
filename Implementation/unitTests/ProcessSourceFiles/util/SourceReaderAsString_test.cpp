@@ -13,9 +13,19 @@ class SourceReaderAsStringTest : public ::testing::Test
     const std::string testFileContent = "This is a test file content.";
 };
 
+// Tests
+
+TEST_F(SourceReaderAsStringTest, ReadFilePathEmpty)
+{
+    EXPECT_THROW(SourceReaderAsString sourceReader(""), std::invalid_argument);
+
+    SourceReaderAsString sourceReader2(testFilePath);
+    EXPECT_THROW(sourceReader2.readFile(""), std::invalid_argument);
+}
+
 TEST_F(SourceReaderAsStringTest, ReadFileNotFound)
 {
-    SourceReaderAsString sourceReader;
+    SourceReaderAsString sourceReader(testFilePath);
     EXPECT_THROW(sourceReader.readFile("non_existent_file.txt"), std::runtime_error);
 }
 
@@ -26,8 +36,24 @@ TEST_F(SourceReaderAsStringTest, ReadFileContent)
     testFile << testFileContent;
     testFile.close();
 
-    SourceReaderAsString sourceReader;
+    SourceReaderAsString sourceReader(testFilePath);
     std::string content = sourceReader.readFile(testFilePath);
+
+    EXPECT_EQ(content, testFileContent);
+
+    // Clean up the test file
+    std::remove(testFilePath.c_str());
+}
+
+TEST_F(SourceReaderAsStringTest, ReadFileContentUsingConstructorPath)
+{
+    // Create a test file with known content
+    std::ofstream testFile(testFilePath);
+    testFile << testFileContent;
+    testFile.close();
+
+    SourceReaderAsString sourceReader(testFilePath);
+    std::string content = sourceReader.readFile();
 
     EXPECT_EQ(content, testFileContent);
 
@@ -41,7 +67,7 @@ TEST_F(SourceReaderAsStringTest, ReadFileEmptyContent)
     std::ofstream testFile(testFilePath);
     testFile.close();
 
-    SourceReaderAsString sourceReader;
+    SourceReaderAsString sourceReader(testFilePath);
     std::string content = sourceReader.readFile(testFilePath);
 
     EXPECT_EQ(content, "");
@@ -57,7 +83,7 @@ TEST_F(SourceReaderAsStringTest, ReadFileWithSpecialCharacters)
     testFile << "Special characters: !@#$%^&*()_+";
     testFile.close();
 
-    SourceReaderAsString sourceReader;
+    SourceReaderAsString sourceReader(testFilePath);
     std::string content = sourceReader.readFile(testFilePath);
 
     EXPECT_EQ(content, "Special characters: !@#$%^&*()_+");
@@ -73,7 +99,7 @@ TEST_F(SourceReaderAsStringTest, ReadFileWithNewlineCharacters)
     testFile << "Line 1\nLine 2\nLine 3";
     testFile.close();
 
-    SourceReaderAsString sourceReader;
+    SourceReaderAsString sourceReader(testFilePath);
     std::string content = sourceReader.readFile(testFilePath);
 
     EXPECT_EQ(content, "Line 1\nLine 2\nLine 3");

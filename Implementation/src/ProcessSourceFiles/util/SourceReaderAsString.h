@@ -5,7 +5,12 @@
 class SourceReaderAsString : public ISourceReader
 {
    public:
-    SourceReaderAsString() = default;
+    SourceReaderAsString() = delete;
+    SourceReaderAsString(const std::string& filePath);
 
+    std::string readFile() const override;
     std::string readFile(const std::string& filePath) const override;
+
+   private:
+    std::string m_filePath;
 };
