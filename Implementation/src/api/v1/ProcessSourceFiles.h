@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "../../Logger/Log.h"
-#include "../../ProcessSourceFiles/ProcessFiles.h"
+#include "../../ProcessSourceFiles/DownloadFiles.h"
 #include "../../ProcessSourceFiles/util/HttpClient.h"
 
 class ProcessSourceFiles
