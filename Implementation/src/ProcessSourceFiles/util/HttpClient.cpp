@@ -21,6 +21,7 @@ size_t writeToStringCallback(void* contents, size_t size, size_t nmemb, void* us
     // static_cast<std::string*>(userp)	 -> You cast it back to a real std::string*.
     // append	     -> You append the received data to the string.
     // return totalSize	 -> You return how many bytes you processed (curl expects this).
+    Logger::getInstance().log("[CurlHttpClient::writeToStringCallback] Writing to file");
     size_t totalSize = size * nmemb;
     std::string* str = static_cast<std::string*>(userp);
     str->append(static_cast<char*>(contents), totalSize);
@@ -29,6 +30,7 @@ size_t writeToStringCallback(void* contents, size_t size, size_t nmemb, void* us
 
 size_t writeToFileCallback(void* ptr, size_t size, size_t nmemb, void* userdata)
 {
+    Logger::getInstance().log("[CurlHttpClient::writeToFileCallback] Writing to file");
     FILE* file = static_cast<FILE*>(userdata);
     return fwrite(ptr, size, nmemb, file);
 }
@@ -106,6 +108,8 @@ bool CurlHttpClient::getResponseFronUrl(
 }
 
 // Responsible for downloading a file from a given URL and saving it to a specified output path.
+// writeCallback-> is just fo special cases... leaving it here just in case. But prefer to use the
+// callbacks deined within this file
 bool CurlHttpClient::downloadFile(
     const std::string& url, const std::string& outputPath,
     std::optional<size_t (*)(void*, size_t, size_t, void*)> writeCallback)
@@ -128,6 +132,8 @@ bool CurlHttpClient::downloadFile(
     }
 
     auto headers = defineHeaders();
+
+    Logger::getInstance().log("[CurlHttpClient::downloadFile] create_directories: " + outputPath);
 
     curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(m_curl, CURLOPT_URL, url.c_str());

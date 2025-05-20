@@ -1,12 +1,12 @@
 #include "../../src/ProcessSourceFiles/ScannerForConditionMatch.h"
 
-#include "../../src/ProcessSourceFiles/util/SourceReaderAsString.h"
-
 #include <gtest/gtest.h>
 
 #include <fstream>
 #include <stdexcept>
 #include <string>
+
+#include "../../src/ProcessSourceFiles/util/SourceReaderAsString.h"
 
 class ScannerForConditionMatchTest : public ::testing::Test
 {
@@ -25,8 +25,7 @@ TEST_F(ScannerForConditionMatchTest, RetrieveFileContent)
     testFile.close();
 
     ScannerForConditionMatch scanner;
-    std::string content = scanner.retrieveSourceFileContent(
-        SourceReaderAsString(testFilePath));
+    std::string content = scanner.retrieveSourceFileContent(SourceReaderAsString(testFilePath));
 
     EXPECT_EQ(content, testFileContent);
 

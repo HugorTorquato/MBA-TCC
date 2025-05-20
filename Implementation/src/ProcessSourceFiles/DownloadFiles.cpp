@@ -1,6 +1,7 @@
 #include "DownloadFiles.h"
 
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -15,13 +16,6 @@ namespace
 // - Sequence, one api to post the URL and another to get if URL is valid
 // - Maybe set as internal API.... just to test this
 // - With the new wrapper i can unit test this passing the curl wrapper as a parameter to mock
-
-// Callback to store the response string ( Transform this to function header )
-size_t writeToString(void* contents, size_t size, size_t nmemb, void* userp)
-{
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
-    return size * nmemb;
-}
 
 bool errorWithUrlInfoMember(const IRepoURL& urlInfo)
 {
@@ -250,7 +244,7 @@ std::string DownloadFiles::listGitHubContentFromURL(const std::optional<std::str
             "[DownloadFiles::listGitHubContentFromURL] Error with HTTP Client");
         return response;
     }
-    if (!m_httpClient->getResponseFronUrl(endpointToListFiles, response, writeToString)) return "";
+    if (!m_httpClient->getResponseFronUrl(endpointToListFiles, response, std::nullopt)) return "";
     Logger::getInstance().log("[ProcessFiles][listGitHubContentFromURL] response: " + response);
     return response;
 }
@@ -282,7 +276,9 @@ void DownloadFiles::recursivelyDownloadFilesPopulatingGraph(
     for (const auto& item : parsed)
     {
         std::shared_ptr<ItemInFolder> child = instantiateChidFromParsedJsonItem(item);
-        Logger::getInstance().log("Processing : " + child->getName());
+        Logger::getInstance().log(
+            "[DownloadFiles::recursivelyDownloadFilesPopulatingGraph] Processing : " +
+            child->getName());
 
         processChildNode(item, child, parent);
     }
@@ -323,7 +319,7 @@ void DownloadFiles::processSourceFile(const json& item, const std::shared_ptr<It
 
         if (!downloadUrl.empty() && isCppSourceFile(child->getName()))
         {
-            m_httpClient->downloadFile(downloadUrl, m_tempFolder + path, writeToString);
+            m_httpClient->downloadFile(downloadUrl, m_tempFolder + path, std::nullopt);
             m_folderGraph.addEdge(parent, child);
         }
     }
