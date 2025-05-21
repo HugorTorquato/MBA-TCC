@@ -9,5 +9,5 @@ class ScannerForConditionMatch : public IScanner
    public:
     ScannerForConditionMatch() = default;
 
-    std::string retrieveSourceFileContent(const ISourceReader& reader) const override;
+    json downloadAndRetrieveSourceFileContent(const std::string& url) const override;
 };

@@ -78,7 +78,8 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
     assert response.status_code == 200  
 
     expected_order = [
-        ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp","Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp"),
+        ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp",
+            "Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp"),
         ("root:", "")
     ]
 
@@ -97,3 +98,13 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
     data = response.json()
     assert response.status_code == 200  
 
+    expected_result = [
+        ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp","// First Example only with text content that must be displayed in the source reader as comment")
+    ]
+
+    for idx, (name, content) in enumerate(data.items()):
+        expected_name, expected_content = expected_result[idx]
+        assert name == expected_name, f"Name - Expected {expected_name}, but got {name} at position {idx}"
+        assert content == expected_content, f"Content - Expected {expected_content}, but got {content} at position {idx}"
+        assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
+        assert isinstance(content, str), f"Expected string as content, got {type(content)}"

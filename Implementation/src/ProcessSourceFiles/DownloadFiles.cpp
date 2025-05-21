@@ -113,13 +113,6 @@ json convertVectorWithNodeNameAndPathToJSON(const FolderGraph& folderGraph)
 
     for (const auto& item : result)
     {
-        // json jsonItem;
-        // jsonItem["name"] = item.first;
-        // jsonItem["path"] = std::get<std::filesystem::path>(item.second);
-        // Logger::getInstance().log(
-        //     "[convertVectorWithNodeNameAndPath] name: " + item.first +
-        //     " path: " + static_cast<std::string>(std::get<std::filesystem::path>(item.second)));
-        // jsonResult.push_back(jsonItem);
         const std::string& name = item.first;
         const std::string path = std::get<std::filesystem::path>(item.second).string();
 

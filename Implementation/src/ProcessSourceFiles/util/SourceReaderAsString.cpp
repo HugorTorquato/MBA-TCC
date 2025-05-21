@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <stdexcept>
+#include <string>
 
 #include "../../Logger/Log.h"
 
@@ -11,16 +12,33 @@ namespace
 {
 std::string readFile(const std::string& filePath)
 {
-    std::ifstream file(filePath);  // Open the file using an input file stream (ifstream)
-    if (!file.is_open())
+    if (filePath.empty())
     {
-        throw std::runtime_error("[SourceReaderAsString::readFile] Could not open file: " +
-                                 filePath);
+        throw std::invalid_argument("[::readFile] File path is empty");
     }
 
-    // Read the entire file into a std::string using stream buffer iterators
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    return content;
+    std::filesystem::path basePath("/app/temp");
+    std::filesystem::path fullPath = basePath / filePath;
+
+    if (!std::filesystem::exists(fullPath))
+    {
+        throw std::runtime_error("[::readFile] File does not exist: " + fullPath.string());
+    }
+
+    Logger::getInstance().log("[::readFile] fullPath: " + fullPath.string());
+
+    std::ifstream file(fullPath,
+                       std::ios::in | std::ios::binary);  // Open in binary mode for robustness
+
+    if (!file.is_open())
+    {
+        throw std::runtime_error("[::readFile] Could not open file: " + fullPath.string());
+    }
+
+    // Use a stringstream for better performance and readability
+    std::ostringstream contentStream;
+    contentStream << file.rdbuf();
+    return contentStream.str();
 }
 }  // namespace
 

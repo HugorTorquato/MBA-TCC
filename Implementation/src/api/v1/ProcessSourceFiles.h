@@ -6,7 +6,6 @@
 #include "../../ProcessSourceFiles/DownloadFiles.h"
 #include "../../ProcessSourceFiles/ScannerForConditionMatch.h"
 #include "../../ProcessSourceFiles/util/HttpClient.h"
-#include "../../ProcessSourceFiles/util/SourceReaderAsString.h"
 
 class ProcessSourceFiles
 {
@@ -92,21 +91,12 @@ class ProcessSourceFiles
 
                     const std::string git_url = body["url"].s();
 
-                    // Create a class here to handle this and make it testable...
-                    // The route is just a bridge... and not suppose to have logic in here
-                    DownloadFiles downoadFiles(git_url, std::make_unique<CurlHttpClient>());
-
-                    json response = downoadFiles.downloadURLContentIntoTempFolder();
-                    Logger::getInstance().log(
-                        "[ProcessSourceFiles][downloadFilesInUrl] response: " + response.dump());
-
                     ScannerForConditionMatch scanner;
-                    std::string readDocument = scanner.retrieveSourceFileContent(
-                        SourceReaderAsString(downoadFiles.getTempFolder() + "/test.txt"));
+                    json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
 
                     Logger::getInstance().log(
-                        "[ProcessSourceFiles][downloadFilesInUrl] response: " + readDocument);
-                    return crow::response(readDocument);
+                        "[ProcessSourceFiles][downloadFilesInUrl] response: " + jsonResult.dump());
+                    return crow::response(jsonResult.dump());
                 });
     }
 };
