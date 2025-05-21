@@ -1,5 +1,6 @@
 #include "SourceReaderAsString.h"
 
+#include <filesystem>
 #include <fstream>
 #include <stdexcept>
 #include <string>
