@@ -6,6 +6,7 @@
 #include "../../ProcessSourceFiles/DownloadFiles.h"
 #include "../../ProcessSourceFiles/ScannerForConditionMatch.h"
 #include "../../ProcessSourceFiles/util/HttpClient.h"
+#include "../../ProcessSourceFiles/util/SourceReaderAsString.h"
 
 class ProcessSourceFiles
 {
@@ -91,7 +92,13 @@ class ProcessSourceFiles
 
                     const std::string git_url = body["url"].s();
 
-                    ScannerForConditionMatch scanner;
+                    auto downloader = std::make_shared<DownloadFiles>(
+                        git_url, std::make_unique<CurlHttpClient>());
+
+                    auto readerFactory = [](const std::string& path)
+                    { return std::make_unique<SourceReaderAsString>(path); };
+
+                    ScannerForConditionMatch scanner(downloader, readerFactory);
                     json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
 
                     Logger::getInstance().log(

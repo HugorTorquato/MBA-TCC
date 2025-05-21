@@ -1,19 +1,23 @@
 #include "ScannerForConditionMatch.h"
 
 #include "../Logger/Log.h"
-#include "../ProcessSourceFiles/util/SourceReaderAsString.h"
-#include "DownloadFiles.h"
-#include "util/HttpClient.h"
 #include "util/ISourceReader.h"
+
+ScannerForConditionMatch::ScannerForConditionMatch(
+    std::shared_ptr<IDownloadFiles> downloader,
+    std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)> sourceReaderFactory)
+    : m_downloadFiles(downloader), m_sourceReaderFactory(sourceReaderFactory)
+{
+    Logger::getInstance().log("[ScannerForConditionMatch::ScannerForConditionMatch]");
+}
 
 json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::string& url) const
 {
-    // return reader.readFile();
+    Logger::getInstance().log(
+        "[ScannerForConditionMatch][downloadAndRetrieveSourceFileContent] url: " + url);
 
-    DownloadFiles downoadFiles(url, std::make_unique<CurlHttpClient>());
-
-    json downloadResult = downoadFiles.downloadURLContentIntoTempFolder();
-    Logger::getInstance().log("[ProcessSourceFiles][downloadFilesInUrl] response: " +
+    json downloadResult = m_downloadFiles->downloadURLContentIntoTempFolder();
+    Logger::getInstance().log("[ScannerForConditionMatch][downloadFilesInUrl] response: " +
                               downloadResult.dump());
 
     json responseResult = json::object();
@@ -22,11 +26,12 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
     {
         if (key.rfind("root", 0) == 0) continue;
 
-        std::unique_ptr<ISourceReader> reader = std::make_unique<SourceReaderAsString>(path);
+        auto reader = m_sourceReaderFactory(path);
         std::string readDocument = reader->readFile();
 
-        Logger::getInstance().log("[ProcessSourceFiles][downloadFilesInUrl] readDocument: " +
-                                  readDocument);
+        Logger::getInstance().log(
+            "[ScannerForConditionMatch][downloadAndRetrieveSourceFileContent] readDocument: " +
+            readDocument);
 
         responseResult[key] = readDocument;
     }

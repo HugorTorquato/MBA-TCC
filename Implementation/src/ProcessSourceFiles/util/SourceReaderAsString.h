@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "ISourceReader.h"
 
 class SourceReaderAsString : public ISourceReader

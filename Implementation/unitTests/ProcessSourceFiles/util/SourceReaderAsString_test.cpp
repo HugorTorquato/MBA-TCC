@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <string>
 
-// Test fixture for SourceReaderAsString
 class SourceReaderAsStringTest : public ::testing::Test
 {
    protected:
