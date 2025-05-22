@@ -98,7 +98,8 @@ class ProcessSourceFiles
                     auto readerFactory = [](const std::string& path)
                     { return std::make_unique<SourceReaderAsString>(path); };
 
-                    ScannerForConditionMatch scanner(downloader, readerFactory);
+                    ScannerForConditionMatch scanner(downloader->downloadURLContentIntoTempFolder(),
+                                                     readerFactory);
                     json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
 
                     Logger::getInstance().log(

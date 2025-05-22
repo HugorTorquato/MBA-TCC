@@ -12,7 +12,7 @@ class ScannerForConditionMatch : public IScanner
    public:
     ScannerForConditionMatch() = default;
     ScannerForConditionMatch(
-        std::shared_ptr<IDownloadFiles> downloader,
+        json downloadResult,
         std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
             sourceReaderFactory);
 
@@ -20,7 +20,7 @@ class ScannerForConditionMatch : public IScanner
 
    private:
     // Remove coupling from DownloadFiles, CurlHttpClient, and  SourceReaderAsString
-    std::shared_ptr<IDownloadFiles> m_downloadFiles;
+    json m_downloadResult;
     std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
         m_sourceReaderFactory;
 };
