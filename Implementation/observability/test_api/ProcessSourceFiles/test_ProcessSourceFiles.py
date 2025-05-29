@@ -108,3 +108,8 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
         assert content == expected_content, f"Content - Expected {expected_content}, but got {content} at position {idx}"
         assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
         assert isinstance(content, str), f"Expected string as content, got {type(content)}"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200 
