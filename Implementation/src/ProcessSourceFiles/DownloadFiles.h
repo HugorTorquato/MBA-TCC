@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "IProcessFiles.h"
+#include "IDownloadFiles.h"
 #include "util/IHttpClient.h"
 
 enum RegexpTarget
@@ -37,6 +37,7 @@ class DownloadFiles : public IDownloadFiles
         const json& parsed, const std::shared_ptr<ItemInFolder>& parent) override;
     json downloadURLContentIntoTempFolder() override;
 
+   public:  // util methods not included in the interface
     void callRecursiveDoenloadMethod(const std::optional<std::string>& url,
                                      const std::shared_ptr<ItemInFolder>& parent);
     // std::string getgithubRegexpExpr(RegexpTarget target) const;

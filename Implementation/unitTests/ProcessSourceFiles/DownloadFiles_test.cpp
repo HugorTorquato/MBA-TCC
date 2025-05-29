@@ -1,4 +1,4 @@
-#include "../../src/ProcessSourceFiles/ProcessFiles.h"
+#include "../../src/ProcessSourceFiles/DownloadFiles.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

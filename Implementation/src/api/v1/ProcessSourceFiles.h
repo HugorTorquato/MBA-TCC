@@ -3,8 +3,10 @@
 #include <memory>
 
 #include "../../Logger/Log.h"
-#include "../../ProcessSourceFiles/ProcessFiles.h"
+#include "../../ProcessSourceFiles/DownloadFiles.h"
+#include "../../ProcessSourceFiles/ScannerForConditionMatch.h"
 #include "../../ProcessSourceFiles/util/HttpClient.h"
+#include "../../ProcessSourceFiles/util/SourceReaderAsString.h"
 
 class ProcessSourceFiles
 {
@@ -76,6 +78,33 @@ class ProcessSourceFiles
                     Logger::getInstance().log(
                         "[ProcessSourceFiles][downloadFilesInUrl] response: " + response.dump());
                     return crow::response(response.dump());
+                });
+
+        CROW_ROUTE(app, "/api/v1/downloadAndRetreveSourceFileContent")
+            .methods("POST"_method)(
+                [](const crow::request& req)
+                {
+                    Logger::getInstance().log(
+                        "Accessing /api/v1/downloadAndRetreveSourceFileContent route.");
+                    auto body = crow::json::load(req.body);
+
+                    if (!body) return crow::response(400, "Invalid JSON");
+
+                    const std::string git_url = body["url"].s();
+
+                    auto downloader = std::make_shared<DownloadFiles>(
+                        git_url, std::make_unique<CurlHttpClient>());
+
+                    auto readerFactory = [](const std::string& path)
+                    { return std::make_unique<SourceReaderAsString>(path); };
+
+                    ScannerForConditionMatch scanner(downloader->downloadURLContentIntoTempFolder(),
+                                                     readerFactory);
+                    json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
+
+                    Logger::getInstance().log(
+                        "[ProcessSourceFiles][downloadFilesInUrl] response: " + jsonResult.dump());
+                    return crow::response(jsonResult.dump());
                 });
     }
 };

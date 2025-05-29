@@ -26,7 +26,7 @@ def test_v1_listFilesInUrl_SimpleMainFile():
         assert item["name"] == "main.cpp", f"Expected name 'main.cpp', but got {item['name']}"
         assert item["type"] == "file", f"Expected a file, but got {item['type']}"
 
-def test_v1_listFilesInUrl_EmptyProjectFoldeStructure():
+def test_v1_downloadFilesInUrl_EmptyProjectFoldeStructure():
 
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure"
@@ -59,6 +59,55 @@ def test_v1_listFilesInUrl_EmptyProjectFoldeStructure():
         # Additional checks to ensure types are correct
         assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
         assert isinstance(path, str), f"Expected string as path, got {type(path)}"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200 
+
+def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
+
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests"
+    }
+
+    response = requests.post(f"{BASE_URL}/api/v1/downloadFilesInUrl", json=input_json)
+    data = response.json()
+    
+    # Response is valid JSON and not empty
+    assert response.status_code == 200  
+
+    expected_order = [
+        ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp",
+            "Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp"),
+        ("root:", "")
+    ]
+
+    for idx, (name, path) in enumerate(data.items()):
+        
+        # Assert that the current name and path match the expected values
+        expected_name, expected_path = expected_order[idx]
+        assert name == expected_name, f"Name - Expected {expected_name}, but got {name} at position {idx}"
+        assert path == expected_path, f"Path - Expected {expected_path}, but got {path} at position {idx}"
+
+        # Additional checks to ensure types are correct
+        assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
+        assert isinstance(path, str), f"Expected string as path, got {type(path)}"
+
+    response = requests.post(f"{BASE_URL}/api/v1/downloadAndRetreveSourceFileContent", json=input_json)
+    data = response.json()
+    assert response.status_code == 200  
+
+    expected_result = [
+        ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp","// First Example only with text content that must be displayed in the source reader as comment")
+    ]
+
+    for idx, (name, content) in enumerate(data.items()):
+        expected_name, expected_content = expected_result[idx]
+        assert name == expected_name, f"Name - Expected {expected_name}, but got {name} at position {idx}"
+        assert content == expected_content, f"Content - Expected {expected_content}, but got {content} at position {idx}"
+        assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
+        assert isinstance(content, str), f"Expected string as content, got {type(content)}"
 
     logger.info(f"RemoveTempFolder")
     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
