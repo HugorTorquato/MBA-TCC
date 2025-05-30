@@ -3,6 +3,23 @@
 #include "../Logger/Log.h"
 #include "util/ISourceReader.h"
 
+namespace
+{
+/**
+ * @brief Logs a JSON object in a formatted manner.
+ *
+ * This function takes a JSON object and logs its contents as a formatted string
+ * with an indentation level of 4 spaces. The log entry is prefixed with the
+ * context "[ScannerForConditionMatch][printJson]" for easier identification.
+ *
+ * @param j The JSON object to be logged.
+ */
+void printJson(const json& j)
+{
+    Logger::getInstance().log("[ScannerForConditionMatch][printJson] " + j.dump(4));
+}
+}  // namespace
+
 ScannerForConditionMatch::ScannerForConditionMatch(
     json downloadResult,
     std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)> sourceReaderFactory)
@@ -32,5 +49,27 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
         responseResult[key] = readDocument;
     }
 
+    printJson(responseResult);
+
     return responseResult;
 }
+
+// ok, The json is a way to organize things as files... i need to print the content of the file
+// OK I NEED TO LOOP THE JSON FILE TO SEE THE CONTENT.... I MAY NEED TO PROCESS ALL FILES, SO I NEED
+// TO SEE IT
+
+// void
+
+// create a test exemple with more than one file to read.
+// iMPLEMENT A METHOD TO LOOP THESE JSON RESPONSES
+/// ...
+
+
+// Example to create unit tests
+// [ScannerForConditionMatch][printJson] {
+//     "classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h": "#pragma once\n\nclass hugo {\n\n};",
+//     "main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp": "#include \"classDef.h\""
+// }
+// [ProcessSourceFiles][downloadFilesInUrl] response: {"classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":"#pragma once\n\nclass hugo {\n\n};","main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":"#include \"classDef.h\""}
+
+
