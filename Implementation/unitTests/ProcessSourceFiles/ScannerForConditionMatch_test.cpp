@@ -114,3 +114,22 @@ TEST_F(ScannerForConditionMatchTest, MultipleFiles)
     EXPECT_TRUE(actualResult.contains("file1.cpp"));
     EXPECT_TRUE(actualResult.contains("file2.cpp"));
 }
+
+TEST_F(ScannerForConditionMatchTest, evaluateFromJsonResponse)
+{
+    const json downloadResult = {{"file1.cpp", "path/to/file1.cpp"},
+                                 {"file2.cpp", "path/to/file2.cpp"}};
+
+    const std::string jsonResponse =
+        R"({classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h: #pragma once\n\nclass hugo {\n\n};, main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp: #include \"classDef.h\"})";
+
+    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    scanner.evaluateJsonContent(jsonResponse);
+    // auto result = sourceReader.evaluateFromJsonResponse(jsonResponse);
+
+    // EXPECT_EQ(result.size(), 2);
+    // EXPECT_EQ(result["file1.txt"], "Content of file 1");
+    // EXPECT_EQ(result["file2.txt"], "Content of file 2");
+}

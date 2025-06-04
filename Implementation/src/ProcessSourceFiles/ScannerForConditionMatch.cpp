@@ -54,7 +54,6 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
     return responseResult;
 }
 
-// ok, The json is a way to organize things as files... i need to print the content of the file
 // OK I NEED TO LOOP THE JSON FILE TO SEE THE CONTENT.... I MAY NEED TO PROCESS ALL FILES, SO I NEED
 // TO SEE IT
 
@@ -64,12 +63,34 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
 // iMPLEMENT A METHOD TO LOOP THESE JSON RESPONSES
 /// ...
 
-
 // Example to create unit tests
 // [ScannerForConditionMatch][printJson] {
-//     "classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h": "#pragma once\n\nclass hugo {\n\n};",
-//     "main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp": "#include \"classDef.h\""
+//     "classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":
+//     "#pragma once\n\nclass hugo {\n\n};",
+//     "main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":
+//     "#include \"classDef.h\""
 // }
-// [ProcessSourceFiles][downloadFilesInUrl] response: {"classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":"#pragma once\n\nclass hugo {\n\n};","main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":"#include \"classDef.h\""}
+// [ProcessSourceFiles][downloadFilesInUrl] response:
+// {"classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":"#pragma
+// once\n\nclass hugo
+// {\n\n};","main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":"#include
+// \"classDef.h\""}
 
+// loop jason content per file
+// i also need to collect metadata... linefiles ( line col form beggining and end of each token )
 
+void ScannerForConditionMatch::evaluateJsonContent(const json& content)
+{
+    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] content: " +
+                              content.dump(4));
+
+    std::vector<std::pair<std::string, std::string>> file_contents;
+
+    for (const auto& [file, content] : content.items())
+    {
+        file_contents.emplace_back(file, content);
+
+        Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] file: " + file +
+                                  " content: " + content.dump(4));
+    }
+}

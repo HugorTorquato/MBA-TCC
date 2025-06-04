@@ -103,7 +103,8 @@ class ProcessSourceFiles
                     json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
 
                     Logger::getInstance().log(
-                        "[ProcessSourceFiles][downloadAndRetreveSourceFileContent] response: " + jsonResult.dump());
+                        "[ProcessSourceFiles][downloadAndRetreveSourceFileContent] response: " +
+                        jsonResult.dump());
                     return crow::response(jsonResult.dump());
                 });
     }
