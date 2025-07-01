@@ -120,16 +120,44 @@ TEST_F(ScannerForConditionMatchTest, evaluateFromJsonResponse)
     const json downloadResult = {{"file1.cpp", "path/to/file1.cpp"},
                                  {"file2.cpp", "path/to/file2.cpp"}};
 
-    const std::string jsonResponse =
-        R"({classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h: #pragma once\n\nclass hugo {\n\n};, main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp: #include \"classDef.h\"})";
+    // const std::string jsonResponse =
+    //     R"({classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h:
+    //     #pragma once\n\nclass hugo {\n\n};,
+    //     main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp:
+    //     #include \"classDef.h\"})";
+
+    // Now jsonResponse is a real nlohmann::json object, and your loop with content.items() will
+    // correctly iterate through each key–value pair.
+    json jsonResponse = {{"classDef.h:Implementation/observability/source_code_for_testing/"
+                          "ProcessSourceFiles/TwoFileSourceCode/classDef.h",
+                          "#pragma once\n\nclass hugo {\n\n};"},
+                         {"main.cpp:Implementation/observability/source_code_for_testing/"
+                          "ProcessSourceFiles/TwoFileSourceCode/main.cpp",
+                          "#include \"classDef.h\""}};
 
     ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
                                      { return std::make_unique<MockSourceReader>(filePath); });
 
-    scanner.evaluateJsonContent(jsonResponse);
-    // auto result = sourceReader.evaluateFromJsonResponse(jsonResponse);
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
-    // EXPECT_EQ(result.size(), 2);
-    // EXPECT_EQ(result["file1.txt"], "Content of file 1");
-    // EXPECT_EQ(result["file2.txt"], "Content of file 2");
+    EXPECT_EQ(file_contents.size(), 2);
+    EXPECT_EQ(file_contents[0].first,
+              "classDef.h:Implementation/observability/source_code_for_testing/"
+              "ProcessSourceFiles/TwoFileSourceCode/classDef.h");
+    EXPECT_EQ(file_contents[0].second, "#pragma once\n\nclass hugo {\n\n};");
+    EXPECT_EQ(file_contents[1].first,
+              "main.cpp:Implementation/observability/source_code_for_testing/"
+              "ProcessSourceFiles/TwoFileSourceCode/main.cpp");
+    EXPECT_EQ(file_contents[1].second, "#include \"classDef.h\"");
+}
+
+TEST_F(ScannerForConditionMatchTest, returnEmptyForEmptyJson)
+{
+    const json downloadResult = json::object();
+    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(json::object());
+
+    EXPECT_TRUE(file_contents.empty());
 }

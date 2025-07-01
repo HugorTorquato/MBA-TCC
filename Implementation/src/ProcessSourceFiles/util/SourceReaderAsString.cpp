@@ -8,7 +8,7 @@
 #include "../../Logger/Log.h"
 
 // TODO:
-// - Create an arg checker for path. To nthandle it as strings anymore
+// - Create an arg checker for path. To not handle it as strings anymore
 namespace
 {
 std::string readFile(const std::string& filePath)

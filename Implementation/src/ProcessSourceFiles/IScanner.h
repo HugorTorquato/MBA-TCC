@@ -13,5 +13,6 @@ class IScanner
     virtual ~IScanner() = default;
 
     virtual json downloadAndRetrieveSourceFileContent(const std::string& url) const = 0;
-    virtual void evaluateJsonContent(const json& content) = 0;
+    virtual std::vector<std::pair<std::string, std::string>> evaluateJsonContent(
+        const json& content) = 0;
 };

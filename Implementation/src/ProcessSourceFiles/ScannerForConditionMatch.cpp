@@ -79,18 +79,31 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
 // loop jason content per file
 // i also need to collect metadata... linefiles ( line col form beggining and end of each token )
 
-void ScannerForConditionMatch::evaluateJsonContent(const json& content)
+std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evaluateJsonContent(
+    const json& content)
 {
-    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] content: " +
-                              content.dump(4));
+    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent]");
+
+    if (content.empty())
+    {
+        Logger::getInstance().log(
+            "[ScannerForConditionMatch][evaluateJsonContent] content is empty");
+        return {};
+    }
+
+    printJson(content);
 
     std::vector<std::pair<std::string, std::string>> file_contents;
 
-    for (const auto& [file, content] : content.items())
-    {
-        file_contents.emplace_back(file, content);
+    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] Type: " +
+                              std::string(content.type_name()));
 
-        Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] file: " + file +
-                                  " content: " + content.dump(4));
+    for (const auto& [key, value] : content.items())
+    {
+        Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] Key: " + key +
+                                  " value: " + value.dump());
+        file_contents.emplace_back(key, value);
     }
+    
+    return file_contents;
 }

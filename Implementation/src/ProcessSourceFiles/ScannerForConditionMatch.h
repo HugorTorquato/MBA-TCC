@@ -17,7 +17,8 @@ class ScannerForConditionMatch : public IScanner
             sourceReaderFactory);
 
     json downloadAndRetrieveSourceFileContent(const std::string& url) const override;
-    void evaluateJsonContent(const json& content) override;
+    std::vector<std::pair<std::string, std::string>> evaluateJsonContent(
+        const json& content) override;
 
    private:
     // Remove coupling from DownloadFiles, CurlHttpClient, and  SourceReaderAsString
