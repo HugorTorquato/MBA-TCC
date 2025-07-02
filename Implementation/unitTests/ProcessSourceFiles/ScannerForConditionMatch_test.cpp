@@ -161,3 +161,98 @@ TEST_F(ScannerForConditionMatchTest, returnEmptyForEmptyJson)
 
     EXPECT_TRUE(file_contents.empty());
 }
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_SingleEntry)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", "int main() { return 0; }"}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
+    EXPECT_EQ(file_contents[0].second, "int main() { return 0; }");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_MultipleEntries)
+{
+    json jsonResponse = {
+        {"a.cpp:path/a.cpp", "a"}, {"b.cpp:path/b.cpp", "b"}, {"c.cpp:path/c.cpp", "c"}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 3);
+    EXPECT_EQ(file_contents[0].second, "a");
+    EXPECT_EQ(file_contents[1].second, "b");
+    EXPECT_EQ(file_contents[2].second, "c");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NonStringValue)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", 12345}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
+    // Should convert non-string to string via json::dump or similar
+    EXPECT_EQ(file_contents[0].second, "12345");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NestedObjectValue)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", {{"key", "value"}}}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
+    // Should convert object to string (e.g., {"key":"value"})
+    EXPECT_EQ(file_contents[0].second, "{\"key\":\"value\"}");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NullValue)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", nullptr}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
+    EXPECT_EQ(file_contents[0].second, "null");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_EmptyStringValue)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", ""}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
+    EXPECT_EQ(file_contents[0].second, "");
+}
+
+TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_SpecialCharacters)
+{
+    json jsonResponse = {{"fïlè.cpp:päth/ƒïlè.cpp", "lïñé1\nlïñé2\t\u2603"}};
+    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
+                                     { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    ASSERT_EQ(file_contents.size(), 1);
+    EXPECT_EQ(file_contents[0].first, "fïlè.cpp:päth/ƒïlè.cpp");
+    EXPECT_EQ(file_contents[0].second, "lïñé1\nlïñé2\t\u2603");
+}

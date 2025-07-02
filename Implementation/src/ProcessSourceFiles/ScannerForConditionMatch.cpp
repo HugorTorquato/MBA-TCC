@@ -104,6 +104,6 @@ std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evalu
                                   " value: " + value.dump());
         file_contents.emplace_back(key, value);
     }
-    
+
     return file_contents;
 }
