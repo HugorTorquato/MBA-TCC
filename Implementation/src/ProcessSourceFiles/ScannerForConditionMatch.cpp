@@ -79,6 +79,29 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
 // loop jason content per file
 // i also need to collect metadata... linefiles ( line col form beggining and end of each token )
 
+std::string handleValueTypeToString(const json& value)
+{
+    // Convert the value to a string representation
+    if (value.is_string())
+    {
+        return value.get<std::string>();
+    }
+    else if (value.is_number())
+    {
+        // TODO: Handle different number types if necessary ( INT DOUBLE FLOAT )
+        return std::to_string(value.get<double>());
+    }
+    else if (value.is_boolean())
+    {
+        return value.get<bool>() ? "true" : "false";
+    }
+    else
+    {
+        // For other types, use dump to get a JSON string representation
+        return value.dump();
+    }
+}
+
 std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evaluateJsonContent(
     const json& content)
 {
@@ -102,7 +125,8 @@ std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evalu
     {
         Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] Key: " + key +
                                   " value: " + value.dump());
-        file_contents.emplace_back(key, value);
+        std::string adjustedValue = handleValueTypeToString(value);
+        file_contents.emplace_back(key, adjustedValue);
     }
 
     return file_contents;

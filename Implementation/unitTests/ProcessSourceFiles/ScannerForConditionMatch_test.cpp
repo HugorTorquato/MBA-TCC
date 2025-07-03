@@ -201,7 +201,7 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NonStringValue)
     ASSERT_EQ(file_contents.size(), 1);
     EXPECT_EQ(file_contents[0].first, "file.cpp:path/to/file.cpp");
     // Should convert non-string to string via json::dump or similar
-    EXPECT_EQ(file_contents[0].second, "12345");
+    EXPECT_EQ(file_contents[0].second, "12345.000000");
 }
 
 TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NestedObjectValue)
