@@ -4,21 +4,22 @@
 #include <string>
 
 #include "IDownloadFiles.h"
-#include "IScanner.h"
+#include "IScannerWrapper.h"
 #include "util/ISourceReader.h"
 
-class ScannerForConditionMatch : public IScanner
+class ScannerWrapper : public IScannerWrapper
 {
    public:
-    ScannerForConditionMatch() = default;
-    ScannerForConditionMatch(
-        json downloadResult,
-        std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
-            sourceReaderFactory);
+    ScannerWrapper() = default;
+    ScannerWrapper(json downloadResult,
+                   std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
+                       sourceReaderFactory);
 
     json downloadAndRetrieveSourceFileContent(const std::string& url) const override;
     std::vector<std::pair<std::string, std::string>> evaluateJsonContent(
         const json& content) override;
+    void groupTokensByFile(
+        const std::vector<std::pair<std::string, std::string>> files_with_content);
 
    private:
     // Remove coupling from DownloadFiles, CurlHttpClient, and  SourceReaderAsString

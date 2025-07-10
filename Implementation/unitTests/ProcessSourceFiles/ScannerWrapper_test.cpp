@@ -1,4 +1,4 @@
-#include "../../src/ProcessSourceFiles/ScannerForConditionMatch.h"
+#include "../../src/ProcessSourceFiles/ScannerWrapper.h"
 
 #include <gtest/gtest.h>
 
@@ -36,7 +36,7 @@ class MockSourceReader : public ISourceReader
         R"(// First Example only with text content that must be displayed in the source reader as comment)";
 };
 
-class ScannerForConditionMatchTest : public ::testing::Test
+class ScannerWrapperTest : public ::testing::Test
 {
    protected:
     const std::string testURL =
@@ -56,7 +56,7 @@ class ScannerForConditionMatchTest : public ::testing::Test
 
 // Tests
 
-TEST_F(ScannerForConditionMatchTest, RetrieveFileContent)
+TEST_F(ScannerWrapperTest, RetrieveFileContent)
 {
     const json scannerExpectedResult = {
         {"main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
@@ -68,31 +68,31 @@ TEST_F(ScannerForConditionMatchTest, RetrieveFileContent)
          "SimpleSorceExampleForReaderTests/main.cpp",
          "Implementation/observability/source_code_for_testing/ProcessSourceFiles/"
          "SimpleSorceExampleForReaderTests/main.cpp"}};
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     const auto actualResult = scanner.downloadAndRetrieveSourceFileContent(testURL);
 
     EXPECT_EQ(actualResult, scannerExpectedResult);
 }
 
-TEST_F(ScannerForConditionMatchTest, EmptyDownloadResult)
+TEST_F(ScannerWrapperTest, EmptyDownloadResult)
 {
     const json downloadResult = json::object();
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     const auto actualResult = scanner.downloadAndRetrieveSourceFileContent(testURL);
 
     EXPECT_TRUE(actualResult.empty());
 }
 
-TEST_F(ScannerForConditionMatchTest, SkipRootKey)
+TEST_F(ScannerWrapperTest, SkipRootKey)
 {
     const json downloadResult = {{"root", "some/path/to/root"},
                                  {"main.cpp", "some/path/to/main.cpp"}};
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     const auto actualResult = scanner.downloadAndRetrieveSourceFileContent(testURL);
 
@@ -101,12 +101,12 @@ TEST_F(ScannerForConditionMatchTest, SkipRootKey)
     EXPECT_FALSE(actualResult.contains("root"));
 }
 
-TEST_F(ScannerForConditionMatchTest, MultipleFiles)
+TEST_F(ScannerWrapperTest, MultipleFiles)
 {
     const json downloadResult = {{"file1.cpp", "path/to/file1.cpp"},
                                  {"file2.cpp", "path/to/file2.cpp"}};
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     const auto actualResult = scanner.downloadAndRetrieveSourceFileContent(testURL);
 
@@ -115,7 +115,7 @@ TEST_F(ScannerForConditionMatchTest, MultipleFiles)
     EXPECT_TRUE(actualResult.contains("file2.cpp"));
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateFromJsonResponse)
+TEST_F(ScannerWrapperTest, evaluateFromJsonResponse)
 {
     const json downloadResult = {{"file1.cpp", "path/to/file1.cpp"},
                                  {"file2.cpp", "path/to/file2.cpp"}};
@@ -135,8 +135,8 @@ TEST_F(ScannerForConditionMatchTest, evaluateFromJsonResponse)
                           "ProcessSourceFiles/TwoFileSourceCode/main.cpp",
                           "#include \"classDef.h\""}};
 
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -151,22 +151,22 @@ TEST_F(ScannerForConditionMatchTest, evaluateFromJsonResponse)
     EXPECT_EQ(file_contents[1].second, "#include \"classDef.h\"");
 }
 
-TEST_F(ScannerForConditionMatchTest, returnEmptyForEmptyJson)
+TEST_F(ScannerWrapperTest, returnEmptyForEmptyJson)
 {
     const json downloadResult = json::object();
-    ScannerForConditionMatch scanner(downloadResult, [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(downloadResult, [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(json::object());
 
     EXPECT_TRUE(file_contents.empty());
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_SingleEntry)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_SingleEntry)
 {
     json jsonResponse = {{"file.cpp:path/to/file.cpp", "int main() { return 0; }"}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -175,12 +175,12 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_SingleEntry)
     EXPECT_EQ(file_contents[0].second, "int main() { return 0; }");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_MultipleEntries)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_MultipleEntries)
 {
     json jsonResponse = {
         {"a.cpp:path/a.cpp", "a"}, {"b.cpp:path/b.cpp", "b"}, {"c.cpp:path/c.cpp", "c"}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -190,11 +190,11 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_MultipleEntries)
     EXPECT_EQ(file_contents[2].second, "c");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NonStringValue)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_NonStringValue)
 {
     json jsonResponse = {{"file.cpp:path/to/file.cpp", 12345}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -204,11 +204,11 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NonStringValue)
     EXPECT_EQ(file_contents[0].second, "12345.000000");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NestedObjectValue)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_NestedObjectValue)
 {
     json jsonResponse = {{"file.cpp:path/to/file.cpp", {{"key", "value"}}}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -218,11 +218,11 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NestedObjectValue)
     EXPECT_EQ(file_contents[0].second, "{\"key\":\"value\"}");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NullValue)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_NullValue)
 {
     json jsonResponse = {{"file.cpp:path/to/file.cpp", nullptr}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -231,11 +231,11 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_NullValue)
     EXPECT_EQ(file_contents[0].second, "null");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_EmptyStringValue)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_EmptyStringValue)
 {
     json jsonResponse = {{"file.cpp:path/to/file.cpp", ""}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
@@ -244,15 +244,28 @@ TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_EmptyStringValue)
     EXPECT_EQ(file_contents[0].second, "");
 }
 
-TEST_F(ScannerForConditionMatchTest, evaluateJsonContent_SpecialCharacters)
+TEST_F(ScannerWrapperTest, evaluateJsonContent_SpecialCharacters)
 {
     json jsonResponse = {{"fïlè.cpp:päth/ƒïlè.cpp", "lïñé1\nlïñé2\t\u2603"}};
-    ScannerForConditionMatch scanner(json::object(), [](const std::string& filePath)
-                                     { return std::make_unique<MockSourceReader>(filePath); });
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
 
     auto file_contents = scanner.evaluateJsonContent(jsonResponse);
 
     ASSERT_EQ(file_contents.size(), 1);
     EXPECT_EQ(file_contents[0].first, "fïlè.cpp:päth/ƒïlè.cpp");
     EXPECT_EQ(file_contents[0].second, "lïñé1\nlïñé2\t\u2603");
+}
+
+////////////////////////////////////////
+
+TEST_F(ScannerWrapperTest, evaluateGroupTokensByFile_SingleEntry)
+{
+    json jsonResponse = {{"file.cpp:path/to/file.cpp", "int main() { return 0; }"}};
+    ScannerWrapper scanner(json::object(), [](const std::string& filePath)
+                           { return std::make_unique<MockSourceReader>(filePath); });
+
+    auto file_contents = scanner.evaluateJsonContent(jsonResponse);
+
+    scanner.groupTokensByFile(file_contents);
 }

@@ -1,4 +1,4 @@
-#include "ScannerForConditionMatch.h"
+#include "ScannerWrapper.h"
 
 #include "../Logger/Log.h"
 #include "util/ISourceReader.h"
@@ -10,27 +10,27 @@ namespace
  *
  * This function takes a JSON object and logs its contents as a formatted string
  * with an indentation level of 4 spaces. The log entry is prefixed with the
- * context "[ScannerForConditionMatch][printJson]" for easier identification.
+ * context "[ScannerWrapper][printJson]" for easier identification.
  *
  * @param j The JSON object to be logged.
  */
 void printJson(const json& j)
 {
-    Logger::getInstance().log("[ScannerForConditionMatch][printJson] " + j.dump(4));
+    Logger::getInstance().log("[ScannerWrapper][printJson] " + j.dump(4));
 }
 }  // namespace
 
-ScannerForConditionMatch::ScannerForConditionMatch(
+ScannerWrapper::ScannerWrapper(
     json downloadResult,
     std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)> sourceReaderFactory)
     : m_downloadResult(downloadResult), m_sourceReaderFactory(sourceReaderFactory)
 {
-    Logger::getInstance().log("[ScannerForConditionMatch::ScannerForConditionMatch]");
+    Logger::getInstance().log("[ScannerWrapper::ScannerWrapper]");
 }
 
-json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::string& url) const
+json ScannerWrapper::downloadAndRetrieveSourceFileContent(const std::string& url) const
 {
-    Logger::getInstance().log("[ScannerForConditionMatch][downloadFilesInUrl] url: " + url +
+    Logger::getInstance().log("[ScannerWrapper][downloadFilesInUrl] url: " + url +
                               " response: " + m_downloadResult.dump());
 
     json responseResult = json::object();
@@ -43,8 +43,7 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
         std::string readDocument = reader->readFile();
 
         Logger::getInstance().log(
-            "[ScannerForConditionMatch][downloadAndRetrieveSourceFileContent] readDocument: " +
-            readDocument);
+            "[ScannerWrapper][downloadAndRetrieveSourceFileContent] readDocument: " + readDocument);
 
         responseResult[key] = readDocument;
     }
@@ -64,7 +63,7 @@ json ScannerForConditionMatch::downloadAndRetrieveSourceFileContent(const std::s
 /// ...
 
 // Example to create unit tests
-// [ScannerForConditionMatch][printJson] {
+// [ScannerWrapper][printJson] {
 //     "classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":
 //     "#pragma once\n\nclass hugo {\n\n};",
 //     "main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":
@@ -102,15 +101,14 @@ std::string handleValueTypeToString(const json& value)
     }
 }
 
-std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evaluateJsonContent(
+std::vector<std::pair<std::string, std::string>> ScannerWrapper::evaluateJsonContent(
     const json& content)
 {
-    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent]");
+    Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent]");
 
     if (content.empty())
     {
-        Logger::getInstance().log(
-            "[ScannerForConditionMatch][evaluateJsonContent] content is empty");
+        Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] content is empty");
         return {};
     }
 
@@ -118,16 +116,37 @@ std::vector<std::pair<std::string, std::string>> ScannerForConditionMatch::evalu
 
     std::vector<std::pair<std::string, std::string>> file_contents;
 
-    Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] Type: " +
+    Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] Type: " +
                               std::string(content.type_name()));
 
     for (const auto& [key, value] : content.items())
     {
-        Logger::getInstance().log("[ScannerForConditionMatch][evaluateJsonContent] Key: " + key +
+        Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] Key: " + key +
                                   " value: " + value.dump());
         std::string adjustedValue = handleValueTypeToString(value);
         file_contents.emplace_back(key, adjustedValue);
     }
 
     return file_contents;
+}
+
+// Here i have
+// -> a vector with the name of the file and the raw string content
+// -> Return
+// -> a list of pairs with the file name and list of tokens for that file
+
+// Call the class scanner for diferen files.
+
+void ScannerWrapper::groupTokensByFile(
+    const std::vector<std::pair<std::string, std::string>> files_with_content)
+{
+    Logger::getInstance().log("[ScannerWrapper][groupTokensByFile]");
+
+    for (auto file : files_with_content)
+    {
+        Logger::getInstance().log("[ScannerWrapper][groupTokensByFile] file name " + file.first +
+                                  " content: " + file.second);
+    }
+
+    // TODO: Call scanner in separate threads
 }

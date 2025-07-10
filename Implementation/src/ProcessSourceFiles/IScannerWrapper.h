@@ -7,10 +7,10 @@
 
 using json = nlohmann::json;
 
-class IScanner
+class IScannerWrapper
 {
    public:
-    virtual ~IScanner() = default;
+    virtual ~IScannerWrapper() = default;
 
     virtual json downloadAndRetrieveSourceFileContent(const std::string& url) const = 0;
     virtual std::vector<std::pair<std::string, std::string>> evaluateJsonContent(
