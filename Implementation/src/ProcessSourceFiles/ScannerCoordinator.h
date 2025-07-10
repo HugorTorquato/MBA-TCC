@@ -4,16 +4,16 @@
 #include <string>
 
 #include "IDownloadFiles.h"
-#include "IScannerWrapper.h"
+#include "IScannerCoordinator.h"
 #include "util/ISourceReader.h"
 
-class ScannerWrapper : public IScannerWrapper
+class ScannerCoordinator : public IScannerCoordinator
 {
    public:
-    ScannerWrapper() = default;
-    ScannerWrapper(json downloadResult,
-                   std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
-                       sourceReaderFactory);
+    ScannerCoordinator() = default;
+    ScannerCoordinator(json downloadResult,
+                       std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)>
+                           sourceReaderFactory);
 
     json downloadAndRetrieveSourceFileContent(const std::string& url) const override;
     std::vector<std::pair<std::string, std::string>> evaluateJsonContent(

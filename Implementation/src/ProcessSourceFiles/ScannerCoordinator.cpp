@@ -1,4 +1,4 @@
-#include "ScannerWrapper.h"
+#include "ScannerCoordinator.h"
 
 #include "../Logger/Log.h"
 #include "util/ISourceReader.h"
@@ -10,27 +10,27 @@ namespace
  *
  * This function takes a JSON object and logs its contents as a formatted string
  * with an indentation level of 4 spaces. The log entry is prefixed with the
- * context "[ScannerWrapper][printJson]" for easier identification.
+ * context "[ScannerCoordinator][printJson]" for easier identification.
  *
  * @param j The JSON object to be logged.
  */
 void printJson(const json& j)
 {
-    Logger::getInstance().log("[ScannerWrapper][printJson] " + j.dump(4));
+    Logger::getInstance().log("[ScannerCoordinator][printJson] " + j.dump(4));
 }
 }  // namespace
 
-ScannerWrapper::ScannerWrapper(
+ScannerCoordinator::ScannerCoordinator(
     json downloadResult,
     std::function<std::unique_ptr<ISourceReader>(const std::string& filePath)> sourceReaderFactory)
     : m_downloadResult(downloadResult), m_sourceReaderFactory(sourceReaderFactory)
 {
-    Logger::getInstance().log("[ScannerWrapper::ScannerWrapper]");
+    Logger::getInstance().log("[ScannerCoordinator::ScannerCoordinator]");
 }
 
-json ScannerWrapper::downloadAndRetrieveSourceFileContent(const std::string& url) const
+json ScannerCoordinator::downloadAndRetrieveSourceFileContent(const std::string& url) const
 {
-    Logger::getInstance().log("[ScannerWrapper][downloadFilesInUrl] url: " + url +
+    Logger::getInstance().log("[ScannerCoordinator][downloadFilesInUrl] url: " + url +
                               " response: " + m_downloadResult.dump());
 
     json responseResult = json::object();
@@ -43,7 +43,8 @@ json ScannerWrapper::downloadAndRetrieveSourceFileContent(const std::string& url
         std::string readDocument = reader->readFile();
 
         Logger::getInstance().log(
-            "[ScannerWrapper][downloadAndRetrieveSourceFileContent] readDocument: " + readDocument);
+            "[ScannerCoordinator][downloadAndRetrieveSourceFileContent] readDocument: " +
+            readDocument);
 
         responseResult[key] = readDocument;
     }
@@ -63,7 +64,7 @@ json ScannerWrapper::downloadAndRetrieveSourceFileContent(const std::string& url
 /// ...
 
 // Example to create unit tests
-// [ScannerWrapper][printJson] {
+// [ScannerCoordinator][printJson] {
 //     "classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h":
 //     "#pragma once\n\nclass hugo {\n\n};",
 //     "main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/main.cpp":
@@ -101,14 +102,14 @@ std::string handleValueTypeToString(const json& value)
     }
 }
 
-std::vector<std::pair<std::string, std::string>> ScannerWrapper::evaluateJsonContent(
+std::vector<std::pair<std::string, std::string>> ScannerCoordinator::evaluateJsonContent(
     const json& content)
 {
-    Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent]");
+    Logger::getInstance().log("[ScannerCoordinator][evaluateJsonContent]");
 
     if (content.empty())
     {
-        Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] content is empty");
+        Logger::getInstance().log("[ScannerCoordinator][evaluateJsonContent] content is empty");
         return {};
     }
 
@@ -116,12 +117,12 @@ std::vector<std::pair<std::string, std::string>> ScannerWrapper::evaluateJsonCon
 
     std::vector<std::pair<std::string, std::string>> file_contents;
 
-    Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] Type: " +
+    Logger::getInstance().log("[ScannerCoordinator][evaluateJsonContent] Type: " +
                               std::string(content.type_name()));
 
     for (const auto& [key, value] : content.items())
     {
-        Logger::getInstance().log("[ScannerWrapper][evaluateJsonContent] Key: " + key +
+        Logger::getInstance().log("[ScannerCoordinator][evaluateJsonContent] Key: " + key +
                                   " value: " + value.dump());
         std::string adjustedValue = handleValueTypeToString(value);
         file_contents.emplace_back(key, adjustedValue);
@@ -137,16 +138,18 @@ std::vector<std::pair<std::string, std::string>> ScannerWrapper::evaluateJsonCon
 
 // Call the class scanner for diferen files.
 
-void ScannerWrapper::groupTokensByFile(
+void ScannerCoordinator::groupTokensByFile(
     const std::vector<std::pair<std::string, std::string>> files_with_content)
 {
-    Logger::getInstance().log("[ScannerWrapper][groupTokensByFile]");
+    Logger::getInstance().log("[ScannerCoordinator][groupTokensByFile]");
 
     for (auto file : files_with_content)
     {
-        Logger::getInstance().log("[ScannerWrapper][groupTokensByFile] file name " + file.first +
-                                  " content: " + file.second);
+        Logger::getInstance().log("[ScannerCoordinator][groupTokensByFile] file name " +
+                                  file.first + " content: " + file.second);
     }
 
     // TODO: Call scanner in separate threads
+
+    // Create Scanner and Tokens class
 }

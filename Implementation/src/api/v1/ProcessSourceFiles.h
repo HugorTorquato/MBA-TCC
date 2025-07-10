@@ -4,7 +4,7 @@
 
 #include "../../Logger/Log.h"
 #include "../../ProcessSourceFiles/DownloadFiles.h"
-#include "../../ProcessSourceFiles/ScannerWrapper.h"
+#include "../../ProcessSourceFiles/ScannerCoordinator.h"
 #include "../../ProcessSourceFiles/util/HttpClient.h"
 #include "../../ProcessSourceFiles/util/SourceReaderAsString.h"
 
@@ -98,8 +98,8 @@ class ProcessSourceFiles
                     auto readerFactory = [](const std::string& path)
                     { return std::make_unique<SourceReaderAsString>(path); };
 
-                    ScannerWrapper scanner(downloader->downloadURLContentIntoTempFolder(),
-                                           readerFactory);
+                    ScannerCoordinator scanner(downloader->downloadURLContentIntoTempFolder(),
+                                               readerFactory);
                     json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
 
                     Logger::getInstance().log(
