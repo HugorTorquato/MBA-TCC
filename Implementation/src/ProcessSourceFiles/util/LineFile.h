@@ -5,6 +5,7 @@
 class LineFile
 {
    public:
+    LineFile();
     LineFile(int line, int col, int endLine, int endCol);
 
     int getLine() const;
@@ -12,7 +13,12 @@ class LineFile
     int getEndLine() const;
     int getEndCol() const;
 
-    std::string logLineFile() const;
+    void setLine(int line);
+    void setCol(int col);
+    void setEndLine(int endLine);
+    void setEndCol(int endCol);
+
+    std::string getLineFileAsString() const;
 
    private:
     int m_line;
