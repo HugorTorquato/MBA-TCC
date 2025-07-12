@@ -4,20 +4,19 @@
 
 class ScannerTest : public ::testing::Test
 {
-
     void SetUp() override {}
 
     void TearDown() override {}
 };
 
-TEST_F(ScannerTest, ScanTokens_EmptyInput) {
+TEST_F(ScannerTest, ScanTokens_EmptyInput)
+{
     Scanner scanner;
     std::string code = "";
     std::vector<std::string> tokens = scanner.scanTokens(code);
 
     ASSERT_TRUE(tokens.empty());
 }
-
 
 // TEST_F(ScannerTest, ScanTokens_EmptyInput) {
 //     Scanner scanner;

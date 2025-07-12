@@ -46,7 +46,9 @@ enum class TokenType
     THIS,
     TRUE,
     VAR,
-    WHILE
+    WHILE,
+    // Not Defined
+    UNKNOWN
 };
 
 namespace TokenTypeNameSpace
