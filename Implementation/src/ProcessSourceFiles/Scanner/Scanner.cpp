@@ -37,10 +37,15 @@ void updateCurrentAndLineFiles(const std::string& sourceCode, int& current, int&
     col++;
 
     // If we encounter a newline character, we should increment the line number and reset the column
-    if (isAtEndOfSource(sourceCode.length(), current) && sourceCode[current] == '\n')
+    if (!isAtEndOfSource(sourceCode.length(), current) && sourceCode[current] == '\n')
     {
         line++;
-        col = 1;  // Reset column to 1 for the new line
+        // Reset column to 0 for the new line -> Return to 0 because the new line char will count as
+        // a col. So we expect to add 1 in the scanner
+        col = 0;
+        Logger::getInstance().log(
+            "[Scanner][updateCurrentAndLineFiles] New line detected. Incrementing line number and "
+            "resetting column.");
     }
 
     Logger::getInstance().log(
@@ -57,6 +62,7 @@ void addToken(TokenType type, std::vector<std::shared_ptr<IToken>>& tokens,
     Logger::getInstance().log("[Scanner][addToken] Added token: " + lexeme);
 }
 
+// One char of loo ahead. The smaller this number is the faster the scanner runs.
 bool match(const char expected, const int sourceLength, const int current,
            const std::string& sourceCode)
 {
@@ -80,6 +86,14 @@ bool match(const char expected, const int sourceLength, const int current,
     return true;
 }
 
+void logTokens(const std::vector<std::shared_ptr<IToken>>& tokens)
+{
+    for (const auto token : tokens)
+    {
+        Logger::getInstance().log("[Scanner][logTokens]" + token->toString());
+    }
+}
+
 }  // namespace
 
 Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
@@ -90,7 +104,6 @@ Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
 void Scanner::scanToken(const std::string& sourceCode, int& start, int& current, int& line,
                         int& col)
 {
-    m_tokens.clear();  // Clear to avoid issues reusing the scanToken method
     const int sourceLength = sourceCode.length();
 
     // Start simple, with lexemes of only one character.
@@ -105,8 +118,9 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
     {
         // ignore white spaces
         case ' ':
-        case '\n':
+        case '\r':
         case '\t':
+        case '\n':
             Logger::getInstance().log(
                 "[Scanner][scanToken] Ignore invalid chars from been added to the token vector.");
             break;
@@ -187,6 +201,45 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             }
             break;
 
+        // Longer Lexemes
+        case '/':
+            // Check for comments. They are lexemes but not meaningful tokens. The parser doesn't
+            // want to deal with them. So we don't add them to the token vector.
+            if (match('/', sourceLength, current, sourceCode))
+            {
+                // Single-line comment
+                while (!isAtEndOfSource(sourceLength, current) && sourceCode[current] != '\n')
+                {
+                    current++;
+                }
+            }
+            else if (match('*', sourceLength, current, sourceCode))
+            {
+                // Multi-line comment
+                while (
+                    !isAtEndOfSource(sourceLength, current) &&
+                    !(sourceCode[current] == '*' && match('/', sourceLength, current, sourceCode)))
+                {
+                    if (sourceCode[current] == '\n')
+                    {
+                        line++;
+                        col = 1;
+                    }
+                    current++;
+                }
+                // Consume the closing '*/'
+                if (!isAtEndOfSource(sourceLength, current))
+                {
+                    current += 2;  // Skip '*/'
+                }
+            }
+            // Only add single slash tokens if they are not part of a comment ( division )
+            else
+            {
+                addToken(TokenType::SLASH, m_tokens, "/", line, col);
+            }
+            break;
+
         default:
             // May be good to comment this for large source code files
             Logger::getInstance().log(
@@ -202,6 +255,8 @@ std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawS
 {
     Logger::getInstance().log("[Scanner][scanTokens] rawSourceCode: " + rawSourceCode);
     if (!isValidSourceCode(rawSourceCode)) return {};
+
+    m_tokens.clear();  // Clear to avoid issues reusing the scanToken method
 
     // TODO: Implement logic for end line and col
     int start = 0;    // Start index of the current lexeme
@@ -223,7 +278,7 @@ std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawS
         scanToken(rawSourceCode, start, current, line, col);
     }
 
-    // m_tokens.push_back()
+    logTokens(m_tokens);  // Only for Debug - REMOVE
 
     return m_tokens;
 }

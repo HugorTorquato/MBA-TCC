@@ -262,3 +262,63 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_LESS_EQUAL)
     EXPECT_EQ(tokens[0]->getLexeme(), "<=");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
 }
+
+TEST_F(ScannerTest, ScanTokens_SingleCharacter_SLASH)
+{
+    std::string code = "/";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "SLASH");
+    EXPECT_EQ(tokens[0]->getLexeme(), "/");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanToken_SLASH_SLASH_Do_Not_Add_Comments_To_Token_Vector)
+{
+    std::string code = "//";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 0);
+}
+
+// MULTILINEcomment
+TEST_F(ScannerTest, ScanTokens_SLASH_STAR_Do_Not_Add_Comments_To_Token_Vector)
+{
+    std::string code = "/* comment */";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 0);
+}
+
+TEST_F(ScannerTest, ScanTokens_MultiLineComment_SLASH_STAR_Do_Not_Add_Comments_To_Token_Vector)
+{
+    std::string code = "/*\n*/";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 0);
+}
+
+TEST_F(ScannerTest, ScanTokens_lineBreak)
+{
+    std::string code = "<\n>";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 2);
+    EXPECT_EQ(tokens[0]->getType(), "LESS");
+    EXPECT_EQ(tokens[0]->getLexeme(), "<");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "GREATER");
+    EXPECT_EQ(tokens[1]->getLexeme(), ">");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0");
+}
