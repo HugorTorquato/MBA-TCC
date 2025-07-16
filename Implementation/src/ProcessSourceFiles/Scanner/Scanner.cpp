@@ -57,6 +57,29 @@ void addToken(TokenType type, std::vector<std::shared_ptr<IToken>>& tokens,
     Logger::getInstance().log("[Scanner][addToken] Added token: " + lexeme);
 }
 
+bool match(const char expected, const int sourceLength, const int current,
+           const std::string& sourceCode)
+{
+    const int next = current + 1;
+
+    if (isAtEndOfSource(sourceLength, next))
+    {
+        Logger::getInstance().log("[Scanner][match] No more characters to match.");
+        return false;
+    }
+    Logger::getInstance().log("[Scanner][match] Matching character: " + std::string(1, expected) +
+                              " with source code: " + std::string(1, sourceCode[next]) +
+                              " at index: " + std::to_string(next));
+    if (expected != sourceCode[next])
+    {
+        Logger::getInstance().log(
+            "[Scanner][match] Expected character: " + std::string(1, expected) +
+            ", but found: " + std::string(1, sourceCode[next]));
+        return false;
+    }
+    return true;
+}
+
 }  // namespace
 
 Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
@@ -67,7 +90,8 @@ Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
 void Scanner::scanToken(const std::string& sourceCode, int& start, int& current, int& line,
                         int& col)
 {
-    m_tokens.clear(); // Clear to avoid issues reusing the scanToken method
+    m_tokens.clear();  // Clear to avoid issues reusing the scanToken method
+    const int sourceLength = sourceCode.length();
 
     // Start simple, with lexemes of only one character.
     // we need to consume a token type and pick a token type for it
@@ -83,7 +107,8 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
         case ' ':
         case '\n':
         case '\t':
-            Logger::getInstance().log("[Scanner][scanToken] Ignore invalid chars from been added to the token vector.");
+            Logger::getInstance().log(
+                "[Scanner][scanToken] Ignore invalid chars from been added to the token vector.");
             break;
         // Single char tokens
         case '(':
@@ -115,6 +140,51 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             break;
         case '*':
             addToken(TokenType::STAR, m_tokens, "*", line, col);
+            break;
+        // 2 char operators
+        case '!':
+            if (match('=', sourceLength, current, sourceCode))
+            {
+                addToken(TokenType::BANG_EQUAL, m_tokens, "!=", line, col);
+                current++;  // Consume the '=' character
+            }
+            else
+            {
+                addToken(TokenType::BANG, m_tokens, "!", line, col);
+            }
+            break;
+        case '=':
+            if (match('=', sourceLength, current, sourceCode))
+            {
+                addToken(TokenType::EQUAL_EQUAL, m_tokens, "==", line, col);
+                current++;  // Consume the '=' character
+            }
+            else
+            {
+                addToken(TokenType::EQUAL, m_tokens, "=", line, col);
+            }
+            break;
+        case '>':
+            if (match('=', sourceLength, current, sourceCode))
+            {
+                addToken(TokenType::GREATER_EQUAL, m_tokens, ">=", line, col);
+                current++;  // Consume the '=' character
+            }
+            else
+            {
+                addToken(TokenType::GREATER, m_tokens, ">", line, col);
+            }
+            break;
+        case '<':
+            if (match('=', sourceLength, current, sourceCode))
+            {
+                addToken(TokenType::LESS_EQUAL, m_tokens, "<=", line, col);
+                current++;  // Consume the '=' character
+            }
+            else
+            {
+                addToken(TokenType::LESS, m_tokens, "<", line, col);
+            }
             break;
 
         default:
