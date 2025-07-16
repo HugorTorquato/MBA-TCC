@@ -322,3 +322,70 @@ TEST_F(ScannerTest, ScanTokens_lineBreak)
     EXPECT_EQ(tokens[1]->getLexeme(), ">");
     EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0");
 }
+
+TEST_F(ScannerTest, ScanTokens_Multiple_Single_Char_and_comment_code_to_scann)
+{
+    std::string code = "(( )){} // grouping stuff";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+    ASSERT_EQ(tokens.size(), 6);
+    EXPECT_EQ(tokens[0]->getType(), "LEFT_PAREN");
+    EXPECT_EQ(tokens[0]->getLexeme(), "(");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "LEFT_PAREN");
+    EXPECT_EQ(tokens[1]->getLexeme(), "(");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[2]->getType(), "RIGHT_PAREN");
+    EXPECT_EQ(tokens[2]->getLexeme(), ")");
+    EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 4, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[3]->getType(), "RIGHT_PAREN");
+    EXPECT_EQ(tokens[3]->getLexeme(), ")");
+    EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 5, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[4]->getType(), "LEFT_BRACE");
+    EXPECT_EQ(tokens[4]->getLexeme(), "{");
+    EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 1, Col: 6, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[5]->getType(), "RIGHT_BRACE");
+    EXPECT_EQ(tokens[5]->getLexeme(), "}");
+    EXPECT_EQ(tokens[5]->getLineFile(), "[LineFile] Line: 1, Col: 7, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_Multiple_Single_and_Two_Char_and_comment_code_to_scann)
+{
+    std::string code = "!*+-/=<> <= == // operators";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 10);
+    EXPECT_EQ(tokens[0]->getType(), "BANG");
+    EXPECT_EQ(tokens[0]->getLexeme(), "!");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "STAR");
+    EXPECT_EQ(tokens[1]->getLexeme(), "*");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[2]->getType(), "PLUS");
+    EXPECT_EQ(tokens[2]->getLexeme(), "+");
+    EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 3, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[3]->getType(), "MINUS");
+    EXPECT_EQ(tokens[3]->getLexeme(), "-");
+    EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 4, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[4]->getType(), "SLASH");
+    EXPECT_EQ(tokens[4]->getLexeme(), "/");
+    EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 1, Col: 5, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[5]->getType(), "EQUAL");
+    EXPECT_EQ(tokens[5]->getLexeme(), "=");
+    EXPECT_EQ(tokens[5]->getLineFile(), "[LineFile] Line: 1, Col: 6, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[6]->getType(), "LESS");
+    EXPECT_EQ(tokens[6]->getLexeme(), "<");
+    EXPECT_EQ(tokens[6]->getLineFile(), "[LineFile] Line: 1, Col: 7, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[7]->getType(), "GREATER");
+    EXPECT_EQ(tokens[7]->getLexeme(), ">");
+    EXPECT_EQ(tokens[7]->getLineFile(), "[LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[8]->getType(), "LESS_EQUAL");
+    EXPECT_EQ(tokens[8]->getLexeme(), "<=");
+    EXPECT_EQ(tokens[8]->getLineFile(), "[LineFile] Line: 1, Col: 10, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[9]->getType(), "EQUAL_EQUAL");
+    EXPECT_EQ(tokens[9]->getLexeme(), "==");
+    EXPECT_EQ(tokens[9]->getLineFile(), "[LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0");
+}
