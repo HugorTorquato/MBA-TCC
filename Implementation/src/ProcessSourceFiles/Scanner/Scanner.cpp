@@ -67,6 +67,8 @@ Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
 void Scanner::scanToken(const std::string& sourceCode, int& start, int& current, int& line,
                         int& col)
 {
+    m_tokens.clear(); // Clear to avoid issues reusing the scanToken method
+
     // Start simple, with lexemes of only one character.
     // we need to consume a token type and pick a token type for it
 
