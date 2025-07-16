@@ -16,14 +16,6 @@ bool isValidSourceCode(const std::string& sourceCode)
         return false;
     }
 
-    if (sourceCode.find_first_not_of(" \n\t") == std::string::npos)
-    {
-        Logger::getInstance().log(
-            "[Scanner][isValidSourceCode] rawSourceCode is only "
-            "whitespace characters");
-        return false;
-    }
-
     return true;
 }
 
@@ -59,6 +51,8 @@ void updateCurrentAndLineFiles(const std::string& sourceCode, int& current, int&
 void addToken(TokenType type, std::vector<std::shared_ptr<IToken>>& tokens,
               const std::string& lexeme, int line, int col)
 {
+    // TODO: May need to come back and refactor this function to handle end line and column ( hard
+    // codded to zero for now)
     tokens.push_back(std::make_shared<Token>(type, lexeme, LineFile(line, col, 0, 0)));
     Logger::getInstance().log("[Scanner][addToken] Added token: " + lexeme);
 }
@@ -80,8 +74,16 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
     Logger::getInstance().log("[Scanner][scanToken] Current character: " +
                               std::string(1, currentChar));
 
+    // TODO: Include missing tokens as we found
     switch (currentChar)
     {
+        // ignore white spaces
+        case ' ':
+        case '\n':
+        case '\t':
+            Logger::getInstance().log("[Scanner][scanToken] Ignore invalid chars from been added to the token vector.");
+            break;
+        // Single char tokens
         case '(':
             addToken(TokenType::LEFT_PAREN, m_tokens, "(", line, col);
             break;
@@ -111,6 +113,13 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             break;
         case '*':
             addToken(TokenType::STAR, m_tokens, "*", line, col);
+            break;
+
+        default:
+            // May be good to comment this for large source code files
+            Logger::getInstance().log(
+                "[Scanner][scanToken] Unrecognized character: " + std::string(1, currentChar) +
+                " at line: " + std::to_string(line) + ", col: " + std::to_string(col));
             break;
     }
 
