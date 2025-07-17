@@ -4,7 +4,6 @@
 
 #include "../../Logger/Log.h"
 #include "Token.h"
-#include "TokenType.h"
 
 namespace
 {
@@ -98,12 +97,6 @@ void logTokens(const std::vector<std::shared_ptr<IToken>>& tokens)
 std::string stringLiterals(const std::string& sourceCode, int& current, int& line, int& col)
 {
     Logger::getInstance().log("[Scanner][stringLiterals] Starting to scan string literals.");
-
-    Logger::getInstance().log(
-        "[Scanner][stringLiterals] Current index: " + std::to_string(current) +
-        ", Line: " + std::to_string(line) + ", Col: " + std::to_string(col));
-    Logger::getInstance().log("[Scanner][stringLiterals] Source code: " + sourceCode);
-
     std::string lexeme;
 
     while (isAtEndOfSource(sourceCode.length(), current) == false &&
@@ -133,6 +126,54 @@ std::string stringLiterals(const std::string& sourceCode, int& current, int& lin
     }
 
     current++;  // Consume the closing '"'
+    return lexeme;
+}
+
+bool isAnyDigit(char c)
+{
+    // TODO: Add support for hex, octal, binary literals, and special cases like .1234 and 1234.
+    return c >= '0' && c <= '9';
+}
+
+void populateLexemeWithNumbers(const std::string& sourceCode, int& current, std::string& lexeme)
+{
+    Logger::getInstance().log(
+        "[Scanner][numberLiterals][populateLexemeWithNumbers] current: " + std::to_string(current) +
+        " current character: " + std::string(1, sourceCode[current]));
+    while (isAtEndOfSource(sourceCode.length(), current) == false &&
+           isAnyDigit(sourceCode[current]))
+    {
+        Logger::getInstance().log(
+            "[Scanner][numberLiterals][populateLexemeWithNumbers] Current number: " +
+            std::string(1, sourceCode[current]) + " at index: " + std::to_string(current));
+        lexeme += sourceCode[current];
+        current++;  // Consume the current character
+    }
+}
+
+std::string numberLiterals(const std::string& sourceCode, int& current, int& line, int& col)
+{
+    Logger::getInstance().log("[Scanner][numberLiterals] Starting to scan number literals.");
+    std::string lexeme;
+
+    populateLexemeWithNumbers(sourceCode, current, lexeme);
+
+    Logger::getInstance().log("[Scanner][numberLiterals] Number literal found: " + lexeme +
+                              " at index: " + std::to_string(current) +
+                              " current character: " + std::string(1, sourceCode[current]));
+
+    if (sourceCode[current] == '.' && isAnyDigit(sourceCode[current + 1]))
+    {
+        // We don't want to consume the . until we have at least one digit after it.
+        lexeme += ".";
+        current++;
+        populateLexemeWithNumbers(sourceCode, current, lexeme);
+
+        Logger::getInstance().log("[Scanner][numberLiterals] Number literal found with decimal: " +
+                                  lexeme + " at index: " + std::to_string(current) +
+                                  " current character: " + std::string(1, sourceCode[current]));
+    }
+
     return lexeme;
 }
 
@@ -200,6 +241,11 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             addToken(TokenType::COMMA, m_tokens, ",", line, col);
             break;
         case '.':
+            // if (!isAtEndOfSource(sourceLength, current) && isAnyDigit(sourceCode[current + 1]))
+            // {
+            //     // This is a number starting with . and not a real DOT ( .1234)
+            //     break;
+            // }
             addToken(TokenType::DOT, m_tokens, ".", line, col);
             break;
         case '-':
@@ -307,10 +353,23 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
         }
 
         default:
-            // May be good to comment this for large source code files
-            Logger::getInstance().log(
-                "[Scanner][scanToken] Unrecognized character: " + std::string(1, currentChar) +
-                " at line: " + std::to_string(line) + ", col: " + std::to_string(col));
+            // Number Literals
+            //  A number literal is a series of digits optionally followed by . a and one or more
+            //  trailing digits
+            //  TODO: Special cases .1234 1234.
+            if (isAnyDigit(currentChar))
+            {
+                auto lexeme = numberLiterals(sourceCode, current, line, col);
+                addToken(TokenType::NUMBER, m_tokens, lexeme, line, col);
+                break;
+            }
+            else
+            {
+                // May be good to comment this for large source code files
+                Logger::getInstance().log(
+                    "[Scanner][scanToken] Unrecognized character: " + std::string(1, currentChar) +
+                    " at line: " + std::to_string(line) + ", col: " + std::to_string(col));
+            }
             break;
     }
 
