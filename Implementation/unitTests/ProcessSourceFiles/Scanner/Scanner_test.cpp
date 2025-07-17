@@ -389,3 +389,83 @@ TEST_F(ScannerTest, ScanTokens_Multiple_Single_and_Two_Char_and_comment_code_to_
     EXPECT_EQ(tokens[9]->getLexeme(), "==");
     EXPECT_EQ(tokens[9]->getLineFile(), "[LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0");
 }
+
+TEST_F(ScannerTest, ScanTokens_SingleCharacter_STRING)
+{
+    std::string code = "\"x\"";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "STRING");
+    EXPECT_EQ(tokens[0]->getLexeme(), "x");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_MultiCharacter_STRING)
+{
+    std::string code = "\"Hello\"";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "STRING");
+    EXPECT_EQ(tokens[0]->getLexeme(), "Hello");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_MultiLine_STRING)
+{
+    std::string code = "\"Hello\nWorld\"";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "STRING");
+    EXPECT_EQ(tokens[0]->getLexeme(), "Hello\nWorld");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_Unterminated_STRING)
+{
+    std::string code = "\"Hello";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);  // Expect no tokens due to unterminated string
+    EXPECT_EQ(tokens[0]->getType(), "UNKNOWN");
+    EXPECT_EQ(tokens[0]->getLexeme(), "");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_ComplexCode)
+{
+    std::string code =
+        "int main() {\n"
+        "    std::cout << \"Hello, World!\";\n"
+        "    return 0;\n"
+        "}\n";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_GT(tokens.size(), 0);  // Expect some tokens to be generated
+    // Additional checks can be added here for specific tokens if needed
+
+    // [Scanner][logTokens]Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 1, Col: 9,
+    // End Line: 0, End Col: 0 [Scanner][logTokens]Token Type: RIGHT_PAREN, Lexeme: ), LineFile:
+    // [LineFile] Line: 1, Col: 10, End Line: 0, End Col: 0 [Scanner][logTokens]Token Type:
+    // LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0
+    // [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile] Line: 2, Col: 15, End
+    // Line: 0, End Col: 0 [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile]
+    // Line: 2, Col: 16, End Line: 0, End Col: 0 [Scanner][logTokens]Token Type: STRING, Lexeme:
+    // Hello, World!, LineFile: [LineFile] Line: 2, Col: 18, End Line: 0, End Col: 0
+    // [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 2, Col: 19,
+    // End Line: 0, End Col: 0 [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile:
+    // [LineFile] Line: 3, Col: 13, End Line: 0, End Col: 0 [Scanner][logTokens]Token Type:
+    // RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0
+}

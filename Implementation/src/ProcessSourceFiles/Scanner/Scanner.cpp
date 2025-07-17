@@ -4,6 +4,7 @@
 
 #include "../../Logger/Log.h"
 #include "Token.h"
+#include "TokenType.h"
 
 namespace
 {
@@ -94,6 +95,47 @@ void logTokens(const std::vector<std::shared_ptr<IToken>>& tokens)
     }
 }
 
+std::string stringLiterals(const std::string& sourceCode, int& current, int& line, int& col)
+{
+    Logger::getInstance().log("[Scanner][stringLiterals] Starting to scan string literals.");
+
+    Logger::getInstance().log(
+        "[Scanner][stringLiterals] Current index: " + std::to_string(current) +
+        ", Line: " + std::to_string(line) + ", Col: " + std::to_string(col));
+    Logger::getInstance().log("[Scanner][stringLiterals] Source code: " + sourceCode);
+
+    std::string lexeme;
+
+    while (isAtEndOfSource(sourceCode.length(), current) == false &&
+           match('"', sourceCode.length(), current, sourceCode) == false)
+    {
+        current++;  // Consume the current character
+        // TODO: This would be useful for endl line and col variables
+        // if (match('\n', sourceCode.length(), current, sourceCode))
+        // {
+        //     line++;
+        //     col = 0;
+        // }
+        // else
+        // {
+        //     col++;
+        // }
+        Logger::getInstance().log(
+            "[Scanner][stringLiterals] Current character: " + std::string(1, sourceCode[current]) +
+            " at index: " + std::to_string(current));
+        lexeme += sourceCode[current];
+    }
+
+    if (isAtEndOfSource(sourceCode.length(), current))
+    {
+        Logger::getInstance().log("[Scanner][stringLiterals] Unterminated string literal.");
+        return "";  // Unterminated string literal
+    }
+
+    current++;  // Consume the closing '"'
+    return lexeme;
+}
+
 }  // namespace
 
 Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
@@ -116,6 +158,23 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
     // TODO: Include missing tokens as we found
     switch (currentChar)
     {
+        // TODO:
+        // case '<<':
+        // case '>>':
+        // case '&&':
+        // case '||':
+        // case '++':
+        // case '--':
+        // case '::':
+        // case '->':
+        // case '??':
+        // case '??=':
+        // case '::=':
+        // case '=>':
+        // case '...':
+        // case '??':
+
+        //
         // ignore white spaces
         case ' ':
         case '\r':
@@ -239,6 +298,13 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
                 addToken(TokenType::SLASH, m_tokens, "/", line, col);
             }
             break;
+        // String Literals
+        case '"':
+        {
+            auto lexeme = stringLiterals(sourceCode, current, line, col);
+            addToken(TokenType::STRING, m_tokens, lexeme, line, col);
+            break;
+        }
 
         default:
             // May be good to comment this for large source code files
