@@ -177,6 +177,33 @@ std::string numberLiterals(const std::string& sourceCode, int& current, int& lin
     return lexeme;
 }
 
+bool isAnyAlpha(char c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+std::string identifierLiterals(const std::string& sourceCode, int& current, int& line, int& col)
+{
+    Logger::getInstance().log(
+        "[Scanner][identifierLiterals] Starting to scan identifier literals.");
+    std::string lexeme;
+
+    // Consume the first character
+    lexeme += sourceCode[current];
+    current++;  // Move to the next character
+
+    while (isAtEndOfSource(sourceCode.length(), current) == false &&
+           (isAnyAlpha(sourceCode[current]) || isAnyDigit(sourceCode[current])))
+    {
+        Logger::getInstance().log("[Scanner][identifierLiterals] Current identifier character: " +
+                                  std::string(1, sourceCode[current]) +
+                                  " at index: " + std::to_string(current));
+        lexeme += sourceCode[current];
+        current++;  // Consume the current character
+    }
+
+    return lexeme;
+}
 }  // namespace
 
 Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
@@ -361,6 +388,28 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             {
                 auto lexeme = numberLiterals(sourceCode, current, line, col);
                 addToken(TokenType::NUMBER, m_tokens, lexeme, line, col);
+                break;
+            }
+            // Identifiers and Keywords ( Reserved words )
+            else if (isAnyAlpha(currentChar))
+            {
+                auto lexeme = identifierLiterals(sourceCode, current, line, col);
+
+                // Check if the lexeme is a keyword
+                auto it = TokenTypeNameSpace::keywordsMap.find(lexeme);
+                if (it != TokenTypeNameSpace::keywordsMap.end())
+                {
+                    Logger::getInstance().log("[Scanner][scanToken] keyword found: " + lexeme +
+                                              " at line: " + std::to_string(line) +
+                                              ", col: " + std::to_string(col));
+                    addToken(it->second, m_tokens, lexeme, line, col);
+                    break;
+                }
+
+                Logger::getInstance().log("[Scanner][scanToken] Identifier found: " + lexeme +
+                                          " at line: " + std::to_string(line) +
+                                          ", col: " + std::to_string(col));
+                addToken(TokenType::IDENTIFIER, m_tokens, lexeme, line, col);
                 break;
             }
             else
