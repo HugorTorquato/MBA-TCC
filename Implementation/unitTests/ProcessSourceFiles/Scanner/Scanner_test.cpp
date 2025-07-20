@@ -442,81 +442,6 @@ TEST_F(ScannerTest, ScanTokens_Unterminated_STRING)
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
 }
 
-// Too much noisy
-// TEST_F(ScannerTest, ScanTokens_ComplexCode)
-// {
-//     std::string code =
-//         "int main() {\n"
-//         "    std::cout << \"Hello, World!\";\n"
-//         "    return;\n"
-//         "}\n";
-//     Scanner scanner(code);
-
-//     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
-
-//     ASSERT_GT(tokens.size(), 0);  // Expect some tokens to be generated
-//     // Additional checks can be added here for specific tokens if needed
-
-//     // [Scanner][logTokens]Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 1, Col:
-//     9,
-//     // End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[0]->getType(), "LEFT_PAREN");
-//     EXPECT_EQ(tokens[0]->getLexeme(), "(");
-//     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 9, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 1, Col:
-//     // 10, End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[1]->getType(), "RIGHT_PAREN");
-//     EXPECT_EQ(tokens[1]->getLexeme(), ")");
-//     EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 10, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col:
-//     12,
-//     // End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[2]->getType(), "LEFT_BRACE");
-//     EXPECT_EQ(tokens[2]->getLexeme(), "{");
-//     EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 1, Col:
-//     // 13, End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[3]->getType(), "RIGHT_BRACE");
-//     EXPECT_EQ(tokens[3]->getLexeme(), "}");
-//     EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 13, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile] Line: 2, Col: 15,
-//     End
-//     // Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[4]->getType(), "LESS");
-//     EXPECT_EQ(tokens[4]->getLexeme(), "<");
-//     EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 2, Col: 15, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile] Line: 2, Col: 16,
-//     End
-//     // Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[5]->getType(), "LESS");
-//     EXPECT_EQ(tokens[5]->getLexeme(), "<");
-//     EXPECT_EQ(tokens[5]->getLineFile(), "[LineFile] Line: 2, Col: 16, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: STRING, Lexeme: Hello, World!, LineFile: [LineFile] Line:
-//     2,
-//     // Col: 18, End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[6]->getType(), "STRING");
-//     EXPECT_EQ(tokens[6]->getLexeme(), "Hello, World!");
-//     EXPECT_EQ(tokens[6]->getLineFile(), "[LineFile] Line: 2, Col: 18, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 2, Col:
-//     19,
-//     // End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[7]->getType(), "SEMICOLON");
-//     EXPECT_EQ(tokens[7]->getLexeme(), ";");
-//     EXPECT_EQ(tokens[7]->getLineFile(), "[LineFile] Line: 2, Col: 19, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col:
-//     13,
-//     // End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[8]->getType(), "SEMICOLON");
-//     EXPECT_EQ(tokens[8]->getLexeme(), ";");
-//     EXPECT_EQ(tokens[8]->getLineFile(), "[LineFile] Line: 3, Col: 11, End Line: 0, End Col: 0");
-//     // [Scanner][logTokens]Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col:
-//     1,
-//     // End Line: 0, End Col: 0
-//     EXPECT_EQ(tokens[9]->getType(), "RIGHT_BRACE");
-//     EXPECT_EQ(tokens[9]->getLexeme(), "}");
-//     EXPECT_EQ(tokens[9]->getLineFile(), "[LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0");
-// }
-
 // numbers
 TEST_F(ScannerTest, ScanTokens_SingleDigitNumber)
 {
@@ -557,6 +482,7 @@ TEST_F(ScannerTest, ScanTokens_NumberWithDecimal)
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
 }
 
+// TODO: Is it suppose to be 3.0 r 3? in this case i can't process the . token
 TEST_F(ScannerTest, ScanTokens_NumberWithNoDecimalButContinsDot)
 {
     std::string code = "3.";
@@ -564,10 +490,13 @@ TEST_F(ScannerTest, ScanTokens_NumberWithNoDecimalButContinsDot)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "3");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "DOT");
+    EXPECT_EQ(tokens[1]->getLexeme(), ".");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0");
 }
 
 // TEST_F(ScannerTest, ScanTokens_NumberWithLeadingDecimal)
@@ -1194,4 +1123,190 @@ TEST_F(ScannerTest, ScanTokens_Keyword_default)
     EXPECT_EQ(tokens[0]->getType(), "DEFAULT");
     EXPECT_EQ(tokens[0]->getLexeme(), "default");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_Keyword_do)
+{
+    std::string code = "do";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "DO");
+    EXPECT_EQ(tokens[0]->getLexeme(), "do");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_Keyword_double)
+{
+    std::string code = "double";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "DOUBLE");
+    EXPECT_EQ(tokens[0]->getLexeme(), "double");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, intMainTest)
+{
+    std::string code = "int main() { return 0; }";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_GT(tokens.size(), 0);  // Expect some tokens to be generated
+    // Additional checks can be added here for specific tokens if needed
+
+    EXPECT_EQ(tokens[0]->getType(), "INT");
+    EXPECT_EQ(tokens[0]->getLexeme(), "int");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokens[1]->getLexeme(), "main");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 5, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[2]->getType(), "LEFT_PAREN");
+    EXPECT_EQ(tokens[2]->getLexeme(), "(");
+    EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 9, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[3]->getType(), "RIGHT_PAREN");
+    EXPECT_EQ(tokens[3]->getLexeme(), ")");
+    EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 10, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[4]->getType(), "LEFT_BRACE");
+    EXPECT_EQ(tokens[4]->getLexeme(), "{");
+    EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[5]->getType(), "RETURN");
+    EXPECT_EQ(tokens[5]->getLexeme(), "return");
+    EXPECT_EQ(tokens[5]->getLineFile(), "[LineFile] Line: 1, Col: 14, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[6]->getType(), "NUMBER");
+    EXPECT_EQ(tokens[6]->getLexeme(), "0");
+    EXPECT_EQ(tokens[6]->getLineFile(), "[LineFile] Line: 1, Col: 21, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[7]->getType(), "SEMICOLON");
+    EXPECT_EQ(tokens[7]->getLexeme(), ";");
+    EXPECT_EQ(tokens[7]->getLineFile(), "[LineFile] Line: 1, Col: 22, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[8]->getType(), "RIGHT_BRACE");
+    EXPECT_EQ(tokens[8]->getLexeme(), "}");
+    EXPECT_EQ(tokens[8]->getLineFile(), "[LineFile] Line: 1, Col: 24, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, variableAssigment)
+{
+    std::string code = "double variableName = 3.14;";
+    Scanner scanner(code);
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+    ASSERT_EQ(tokens.size(),
+              5);  // Expect 5 tokens: type, identifier, assignment, number, semicolon
+    EXPECT_EQ(tokens[0]->getType(), "DOUBLE");
+    EXPECT_EQ(tokens[0]->getLexeme(), "double");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[1]->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokens[1]->getLexeme(), "variableName");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[2]->getType(), "EQUAL");
+    EXPECT_EQ(tokens[2]->getLexeme(), "=");
+    EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 21, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[3]->getType(), "NUMBER");
+    EXPECT_EQ(tokens[3]->getLexeme(), "3.14");
+    EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 23, End Line: 0, End Col: 0");
+    EXPECT_EQ(tokens[4]->getType(), "SEMICOLON");
+    EXPECT_EQ(tokens[4]->getLexeme(), ";");
+    EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 1, Col: 27, End Line: 0, End Col: 0");
+}
+
+// Too much noisy
+TEST_F(ScannerTest, ScanTokens_ComplexCode)
+{
+    std::string code =
+        "int main() {\n"
+        "    std::cout << \"Hello, World!\";\n"
+        "    return;\n"
+        "}\n";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_GT(tokens.size(), 0);  // Expect some tokens to be generated
+    // Additional checks can be added here for specific tokens if needed
+
+    // [Scanner][logTokens]Token Type: INT, Lexeme: int, LineFile: [LineFile] Line: 1, Col: 1, End
+    // Line: 0, End Col: 0
+    EXPECT_EQ(tokens[0]->getType(), "INT");
+    EXPECT_EQ(tokens[0]->getLexeme(), "int");
+    EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: IDENTIFIER, Lexeme: main, LineFile: [LineFile] Line: 1, Col:
+    // 5, End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[1]->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokens[1]->getLexeme(), "main");
+    EXPECT_EQ(tokens[1]->getLineFile(), "[LineFile] Line: 1, Col: 5, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 1, Col: 9,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[2]->getType(), "LEFT_PAREN");
+    EXPECT_EQ(tokens[2]->getLexeme(), "(");
+    EXPECT_EQ(tokens[2]->getLineFile(), "[LineFile] Line: 1, Col: 9, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 1, Col:
+    // 10, End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[3]->getType(), "RIGHT_PAREN");
+    EXPECT_EQ(tokens[3]->getLexeme(), ")");
+    EXPECT_EQ(tokens[3]->getLineFile(), "[LineFile] Line: 1, Col: 10, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 12,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[4]->getType(), "LEFT_BRACE");
+    EXPECT_EQ(tokens[4]->getLexeme(), "{");
+    EXPECT_EQ(tokens[4]->getLineFile(), "[LineFile] Line: 1, Col: 12, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: IDENTIFIER, Lexeme: std, LineFile: [LineFile] Line: 2, Col:
+    // 5, End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[5]->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokens[5]->getLexeme(), "std");
+    EXPECT_EQ(tokens[5]->getLineFile(), "[LineFile] Line: 2, Col: 5, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 8, End
+    // Line: 0, End Col: 0
+    EXPECT_EQ(tokens[6]->getType(), "COLON");
+    EXPECT_EQ(tokens[6]->getLexeme(), ":");
+    EXPECT_EQ(tokens[6]->getLineFile(), "[LineFile] Line: 2, Col: 8, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 9, End
+    // Line: 0, End Col: 0
+    EXPECT_EQ(tokens[7]->getType(), "COLON");
+    EXPECT_EQ(tokens[7]->getLexeme(), ":");
+    EXPECT_EQ(tokens[7]->getLineFile(), "[LineFile] Line: 2, Col: 9, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: IDENTIFIER, Lexeme: cout, LineFile: [LineFile] Line: 2, Col:
+    // 10, End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[8]->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokens[8]->getLexeme(), "cout");
+    EXPECT_EQ(tokens[8]->getLineFile(), "[LineFile] Line: 2, Col: 10, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile] Line: 2, Col: 15, End
+    // Line: 0, End Col: 0
+    EXPECT_EQ(tokens[9]->getType(), "LESS");
+    EXPECT_EQ(tokens[9]->getLexeme(), "<");
+    EXPECT_EQ(tokens[9]->getLineFile(), "[LineFile] Line: 2, Col: 15, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: LESS, Lexeme: <, LineFile: [LineFile] Line: 2, Col: 16, End
+    // Line: 0, End Col: 0
+    EXPECT_EQ(tokens[10]->getType(), "LESS");
+    EXPECT_EQ(tokens[10]->getLexeme(), "<");
+    EXPECT_EQ(tokens[10]->getLineFile(), "[LineFile] Line: 2, Col: 16, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: STRING, Lexeme: Hello, World!, LineFile: [LineFile] Line: 2,
+    // Col: 18, End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[11]->getType(), "STRING");
+    EXPECT_EQ(tokens[11]->getLexeme(), "Hello, World!");
+    EXPECT_EQ(tokens[11]->getLineFile(), "[LineFile] Line: 2, Col: 18, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 2, Col: 31,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[12]->getType(), "SEMICOLON");
+    EXPECT_EQ(tokens[12]->getLexeme(), ";");
+    EXPECT_EQ(tokens[12]->getLineFile(), "[LineFile] Line: 2, Col: 31, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: RETURN, Lexeme: return, LineFile: [LineFile] Line: 3, Col: 5,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[13]->getType(), "RETURN");
+    EXPECT_EQ(tokens[13]->getLexeme(), "return");
+    EXPECT_EQ(tokens[13]->getLineFile(), "[LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 11,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[14]->getType(), "SEMICOLON");
+    EXPECT_EQ(tokens[14]->getLexeme(), ";");
+    EXPECT_EQ(tokens[14]->getLineFile(), "[LineFile] Line: 3, Col: 11, End Line: 0, End Col: 0");
+    // [Scanner][logTokens]Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1,
+    // End Line: 0, End Col: 0
+    EXPECT_EQ(tokens[15]->getType(), "RIGHT_BRACE");
+    EXPECT_EQ(tokens[15]->getLexeme(), "}");
+    EXPECT_EQ(tokens[15]->getLineFile(), "[LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0");
 }

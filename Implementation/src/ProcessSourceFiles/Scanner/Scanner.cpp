@@ -174,6 +174,10 @@ std::string numberLiterals(const std::string& sourceCode, int& current, int& lin
                                   " current character: " + std::string(1, sourceCode[current]));
     }
 
+    current--;  // Move back to the last character consumed
+    Logger::getInstance().log("[Scanner][numberLiterals] Number found: " + lexeme + " at index: " +
+                              std::to_string(col) + " current : " + std::to_string(current));
+
     return lexeme;
 }
 
@@ -188,7 +192,6 @@ std::string identifierLiterals(const std::string& sourceCode, int& current, int&
         "[Scanner][identifierLiterals] Starting to scan identifier literals.");
     std::string lexeme;
 
-    col = current;
     // Consume the first character
     lexeme += sourceCode[current];
     current++;  // Move to the next character
@@ -287,6 +290,9 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
         case '+':
             addToken(TokenType::PLUS, m_tokens, "+", line, col);
             break;
+        case ':':
+            addToken(TokenType::COLON, m_tokens, ":", line, col);
+            break;
         case ';':
             addToken(TokenType::SEMICOLON, m_tokens, ";", line, col);
             break;
@@ -382,6 +388,7 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
         {
             auto lexeme = stringLiterals(sourceCode, current, line, col);
             addToken(TokenType::STRING, m_tokens, lexeme, line, col);
+            col += lexeme.length() - 1;
             break;
         }
 
@@ -394,11 +401,13 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             {
                 auto lexeme = numberLiterals(sourceCode, current, line, col);
                 addToken(TokenType::NUMBER, m_tokens, lexeme, line, col);
+                col += lexeme.length() - 1;  // Update column based on the length of the identifier
                 break;
             }
             // Identifiers and Keywords ( Reserved words )
             else if (isAnyAlpha(currentChar))
             {
+                // col = current + 1;
                 auto lexeme = identifierLiterals(sourceCode, current, line, col);
 
                 // Check if the lexeme is a keyword
@@ -409,13 +418,15 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
                                               " at line: " + std::to_string(line) +
                                               ", col: " + std::to_string(col));
                     addToken(it->second, m_tokens, lexeme, line, col);
-                    break;
                 }
-
-                Logger::getInstance().log("[Scanner][scanToken] Identifier found: " + lexeme +
-                                          " at line: " + std::to_string(line) +
-                                          ", col: " + std::to_string(col));
-                addToken(TokenType::IDENTIFIER, m_tokens, lexeme, line, col);
+                else
+                {
+                    Logger::getInstance().log("[Scanner][scanToken] Identifier found: " + lexeme +
+                                              " at line: " + std::to_string(line) +
+                                              ", col: " + std::to_string(col));
+                    addToken(TokenType::IDENTIFIER, m_tokens, lexeme, line, col);
+                }
+                col += lexeme.length() - 1;  // Update column based on the length of the identifier
                 break;
             }
             else

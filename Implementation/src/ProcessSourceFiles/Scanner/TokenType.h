@@ -18,6 +18,7 @@ enum class TokenType
     SEMICOLON,
     SLASH,
     STAR,
+    COLON,
     // One or two character tokens.
     BANG,
     BANG_EQUAL,
@@ -152,6 +153,8 @@ inline std::string toString(TokenType type)
             return "PLUS";
         case TokenType::SEMICOLON:
             return "SEMICOLON";
+        case TokenType::COLON:
+            return "COLON";
         case TokenType::SLASH:
             return "SLASH";
         case TokenType::STAR:
