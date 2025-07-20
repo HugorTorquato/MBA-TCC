@@ -188,6 +188,7 @@ std::string identifierLiterals(const std::string& sourceCode, int& current, int&
         "[Scanner][identifierLiterals] Starting to scan identifier literals.");
     std::string lexeme;
 
+    col = current;
     // Consume the first character
     lexeme += sourceCode[current];
     current++;  // Move to the next character
@@ -201,6 +202,11 @@ std::string identifierLiterals(const std::string& sourceCode, int& current, int&
         lexeme += sourceCode[current];
         current++;  // Consume the current character
     }
+
+    current--;  // Move back to the last character consumed
+    Logger::getInstance().log("[Scanner][identifierLiterals] Identifier found: " + lexeme +
+                              " at index: " + std::to_string(col) +
+                              " current : " + std::to_string(current));
 
     return lexeme;
 }
