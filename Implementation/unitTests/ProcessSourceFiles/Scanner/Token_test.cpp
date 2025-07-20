@@ -12,14 +12,6 @@ class TokenTest : public ::testing::Test
     void TearDown() override {}
 };
 
-TEST_F(TokenTest, DefaultConstructor)
-{
-    Token token;
-    EXPECT_EQ(token.toString(),
-              "Token Type: UNKNOWN, Lexeme: , LineFile: [LineFile] Line: 0, Col: 0, End Line: 0, "
-              "End Col: 0");
-}
-
 TEST_F(TokenTest, ParameterizedConstructor)
 {
     Token token(TokenType::IDENTIFIER, "myVariable", DefaultLineFile);
@@ -62,3 +54,21 @@ TEST_F(TokenTest, GetLineFileReturnsCorrectLineFile)
     Token token(TokenType::IDENTIFIER, "myVar", DefaultLineFile);
     EXPECT_EQ(token.getLineFile(), "[LineFile] Line: 1, Col: 2, End Line: 3, End Col: 4");
 }
+
+TEST_F(TokenTest, DefaultConstructor)
+{
+    Token token(TokenType::UNKNOWN, "", DefaultLineFile);
+    EXPECT_EQ(token.getType(), "UNKNOWN");
+    EXPECT_EQ(token.getLexeme(), "");
+    EXPECT_EQ(token.getLineFile(), "[LineFile] Line: 1, Col: 2, End Line: 3, End Col: 4");
+}
+
+TEST_F(TokenTest, ToStringWithDefaultConstructor)
+{
+    Token token(TokenType::UNKNOWN, "", DefaultLineFile);
+    EXPECT_EQ(token.toString(),
+              "Token Type: UNKNOWN, Lexeme: , LineFile: [LineFile] Line: 1, Col: 2, End Line: 3, "
+              "End Col: 4");
+}
+
+// TODO: Add more tests with valid tokens and valid line files

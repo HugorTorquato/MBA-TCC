@@ -9,7 +9,6 @@
 class Token : public IToken
 {
    public:
-    Token() = default;
     Token(TokenType type, const std::string& lexeme, const LineFile& lineFile);
 
     std::string getType() const override;
