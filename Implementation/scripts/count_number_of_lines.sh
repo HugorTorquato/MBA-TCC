@@ -25,3 +25,5 @@
 #
 # The final result is a single number: the total lines in all
 find .. -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.py" \) -exec cat {} + | wc -l
+# No empty lines
+find .. -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.py" \) -exec cat {} + | grep -v '^[[:space:]]*$' | wc -l
