@@ -11,4 +11,3 @@ std::vector<std::string> Parser::ListIncomingTokens() const
     }
     return tokenList;
 }
-
