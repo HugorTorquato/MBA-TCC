@@ -4,6 +4,9 @@
 
 #include "IPrettyPrintVisitor.h"
 
+// TODO: A good exercise is to convert this to smart pointers and use them in the visitor
+//   to avoid manual memory management. This will help prevent memory leaks and make the code safer.
+
 class Expression
 {
    public:
@@ -22,18 +25,9 @@ class BinaryExpression : public Expression
         return visitor->visitBinaryExpression(this);
     }
 
-    Expression* getLeft() const
-    {
-        return left;
-    }
-    Expression* getRight() const
-    {
-        return right;
-    }
-    std::string getOperator() const
-    {
-        return op;
-    }
+    Expression* getLeft() const;
+    Expression* getRight() const;
+    std::string getOperator() const;
 
    private:
     Expression* left;
@@ -52,10 +46,7 @@ class GroupingExpression : public Expression
         return visitor->visitGroupingExpression(this);
     }
 
-    Expression* getExpression() const
-    {
-        return expression;
-    }
+    Expression* getExpression() const;
 
    private:
     Expression* expression;
@@ -72,10 +63,7 @@ class LiteralExpression : public Expression
         return visitor->visitLiteralExpression(this);
     }
 
-    std::string getValue() const
-    {
-        return value;
-    }
+    std::string getValue() const;
 
    private:
     std::string value;
@@ -92,14 +80,8 @@ class UnaryExpression : public Expression
         return visitor->visitUnaryExpression(this);
     }
 
-    std::string getOperator() const
-    {
-        return op;
-    }
-    Expression* getRight() const
-    {
-        return right;
-    }
+    std::string getOperator() const;
+    Expression* getRight() const;
 
    private:
     std::string op;
