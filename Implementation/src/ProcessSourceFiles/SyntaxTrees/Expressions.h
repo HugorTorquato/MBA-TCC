@@ -2,23 +2,37 @@
 
 #include <string>
 
-#include "IVisitor.h"
+#include "IPrettyPrintVisitor.h"
 
 class Expression
 {
+   public:
     virtual ~Expression() = default;
-    virtual void accept(class IVisitor* visitor) = 0;
+    virtual std::string accept(class IPrettyPrintVisitor* visitor) = 0;
 };
 
 // "Binary : Expr left, Token operator, Expr right",
 class BinaryExpression : public Expression
 {
+   public:
     BinaryExpression(Expression* left, Expression* right, const std::string& op);
-    ~BinaryExpression();
 
-    void accept(IVisitor* visitor) override
+    std::string accept(IPrettyPrintVisitor* visitor) override
     {
-        visitor->visitBinaryExpression(this);
+        return visitor->visitBinaryExpression(this);
+    }
+
+    Expression* getLeft() const
+    {
+        return left;
+    }
+    Expression* getRight() const
+    {
+        return right;
+    }
+    std::string getOperator() const
+    {
+        return op;
     }
 
    private:
@@ -30,12 +44,17 @@ class BinaryExpression : public Expression
 // "Grouping : Expr expression",
 class GroupingExpression : public Expression
 {
+   public:
     GroupingExpression(Expression* expression);
-    ~GroupingExpression();          
 
-    void accept(IVisitor* visitor) override
+    std::string accept(IPrettyPrintVisitor* visitor) override
     {
-        visitor->visitGroupingExpression(this);
+        return visitor->visitGroupingExpression(this);
+    }
+
+    Expression* getExpression() const
+    {
+        return expression;
     }
 
    private:
@@ -45,12 +64,17 @@ class GroupingExpression : public Expression
 // "Literal : Object value",
 class LiteralExpression : public Expression
 {
+   public:
     LiteralExpression(const std::string& value);
-    ~LiteralExpression();
 
-    void accept(IVisitor* visitor) override
+    std::string accept(IPrettyPrintVisitor* visitor) override
     {
-        visitor->visitLiteralExpression(this);
+        return visitor->visitLiteralExpression(this);
+    }
+
+    std::string getValue() const
+    {
+        return value;
     }
 
    private:
@@ -60,12 +84,21 @@ class LiteralExpression : public Expression
 // "Unary : Token operator, Expr right"
 class UnaryExpression : public Expression
 {
+   public:
     UnaryExpression(const std::string& op, Expression* right);
-    ~UnaryExpression();
 
-    void accept(IVisitor* visitor) override
+    std::string accept(IPrettyPrintVisitor* visitor) override
     {
-        visitor->visitUnaryExpression(this);
+        return visitor->visitUnaryExpression(this);
+    }
+
+    std::string getOperator() const
+    {
+        return op;
+    }
+    Expression* getRight() const
+    {
+        return right;
     }
 
    private:
