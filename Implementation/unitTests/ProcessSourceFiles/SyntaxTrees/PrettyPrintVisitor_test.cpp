@@ -11,18 +11,23 @@ class PrettyPrintVisitorTests : public ::testing::Test
     void TearDown() override {}
 };
 
+//TODO:Implement tests with smart pointers
+
 TEST_F(PrettyPrintVisitorTests, VisitBinaryExpression)
 {
     Expression* left = new LiteralExpression("left");
     Expression* right = new LiteralExpression("right");
-    BinaryExpression expr(left, right, "+");
-    GroupingExpression groupExpr(new BinaryExpression(expr));
+    Expression* expr = new BinaryExpression(left, right, "+");
+    Expression* groupExpr = new GroupingExpression(expr);
 
     PrettyPrintVisitor visitor;
-    EXPECT_EQ(groupExpr.accept(&visitor), "(left + right)");
+    EXPECT_EQ(groupExpr->accept(&visitor), "(left + right)");
 
+    delete groupExpr;
+    delete expr;
     delete left;
     delete right;
+    
 }
 
 TEST_F(PrettyPrintVisitorTests, VisitGroupingExpression)
@@ -47,12 +52,14 @@ TEST_F(PrettyPrintVisitorTests, VisitLiteralExpression)
 TEST_F(PrettyPrintVisitorTests, VisitUnaryExpression)
 {
     Expression* right = new LiteralExpression("right");
-    UnaryExpression expr("-", right);
-    GroupingExpression groupExpr(new UnaryExpression(expr));
+    Expression* expr = new UnaryExpression("-", right);
+    Expression* groupExpr = new GroupingExpression(expr);
 
     PrettyPrintVisitor visitor;
-    EXPECT_EQ(groupExpr.accept(&visitor), "(-right)");
+    EXPECT_EQ(groupExpr->accept(&visitor), "(-right)");
 
+    delete groupExpr;
+    delete expr;
     delete right;
 }
 
@@ -60,15 +67,20 @@ TEST_F(PrettyPrintVisitorTests, VisitMultipleExpressions)
 {
     Expression* left = new LiteralExpression("left");
     Expression* right = new LiteralExpression("right");
-    BinaryExpression binaryExpr(left, right, "+");
-    GroupingExpression groupbinaryExpr(new BinaryExpression(binaryExpr));
+    Expression* binaryExpr = new BinaryExpression(left, right, "+");
+    Expression* groupbinaryExpr = new GroupingExpression(binaryExpr);
 
-    GroupingExpression groupingExpr(new LiteralExpression("grouped"));
+    Expression* grouped = new LiteralExpression("grouped");
+    Expression* groupingExpr = new GroupingExpression(grouped);
 
     PrettyPrintVisitor visitor;
-    EXPECT_EQ(groupbinaryExpr.accept(&visitor), "(left + right)");
-    EXPECT_EQ(groupingExpr.accept(&visitor), "(grouped)");
+    EXPECT_EQ(groupbinaryExpr->accept(&visitor), "(left + right)");
+    EXPECT_EQ(groupingExpr->accept(&visitor), "(grouped)");
 
+    delete groupingExpr;
+    delete grouped;
+    delete groupbinaryExpr;
+    delete binaryExpr;
     delete left;
     delete right;
 }
@@ -82,12 +94,14 @@ TEST_F(PrettyPrintVisitorTests, VisitEmptyExpressions)
 }
 TEST_F(PrettyPrintVisitorTests, LiteralOnly)
 {
-    LiteralExpression expr("123");
+    Expression* expr = new LiteralExpression("123");
     PrettyPrintVisitor visitor;
 
-    std::string result = expr.accept(&visitor);
+    std::string result = expr->accept(&visitor);
 
     EXPECT_EQ(result, "123");
+
+    delete expr;
 }
 
 TEST_F(PrettyPrintVisitorTests, UnaryExpression)
@@ -121,6 +135,7 @@ TEST_F(PrettyPrintVisitorTests, NestedExpressions)
     delete left;
     delete right;
     delete bin;
+    delete groupBin;
     delete unary;
     delete group;
 }
