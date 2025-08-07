@@ -5,7 +5,7 @@
 Token::Token(TokenType type, const std::string& lexeme, const LineFile& lineFile)
     : m_type(type), m_lexeme(lexeme), m_lineFile(lineFile)
 {
-    if (lexeme.empty())
+    if (lexeme.empty() && type != TokenType::END_OF_FILE)
     {
         m_type = TokenType::UNKNOWN;
     }

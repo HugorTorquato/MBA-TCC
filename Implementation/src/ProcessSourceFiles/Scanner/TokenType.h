@@ -126,7 +126,8 @@ enum class TokenType
     XOR,
     XOR_EQ,
     // Not Defined
-    UNKNOWN
+    UNKNOWN,
+    END_OF_FILE
 };
 
 namespace TokenTypeNameSpace
@@ -365,6 +366,8 @@ inline std::string toString(TokenType type)
             return "XOR";
         case TokenType::XOR_EQ:
             return "XOR_EQ";
+        case TokenType::END_OF_FILE:
+            return "END_OF_FILE";
         default:
             return "UNKNOWN";
     }
@@ -458,5 +461,6 @@ static std::unordered_map<std::string, TokenType> keywordsMap = {
     {"wchar_t", TokenType::WCHAR_T},
     {"while", TokenType::WHILE},
     {"xor", TokenType::XOR},
-    {"xor_eq", TokenType::XOR_EQ}};
+    {"xor_eq", TokenType::XOR_EQ},
+    {"END_OF_FILE", TokenType::END_OF_FILE}};
 }  // namespace TokenTypeNameSpace
