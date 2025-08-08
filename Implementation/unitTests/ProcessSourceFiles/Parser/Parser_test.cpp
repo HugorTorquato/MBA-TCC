@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
+#include "../../../src/ProcessSourceFiles/SyntaxTrees/Expressions.h"
 
 class ParserTest : public ::testing::Test
 {
@@ -48,3 +49,58 @@ TEST_F(ParserTest, ListIncomingTokens_MultipleTokens)
               "Token Type: IDENTIFIER, Lexeme: myVar, LineFile: [LineFile] Line: 1, Col: 4, End "
               "Line: 0, End Col: 0");
 }
+
+TEST_F(ParserTest, PeekTokenFromVector)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::INT, "int", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "myVar", LineFile(1, 4, 0, 0)));
+    Parser parser(tokens);
+
+    auto result = parser.ListIncomingTokens();
+    ASSERT_EQ(result.size(), 2);
+
+    auto tokenAtIndex0 = parser.peekIndex(0);
+    ASSERT_NE(tokenAtIndex0, nullptr);
+    EXPECT_EQ(tokenAtIndex0->getType(), "INT");
+    EXPECT_EQ(tokenAtIndex0->getLexeme(), "int");
+
+    auto tokenAtIndex1 = parser.peekIndex(1);
+    ASSERT_NE(tokenAtIndex1, nullptr);
+    EXPECT_EQ(tokenAtIndex1->getType(), "IDENTIFIER");
+    EXPECT_EQ(tokenAtIndex1->getLexeme(), "myVar");
+}
+
+TEST_F(ParserTest, PeekCurrentToken)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::INT, "int", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "myVar", LineFile(1, 4, 0, 0)));
+    Parser parser(tokens);
+
+    auto currentToken = parser.peekIndex(0);
+    ASSERT_NE(currentToken, nullptr);
+    EXPECT_EQ(currentToken->getType(), "INT");
+    EXPECT_EQ(currentToken->getLexeme(), "int");
+
+    currentToken = parser.peekIndex(1);
+    ASSERT_NE(currentToken, nullptr);
+    EXPECT_EQ(currentToken->getType(), "IDENTIFIER");
+    EXPECT_EQ(currentToken->getLexeme(), "myVar");
+}
+
+// TEST_F(ParserTest, Expression_Equality)
+// {
+//     std::vector<std::shared_ptr<IToken>> tokens;
+//     tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "x", LineFile(1, 1, 0, 0)));
+//     tokens.push_back(std::make_shared<Token>(TokenType::EQUAL_EQUAL, "==", LineFile(1, 2, 0,
+//     0))); tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "42", LineFile(1, 4, 0,
+//     0)));
+
+//     Parser parser(tokens);
+//     auto expr = parser.expression();
+
+//     EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+//     EXPECT_EQ(expr->getLeft()->getLexeme(), "x");
+//     EXPECT_EQ(expr->getRight()->getLexeme(), "42");
+// }

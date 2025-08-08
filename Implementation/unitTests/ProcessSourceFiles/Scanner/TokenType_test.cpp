@@ -128,6 +128,7 @@ TEST_F(TokenTypeTest, ToString_ReturnsCorrectString)
     EXPECT_EQ(toString(TokenType::XOR), "XOR");
     EXPECT_EQ(toString(TokenType::XOR_EQ), "XOR_EQ");
     EXPECT_EQ(toString(TokenType::UNKNOWN), "UNKNOWN");
+    EXPECT_EQ(toString(TokenType::END_OF_FILE), "END_OF_FILE");
 }
 
 TEST_F(TokenTypeTest, EvaluateKeyWordsMapOptions)
@@ -222,6 +223,7 @@ TEST_F(TokenTypeTest, EvaluateKeyWordsMapOptions)
     EXPECT_EQ(keywordsMap.at("while"), TokenType::WHILE);
     EXPECT_EQ(keywordsMap.at("xor"), TokenType::XOR);
     EXPECT_EQ(keywordsMap.at("xor_eq"), TokenType::XOR_EQ);
+    EXPECT_EQ(keywordsMap.at("end_of_file"), TokenType::END_OF_FILE);
 
     // Check that the map size matches the number of unique keywords
     std::set<std::string> unique_keywords;

@@ -462,5 +462,5 @@ static std::unordered_map<std::string, TokenType> keywordsMap = {
     {"while", TokenType::WHILE},
     {"xor", TokenType::XOR},
     {"xor_eq", TokenType::XOR_EQ},
-    {"END_OF_FILE", TokenType::END_OF_FILE}};
+    {"end_of_file", TokenType::END_OF_FILE}};
 }  // namespace TokenTypeNameSpace
