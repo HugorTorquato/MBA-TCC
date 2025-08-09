@@ -89,31 +89,118 @@ TEST_F(ParserTest, PeekCurrentToken)
     EXPECT_EQ(currentToken->getLexeme(), "myVar");
 }
 
-// TEST_F(ParserTest, SimpleExpressionExemple)
-// {
-//     // 1 + 2 * 3
-//     std::vector<std::shared_ptr<IToken>> tokens;
-//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
-//     tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
-//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
-//     tokens.push_back(std::make_shared<Token>(TokenType::STAR, "*", LineFile(1, 4, 0, 0)));
-//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 5, 0, 0)));
+TEST_F(ParserTest, SimpleExpressionExemple)
+{
+    // 1 + 2 * 3
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::STAR, "*", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 5, 0, 0)));
 
-//     Parser parser(tokens);
-//     auto expr = parser.expression();
+    Parser parser(tokens);
+    auto expr = parser.expression();
 
-//     ASSERT_NE(expr, nullptr);
-//     EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
-//     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
-//     ASSERT_NE(binaryExpr, nullptr);
-//     // EXPECT_EQ(binaryExpr->getLeft()->getLexeme(), "1");
-//     EXPECT_EQ(binaryExpr->getOperator(), "+");
-//     auto rightExpr = std::dynamic_pointer_cast<BinaryExpression>(binaryExpr->getRight());
-//     ASSERT_NE(rightExpr, nullptr);
-//     // EXPECT_EQ(rightExpr->getLeft()->getLexeme(), "2");
-//     EXPECT_EQ(rightExpr->getOperator(), "*");
-//     // EXPECT_EQ(rightExpr->getRight()->getLexeme(), "3");
-// }
+    ASSERT_NE(expr, nullptr);
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    EXPECT_EQ(binaryExpr->getOperator(), "+");
+    auto rightExpr = std::dynamic_pointer_cast<BinaryExpression>(binaryExpr->getRight());
+    ASSERT_NE(rightExpr, nullptr);
+    left = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "2");
+    EXPECT_EQ(rightExpr->getOperator(), "*");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "3");
+}
+
+TEST_F(ParserTest, ConsumeTokenType)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "123", LineFile(1, 1, 0, 0)));
+    Parser parser(tokens);
+
+    auto token = parser.parse();
+    ASSERT_NE(token, nullptr);
+    EXPECT_EQ(token->getType(), "LITERAL_EXPRESSION");
+    // EXPECT_EQ(token->getValue(), "int");
+}
+
+// INT is not suporter to parse yet.. just expressions
+
+TEST_F(ParserTest, SixLayersExpression)
+{
+    // 10 - 2 + 2 + 2 + 2 + 2
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "10", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::MINUS, "-", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 5, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 6, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 8, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 9, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 8, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 9, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "10");
+    EXPECT_EQ(binaryExpr->getOperator(), "-");
+    EXPECT_EQ(binaryExpr->getRight()->getType(), "BINARY_EXPRESSION");
+    auto rightExpr = std::dynamic_pointer_cast<BinaryExpression>(binaryExpr->getRight());
+    ASSERT_NE(rightExpr, nullptr);
+    EXPECT_EQ(rightExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    left = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "2");
+    EXPECT_EQ(rightExpr->getOperator(), "+");
+    EXPECT_EQ(rightExpr->getRight()->getType(), "BINARY_EXPRESSION");
+    rightExpr = std::dynamic_pointer_cast<BinaryExpression>(rightExpr->getRight());
+    ASSERT_NE(rightExpr, nullptr);
+    EXPECT_EQ(rightExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    left = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "2");
+    EXPECT_EQ(rightExpr->getOperator(), "+");
+    EXPECT_EQ(rightExpr->getRight()->getType(), "BINARY_EXPRESSION");
+    rightExpr = std::dynamic_pointer_cast<BinaryExpression>(rightExpr->getRight());
+    ASSERT_NE(rightExpr, nullptr);
+    EXPECT_EQ(rightExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    left = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "2");
+    EXPECT_EQ(rightExpr->getOperator(), "+");
+    EXPECT_EQ(rightExpr->getRight()->getType(), "BINARY_EXPRESSION");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getType(), "LITERAL_EXPRESSION");
+    auto rightLeft = std::dynamic_pointer_cast<LiteralExpression>(right);
+    ASSERT_NE(rightLeft, nullptr);
+    EXPECT_EQ(rightLeft->getValue(), "2");
+    left = std::dynamic_pointer_cast<LiteralExpression>(rightExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "2");
+}
+
+// Parser::error
 
 // TEST_F(ParserTest, Expression_Equality)
 // {
