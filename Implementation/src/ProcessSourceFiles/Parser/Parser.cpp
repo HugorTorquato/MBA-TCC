@@ -7,7 +7,7 @@
 namespace
 {
 
-std::shared_ptr<IToken> peek(const std::vector<std::shared_ptr<IToken>> tokens, const int current)
+std::shared_ptr<IToken> peek(const std::vector<std::shared_ptr<IToken>>& tokens, const int current)
 {
     Logger::getInstance().log(" [Parser][peek] tokens.size()=" + std::to_string(tokens.size()) +
                               ", current=" + std::to_string(current));
@@ -47,7 +47,7 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
 
     for (auto& typeToMatch : tokenTypesToMatch)
     {
-        if (token->getType() == TokenTypeNameSpace::toString(typeToMatch))
+        if (token->getTypeEnum() == typeToMatch)
         {
             ::advance(current);
             Logger::getInstance().log(" [Parser][match] matched type=" +
@@ -101,6 +101,11 @@ std::shared_ptr<IToken> Parser::advance()  // Private
 
 std::shared_ptr<IToken> Parser::previous()  // Private
 {
+    if (m_current == 0)
+    {
+        Logger::getInstance().log(" [Parser][previous] No previous token, returning nullptr.");
+        return nullptr;
+    }
     Logger::getInstance().log(" [Parser][previous] m_current=" + std::to_string(m_current));
     return peekIndex(m_current - 1);
 }
@@ -189,13 +194,13 @@ std::shared_ptr<IToken> Parser::consume(TokenType type, const std::string& messa
 {
     Logger::getInstance().log(" [Parser][consume] type=" + TokenTypeNameSpace::toString(type) +
                               ", m_current=" + std::to_string(m_current));
-    if (peekCurrentToken()->getType() == TokenTypeNameSpace::toString(type))
+    auto currentToken = peekCurrentToken();
+    if (currentToken && currentToken->getType() == TokenTypeNameSpace::toString(type))
     {
         return advance();
     }
 
-    throw std::runtime_error("Parse Error at " + peekCurrentToken()->getLineFile() + ": " +
-                             message);
+    throw std::runtime_error("Parse Error at " + currentToken->getLineFile() + ": " + message);
 }
 
 std::shared_ptr<Expression> Parser::primary()

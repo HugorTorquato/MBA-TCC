@@ -4,7 +4,6 @@
 
 #include "../util/LineFile.h"
 #include "IToken.h"
-#include "TokenType.h"
 
 class Token : public IToken
 {
@@ -12,6 +11,7 @@ class Token : public IToken
     Token(TokenType type, const std::string& lexeme, const LineFile& lineFile);
 
     std::string getType() const override;
+    TokenType getTypeEnum() const override;
     std::string getLexeme() const override;
     std::string getLineFile() const override;
 
