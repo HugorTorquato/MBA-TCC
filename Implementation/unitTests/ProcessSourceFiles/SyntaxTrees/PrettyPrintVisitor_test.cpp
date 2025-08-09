@@ -1,7 +1,10 @@
+
+
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/PrettyPrintVisitor.h"
 
 #include <gtest/gtest.h>
 
+#include "../../../src/ProcessSourceFiles/Scanner/Token.h"
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/Expressions.h"
 
 class PrettyPrintVisitorTests : public ::testing::Test
@@ -13,9 +16,16 @@ class PrettyPrintVisitorTests : public ::testing::Test
 
 TEST_F(PrettyPrintVisitorTests, VisitBinaryExpression)
 {
-    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>("left");
-    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>("right");
-    std::shared_ptr<Expression> expr = std::make_shared<BinaryExpression>(left, right, "+");
+    std::shared_ptr<Token> leftToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "left", LineFile(1, 2, 0, 0));
+    std::shared_ptr<Token> rightToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "right", LineFile(1, 6, 0, 0));
+    std::shared_ptr<Token> opToken =
+        std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 4, 0, 0));
+
+    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>(leftToken);
+    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>(rightToken);
+    std::shared_ptr<Expression> expr = std::make_shared<BinaryExpression>(left, right, opToken);
     std::shared_ptr<Expression> groupExpr = std::make_shared<GroupingExpression>(expr);
 
     PrettyPrintVisitor visitor;
@@ -24,7 +34,11 @@ TEST_F(PrettyPrintVisitorTests, VisitBinaryExpression)
 
 TEST_F(PrettyPrintVisitorTests, VisitGroupingExpression)
 {
-    std::shared_ptr<Expression> inner = std::make_shared<LiteralExpression>("inner");
+    std::shared_ptr<Token> innerToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "inner", LineFile(1, 2, 0, 0));
+
+    std::shared_ptr<Expression> inner = std::make_shared<LiteralExpression>(innerToken);
+
     GroupingExpression expr(inner);
 
     PrettyPrintVisitor visitor;
@@ -33,16 +47,24 @@ TEST_F(PrettyPrintVisitorTests, VisitGroupingExpression)
 
 TEST_F(PrettyPrintVisitorTests, VisitLiteralExpression)
 {
-    LiteralExpression expr("literal");
+    std::shared_ptr<Token> literalToken =
+        std::make_shared<Token>(TokenType::STRING, "literal", LineFile(1, 2, 0, 0));
+
+    std::shared_ptr<Expression> expr = std::make_shared<LiteralExpression>(literalToken);
 
     PrettyPrintVisitor visitor;
-    EXPECT_EQ(expr.accept(&visitor), "literal");
+    EXPECT_EQ(expr->accept(&visitor), "literal");
 }
 
 TEST_F(PrettyPrintVisitorTests, VisitUnaryExpression)
 {
-    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>("right");
-    std::shared_ptr<Expression> expr = std::make_shared<UnaryExpression>("-", right);
+    std::shared_ptr<Token> rightToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "right", LineFile(1, 6, 0, 0));
+    std::shared_ptr<Token> opToken =
+        std::make_shared<Token>(TokenType::MINUS, "-", LineFile(1, 4, 0, 0));
+
+    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>(rightToken);
+    std::shared_ptr<Expression> expr = std::make_shared<UnaryExpression>(opToken, right);
     std::shared_ptr<Expression> groupExpr = std::make_shared<GroupingExpression>(expr);
 
     PrettyPrintVisitor visitor;
@@ -51,12 +73,23 @@ TEST_F(PrettyPrintVisitorTests, VisitUnaryExpression)
 
 TEST_F(PrettyPrintVisitorTests, VisitMultipleExpressions)
 {
-    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>("left");
-    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>("right");
-    std::shared_ptr<Expression> binaryExpr = std::make_shared<BinaryExpression>(left, right, "+");
+    std::shared_ptr<Token> leftToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "left", LineFile(1, 2, 0, 0));
+    std::shared_ptr<Token> rightToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "right", LineFile(1, 6, 0, 0));
+    std::shared_ptr<Token> opToken =
+        std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 4, 0, 0));
+
+    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>(leftToken);
+    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>(rightToken);
+    std::shared_ptr<Expression> binaryExpr =
+        std::make_shared<BinaryExpression>(left, right, opToken);
     std::shared_ptr<Expression> groupbinaryExpr = std::make_shared<GroupingExpression>(binaryExpr);
 
-    std::shared_ptr<Expression> grouped = std::make_shared<LiteralExpression>("grouped");
+    std::shared_ptr<Token> groupedToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "grouped", LineFile(1, 10, 0, 0));
+
+    std::shared_ptr<Expression> grouped = std::make_shared<LiteralExpression>(groupedToken);
     std::shared_ptr<Expression> groupingExpr = std::make_shared<GroupingExpression>(grouped);
 
     PrettyPrintVisitor visitor;
@@ -75,7 +108,11 @@ TEST_F(PrettyPrintVisitorTests, VisitEmptyExpressions)
 
 TEST_F(PrettyPrintVisitorTests, LiteralOnly)
 {
-    std::shared_ptr<Expression> expr = std::make_shared<LiteralExpression>("123");
+    std::shared_ptr<Token> literalToken =
+        std::make_shared<Token>(TokenType::NUMBER, "123", LineFile(1, 2, 0, 0));
+
+    std::shared_ptr<Expression> expr = std::make_shared<LiteralExpression>(literalToken);
+
     PrettyPrintVisitor visitor;
 
     std::string result = expr->accept(&visitor);
@@ -85,11 +122,17 @@ TEST_F(PrettyPrintVisitorTests, LiteralOnly)
 
 TEST_F(PrettyPrintVisitorTests, UnaryExpression)
 {
-    std::shared_ptr<LiteralExpression> lit = std::make_shared<LiteralExpression>("true");
-    UnaryExpression expr("!", lit);
+    std::shared_ptr<Token> litToken =
+        std::make_shared<Token>(TokenType::BOOL, "true", LineFile(1, 2, 0, 0));
+    std::shared_ptr<Token> opToken =
+        std::make_shared<Token>(TokenType::BANG, "!", LineFile(1, 1, 0, 0));
+
+    std::shared_ptr<LiteralExpression> lit = std::make_shared<LiteralExpression>(litToken);
+
+    std::shared_ptr<Expression> expr = std::make_shared<UnaryExpression>(opToken, lit);
     PrettyPrintVisitor visitor;
 
-    std::string result = expr.accept(&visitor);
+    std::string result = expr->accept(&visitor);
 
     EXPECT_EQ(result, "!true");
 }
@@ -97,11 +140,21 @@ TEST_F(PrettyPrintVisitorTests, UnaryExpression)
 TEST_F(PrettyPrintVisitorTests, NestedExpressions)
 {
     // Represents: (!(1 + 2))
-    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>("1");
-    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>("2");
-    std::shared_ptr<Expression> bin = std::make_shared<BinaryExpression>(left, right, "+");
+
+    std::shared_ptr<Token> leftToken =
+        std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 2, 0, 0));
+    std::shared_ptr<Token> rightToken =
+        std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 6, 0, 0));
+    std::shared_ptr<Token> opToken =
+        std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 4, 0, 0));
+    std::shared_ptr<Token> unaryOpToken =
+        std::make_shared<Token>(TokenType::BANG, "!", LineFile(1, 1, 0, 0));
+
+    std::shared_ptr<Expression> left = std::make_shared<LiteralExpression>(leftToken);
+    std::shared_ptr<Expression> right = std::make_shared<LiteralExpression>(rightToken);
+    std::shared_ptr<Expression> bin = std::make_shared<BinaryExpression>(left, right, opToken);
     std::shared_ptr<Expression> groupBin = std::make_shared<GroupingExpression>(bin);
-    std::shared_ptr<Expression> unary = std::make_shared<UnaryExpression>("!", groupBin);
+    std::shared_ptr<Expression> unary = std::make_shared<UnaryExpression>(unaryOpToken, groupBin);
     std::shared_ptr<Expression> group = std::make_shared<GroupingExpression>(unary);
 
     PrettyPrintVisitor visitor;

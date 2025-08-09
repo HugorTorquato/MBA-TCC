@@ -89,6 +89,32 @@ TEST_F(ParserTest, PeekCurrentToken)
     EXPECT_EQ(currentToken->getLexeme(), "myVar");
 }
 
+// TEST_F(ParserTest, SimpleExpressionExemple)
+// {
+//     // 1 + 2 * 3
+//     std::vector<std::shared_ptr<IToken>> tokens;
+//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
+//     tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
+//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
+//     tokens.push_back(std::make_shared<Token>(TokenType::STAR, "*", LineFile(1, 4, 0, 0)));
+//     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 5, 0, 0)));
+
+//     Parser parser(tokens);
+//     auto expr = parser.expression();
+
+//     ASSERT_NE(expr, nullptr);
+//     EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+//     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+//     ASSERT_NE(binaryExpr, nullptr);
+//     // EXPECT_EQ(binaryExpr->getLeft()->getLexeme(), "1");
+//     EXPECT_EQ(binaryExpr->getOperator(), "+");
+//     auto rightExpr = std::dynamic_pointer_cast<BinaryExpression>(binaryExpr->getRight());
+//     ASSERT_NE(rightExpr, nullptr);
+//     // EXPECT_EQ(rightExpr->getLeft()->getLexeme(), "2");
+//     EXPECT_EQ(rightExpr->getOperator(), "*");
+//     // EXPECT_EQ(rightExpr->getRight()->getLexeme(), "3");
+// }
+
 // TEST_F(ParserTest, Expression_Equality)
 // {
 //     std::vector<std::shared_ptr<IToken>> tokens;

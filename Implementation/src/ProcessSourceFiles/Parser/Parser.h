@@ -9,9 +9,7 @@ class Parser : public IParser
     virtual ~Parser() = default;
 
     std::vector<std::string> ListIncomingTokens() const override;
-
     std::shared_ptr<Expression> expression();
-
     std::shared_ptr<IToken> peekIndex(const int tokenIndex) const;
 
    private:

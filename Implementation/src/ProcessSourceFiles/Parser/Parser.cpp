@@ -89,7 +89,7 @@ std::shared_ptr<Expression> Parser::equality()
     {
         auto operatorToken = previous();
         std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken->getLexeme());
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
     }
     return expr;
 }
@@ -107,7 +107,7 @@ std::shared_ptr<Expression> Parser::comparison()
     {
         auto operatorToken = previous();
         std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken->getLexeme());
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
     }
     return expr;
 }
@@ -123,7 +123,7 @@ std::shared_ptr<Expression> Parser::term()
     {
         auto operatorToken = previous();
         std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken->getLexeme());
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
     }
     return expr;
 }
@@ -139,7 +139,7 @@ std::shared_ptr<Expression> Parser::factor()
     {
         auto operatorToken = previous();
         std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken->getLexeme());
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
     }
     return expr;
 }
@@ -157,21 +157,22 @@ std::shared_ptr<Expression> Parser::unary()
     {
         auto operatorToken = previous();
         std::shared_ptr<Expression> right = unary();
-        return std::make_shared<UnaryExpression>(operatorToken->getLexeme(), right);
+        return std::make_shared<UnaryExpression>(operatorToken, right);
     }
     return primary();
 }
 
 std::shared_ptr<Expression> Parser::primary()
 {
-    if (match({TokenType::FALSE}, peekCurrentToken(), m_current))
-        return std::make_shared<LiteralExpression>("false");
-    if (match({TokenType::TRUE}, peekCurrentToken(), m_current))
-        return std::make_shared<LiteralExpression>("true");
-    if (match({TokenType::NULLPTR}, peekCurrentToken(), m_current))
-        return std::make_shared<LiteralExpression>("null");
-    if (match({TokenType::NUMBER, TokenType::STRING}, peekCurrentToken(), m_current))
-        return std::make_shared<LiteralExpression>(previous()->getLexeme());
+    auto currentToken = peekCurrentToken();
+    if (match({TokenType::FALSE}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::TRUE}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::NULLPTR}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::NUMBER, TokenType::STRING}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
 
     return nullptr;  // If no match, return nullptr
     // if(match({TokenType::LEFT_PAREN}, peekCurrentToken(), m_current))

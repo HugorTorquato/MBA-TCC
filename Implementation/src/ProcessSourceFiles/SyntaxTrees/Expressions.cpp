@@ -1,7 +1,7 @@
 #include "Expressions.h"
 
 BinaryExpression::BinaryExpression(std::shared_ptr<Expression> left,
-                                   std::shared_ptr<Expression> right, const std::string& op)
+                                   std::shared_ptr<Expression> right, std::shared_ptr<IToken> op)
     : left(left), right(right), op(op)
 {
 }
@@ -18,7 +18,7 @@ std::shared_ptr<Expression> BinaryExpression::getRight() const
 
 std::string BinaryExpression::getOperator() const
 {
-    return op;
+    return op->getLexeme();
 }
 
 GroupingExpression::GroupingExpression(std::shared_ptr<Expression> expression)
@@ -31,21 +31,21 @@ std::shared_ptr<Expression> GroupingExpression::getExpression() const
     return expression;
 }
 
-LiteralExpression::LiteralExpression(const std::string& value) : value(value) {}
+LiteralExpression::LiteralExpression(std::shared_ptr<IToken> value) : value(value) {}
 
 std::string LiteralExpression::getValue() const
 {
-    return value;
+    return value->getLexeme();
 }
 
-UnaryExpression::UnaryExpression(const std::string& op, std::shared_ptr<Expression> right)
+UnaryExpression::UnaryExpression(std::shared_ptr<IToken> op, std::shared_ptr<Expression> right)
     : op(op), right(right)
 {
 }
 
 std::string UnaryExpression::getOperator() const
 {
-    return op;
+    return op->getLexeme();
 }
 
 std::shared_ptr<Expression> UnaryExpression::getRight() const
