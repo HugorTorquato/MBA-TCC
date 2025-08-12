@@ -39,14 +39,13 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
            const std::shared_ptr<IToken>& token, int& current)
 {
     std::string typesStr;
-    for (auto& t : tokenTypesToMatch) typesStr += TokenTypeNameSpace::toString(t) + " ";
-    Logger::getInstance().log(" [Parser][match] tokenTypesToMatch=" + typesStr +
-                              ", token=" + (token ? token->toString() : "nullptr") +
-                              ", current=" + std::to_string(current));
+
     if (isAtEnd(token)) return false;
 
     for (auto& typeToMatch : tokenTypesToMatch)
     {
+        typesStr += TokenTypeNameSpace::toString(typeToMatch) + " ";
+
         if (token->getTypeEnum() == typeToMatch)
         {
             ::advance(current);
@@ -55,6 +54,10 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
             return true;
         }
     }
+
+    Logger::getInstance().log(" [Parser][match] tokenTypesToMatch=" + typesStr +
+                              ", token=" + (token ? token->toString() : "nullptr") +
+                              ", current=" + std::to_string(current));
 
     return false;
 }
@@ -65,6 +68,14 @@ Parser::Parser(std::vector<std::shared_ptr<IToken>> tokens) : m_tokens(std::move
 {
     Logger::getInstance().log(" [Parser][Parser] Constructed with m_tokens.size()=" +
                               std::to_string(m_tokens.size()));
+}
+
+bool Parser::check(const TokenType type) const
+{
+    Logger::getInstance().log(" [Parser][check] type=" + TokenTypeNameSpace::toString(type) +
+                              ", m_current=" + std::to_string(m_current));
+    if (isAtEnd(peekCurrentToken())) return false;
+    return peekCurrentToken()->getTypeEnum() == type;
 }
 
 std::vector<std::string> Parser::ListIncomingTokens() const
@@ -82,6 +93,7 @@ std::vector<std::string> Parser::ListIncomingTokens() const
 std::shared_ptr<IToken> Parser::peekIndex(const int tokenIndex) const
 {
     Logger::getInstance().log(" [Parser][peekIndex] tokenIndex=" + std::to_string(tokenIndex));
+    if (tokenIndex < 0 || tokenIndex >= static_cast<int>(m_tokens.size())) return nullptr;
     return ::peek(m_tokens, tokenIndex);
 }
 
@@ -110,136 +122,30 @@ std::shared_ptr<IToken> Parser::previous()  // Private
     return peekIndex(m_current - 1);
 }
 
-std::shared_ptr<Expression> Parser::equality()
-{
-    Logger::getInstance().log(" [Parser][equality] m_current=" + std::to_string(m_current));
-    std::shared_ptr<Expression> expr = comparison();
-
-    while (match({TokenType::EQUAL_EQUAL, TokenType::BANG_EQUAL}, peekCurrentToken(), m_current))
-    {
-        auto operatorToken = previous();
-        Logger::getInstance().log(" [Parser][equality] operatorToken=" +
-                                  (operatorToken ? operatorToken->toString() : "nullptr"));
-        std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
-    }
-    return expr;
-}
-
-std::shared_ptr<Expression> Parser::comparison()
-{
-    Logger::getInstance().log(" [Parser][comparison] m_current=" + std::to_string(m_current));
-    std::shared_ptr<Expression> expr = term();
-
-    while (match(
-        {TokenType::LESS, TokenType::GREATER, TokenType::LESS_EQUAL, TokenType::GREATER_EQUAL},
-        peekCurrentToken(), m_current))
-    {
-        auto operatorToken = previous();
-        Logger::getInstance().log(" [Parser][comparison] operatorToken=" +
-                                  (operatorToken ? operatorToken->toString() : "nullptr"));
-        std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
-    }
-    return expr;
-}
-
-std::shared_ptr<Expression> Parser::term()
-{
-    Logger::getInstance().log(" [Parser][term] m_current=" + std::to_string(m_current));
-    std::shared_ptr<Expression> expr = factor();
-
-    while (match({TokenType::MINUS, TokenType::PLUS}, peekCurrentToken(), m_current))
-    {
-        auto operatorToken = previous();
-        Logger::getInstance().log(" [Parser][term] operatorToken=" +
-                                  (operatorToken ? operatorToken->toString() : "nullptr"));
-        std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
-    }
-    return expr;
-}
-
-std::shared_ptr<Expression> Parser::factor()
-{
-    Logger::getInstance().log(" [Parser][factor] m_current=" + std::to_string(m_current));
-    std::shared_ptr<Expression> expr = unary();
-
-    while (match({TokenType::SLASH, TokenType::STAR}, peekCurrentToken(), m_current))
-    {
-        auto operatorToken = previous();
-        Logger::getInstance().log(" [Parser][factor] operatorToken=" +
-                                  (operatorToken ? operatorToken->toString() : "nullptr"));
-        std::shared_ptr<Expression> right = comparison();
-        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
-    }
-    return expr;
-}
-
-std::shared_ptr<Expression> Parser::unary()
-{
-    Logger::getInstance().log(" [Parser][unary] m_current=" + std::to_string(m_current));
-    if (match({TokenType::BANG, TokenType::MINUS}, peekCurrentToken(), m_current))
-    {
-        auto operatorToken = previous();
-        Logger::getInstance().log(" [Parser][unary] operatorToken=" +
-                                  (operatorToken ? operatorToken->toString() : "nullptr"));
-        std::shared_ptr<Expression> right = unary();
-        return std::make_shared<UnaryExpression>(operatorToken, right);
-    }
-    return primary();
-}
-
 std::shared_ptr<IToken> Parser::consume(TokenType type, const std::string& message)
 {
     Logger::getInstance().log(" [Parser][consume] type=" + TokenTypeNameSpace::toString(type) +
                               ", m_current=" + std::to_string(m_current));
     auto currentToken = peekCurrentToken();
-    if (currentToken && currentToken->getType() == TokenTypeNameSpace::toString(type))
+    if (check(type))
     {
+        Logger::getInstance().log(" [Parser][consume] Consumed token: " + currentToken->toString());
         return advance();
     }
 
     throw std::runtime_error("Parse Error at " + currentToken->getLineFile() + ": " + message);
 }
 
-std::shared_ptr<Expression> Parser::primary()
-{
-    Logger::getInstance().log(" [Parser][primary] m_current=" + std::to_string(m_current));
-    auto currentToken = peekCurrentToken();
-    Logger::getInstance().log(" [Parser][primary] currentToken=" +
-                              (currentToken ? currentToken->toString() : "nullptr"));
-    if (match({TokenType::FALSE}, currentToken, m_current))
-        return std::make_shared<LiteralExpression>(currentToken);
-    if (match({TokenType::TRUE}, currentToken, m_current))
-        return std::make_shared<LiteralExpression>(currentToken);
-    if (match({TokenType::NULLPTR}, currentToken, m_current))
-        return std::make_shared<LiteralExpression>(currentToken);
-    if (match({TokenType::NUMBER, TokenType::STRING}, currentToken, m_current))
-        return std::make_shared<LiteralExpression>(currentToken);
-
-    if (match({TokenType::LEFT_PAREN}, peekCurrentToken(), m_current))
-    {
-        std::shared_ptr<Expression> expr = expression();
-        consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
-        return std::make_shared<GroupingExpression>(expr);
-    }
-
-    error(currentToken, "Expect expression.");
-    return nullptr;
-}
-
-std::shared_ptr<Expression> Parser::expression()
-{
-    Logger::getInstance().log(" [Parser][expression] m_current=" + std::to_string(m_current));
-    return equality();
-}
-
 void Parser::error(std::shared_ptr<IToken> token, const std::string& message)
 {
     Logger::getInstance().log(" [Parser][error] token=" + (token ? token->toString() : "nullptr") +
                               ", message=" + message);
-    if (token->getType() == "END_OF_FILE")
+
+    if (token == nullptr)
+    {
+        throw std::runtime_error("Parse Error at nullptr: " + message);
+    }
+    else if (token->getTypeEnum() == TokenType::END_OF_FILE)
     {
         throw std::runtime_error("Parse Error at end: " + message);
     }
@@ -261,4 +167,127 @@ std::shared_ptr<Expression> Parser::parse()
         Logger::getInstance().log(" [Parser][parse] Exception: " + std::string(e.what()));
         return nullptr;
     }
+}
+
+// ----------------- grammar functions -----------------
+
+std::shared_ptr<Expression> Parser::expression()
+{
+    Logger::getInstance().log(" [Parser][expression] m_current=" + std::to_string(m_current));
+
+    if (isAtEnd(peekCurrentToken()))
+    {
+        Logger::getInstance().log(" [Parser][expression] No tokens to parse, returning nullptr.");
+        return nullptr;
+    }
+
+    return equality();
+}
+
+std::shared_ptr<Expression> Parser::equality()
+{
+    Logger::getInstance().log(" [Parser][equality] m_current=" + std::to_string(m_current));
+    std::shared_ptr<Expression> expr = comparison();
+
+    while (match({TokenType::EQUAL_EQUAL, TokenType::BANG_EQUAL}, peekCurrentToken(), m_current))
+    {
+        auto operatorToken = previous();
+        Logger::getInstance().log(" [Parser][equality] operatorToken=" +
+                                  (operatorToken ? operatorToken->toString() : "nullptr"));
+        auto right = comparison();
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
+    }
+    return expr;
+}
+
+std::shared_ptr<Expression> Parser::comparison()
+{
+    Logger::getInstance().log(" [Parser][comparison] m_current=" + std::to_string(m_current));
+    auto expr = term();
+
+    while (match(
+        {TokenType::LESS, TokenType::GREATER, TokenType::LESS_EQUAL, TokenType::GREATER_EQUAL},
+        peekCurrentToken(), m_current))
+    {
+        auto operatorToken = previous();
+        Logger::getInstance().log(" [Parser][comparison] operatorToken=" +
+                                  (operatorToken ? operatorToken->toString() : "nullptr"));
+        auto right = comparison();
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
+    }
+    return expr;
+}
+
+std::shared_ptr<Expression> Parser::term()
+{
+    Logger::getInstance().log(" [Parser][term] m_current=" + std::to_string(m_current));
+    auto expr = factor();
+
+    while (match({TokenType::MINUS, TokenType::PLUS}, peekCurrentToken(), m_current))
+    {
+        auto operatorToken = previous();
+        Logger::getInstance().log(" [Parser][term] operatorToken=" +
+                                  (operatorToken ? operatorToken->toString() : "nullptr"));
+        auto right = comparison();
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
+    }
+    return expr;
+}
+
+std::shared_ptr<Expression> Parser::factor()
+{
+    Logger::getInstance().log(" [Parser][factor] m_current=" + std::to_string(m_current));
+    std::shared_ptr<Expression> expr = unary();
+
+    while (match({TokenType::SLASH, TokenType::STAR}, peekCurrentToken(), m_current))
+    {
+        auto operatorToken = previous();
+        Logger::getInstance().log(" [Parser][factor] operatorToken=" +
+                                  (operatorToken ? operatorToken->toString() : "nullptr"));
+        auto right = comparison();
+        expr = std::make_shared<BinaryExpression>(expr, right, operatorToken);
+    }
+    return expr;
+}
+
+std::shared_ptr<Expression> Parser::unary()
+{
+    Logger::getInstance().log(" [Parser][unary] m_current=" + std::to_string(m_current));
+    if (match({TokenType::BANG, TokenType::MINUS}, peekCurrentToken(), m_current))
+    {
+        auto operatorToken = previous();
+        Logger::getInstance().log(" [Parser][unary] operatorToken=" +
+                                  (operatorToken ? operatorToken->toString() : "nullptr"));
+        auto right = unary();
+        return std::make_shared<UnaryExpression>(operatorToken, right);
+    }
+    return primary();
+}
+
+std::shared_ptr<Expression> Parser::primary()
+{
+    Logger::getInstance().log(" [Parser][primary] m_current=" + std::to_string(m_current));
+    auto currentToken = peekCurrentToken();
+    Logger::getInstance().log(" [Parser][primary] currentToken=" +
+                              (currentToken ? currentToken->toString() : "nullptr"));
+    if (match({TokenType::FALSE}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::TRUE}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::NULLPTR}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::NUMBER, TokenType::STRING}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+    if (match({TokenType::IDENTIFIER}, currentToken, m_current))
+        return std::make_shared<LiteralExpression>(currentToken);
+
+    if (match({TokenType::LEFT_PAREN}, peekCurrentToken(), m_current))
+    {
+        auto expr = expression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
+        return std::make_shared<GroupingExpression>(expr);
+    }
+
+    error(currentToken, "Expect expression.");
+    return nullptr;
 }

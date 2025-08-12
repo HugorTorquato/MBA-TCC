@@ -200,20 +200,246 @@ TEST_F(ParserTest, SixLayersExpression)
     EXPECT_EQ(left->getValue(), "2");
 }
 
-// Parser::error
+TEST_F(ParserTest, Expression_Equality)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "x", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::EQUAL_EQUAL, "==", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "42", LineFile(1, 4, 0, 0)));
 
-// TEST_F(ParserTest, Expression_Equality)
-// {
-//     std::vector<std::shared_ptr<IToken>> tokens;
-//     tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "x", LineFile(1, 1, 0, 0)));
-//     tokens.push_back(std::make_shared<Token>(TokenType::EQUAL_EQUAL, "==", LineFile(1, 2, 0,
-//     0))); tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "42", LineFile(1, 4, 0,
-//     0)));
+    Parser parser(tokens);
+    auto expr = parser.parse();
 
-//     Parser parser(tokens);
-//     auto expr = parser.expression();
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    EXPECT_EQ(left->getValue(), "x");
+    EXPECT_EQ(binaryExpr->getOperator(), "==");
+    EXPECT_EQ(binaryExpr->getRight()->getType(), "LITERAL_EXPRESSION");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    EXPECT_EQ(right->getValue(), "42");
+}
 
-//     EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
-//     EXPECT_EQ(expr->getLeft()->getLexeme(), "x");
-//     EXPECT_EQ(expr->getRight()->getLexeme(), "42");
-// }
+TEST_F(ParserTest, Expression_Grouping)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_PAREN, "(", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 3, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_PAREN, ")", LineFile(1, 5, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "GROUPING_EXPRESSION");
+    auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(expr);
+    ASSERT_NE(groupingExpr, nullptr);
+    EXPECT_EQ(groupingExpr->getExpression()->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(groupingExpr->getExpression());
+    ASSERT_NE(binaryExpr, nullptr);
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    EXPECT_EQ(binaryExpr->getOperator(), "+");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "2");
+}
+
+TEST_F(ParserTest, Expression_Unary)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::MINUS, "-", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "5", LineFile(1, 2, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "UNARY_EXPRESSION");
+    auto unaryExpr = std::dynamic_pointer_cast<UnaryExpression>(expr);
+    ASSERT_NE(unaryExpr, nullptr);
+    EXPECT_EQ(unaryExpr->getOperator(), "-");
+    EXPECT_EQ(unaryExpr->getRight()->getType(), "LITERAL_EXPRESSION");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(unaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "5");
+}
+
+TEST_F(ParserTest, Expression_Binary)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "4", LineFile(1, 3, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "3");
+    EXPECT_EQ(binaryExpr->getOperator(), "+");
+    EXPECT_EQ(binaryExpr->getRight()->getType(), "LITERAL_EXPRESSION");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "4");
+}
+
+TEST_F(ParserTest, Expression_Complex)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_PAREN, "(", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 3, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_PAREN, ")", LineFile(1, 5, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::STAR, "*", LineFile(1, 6, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 7, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getLeft()->getType(), "GROUPING_EXPRESSION");
+    auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(binaryExpr->getLeft());
+    ASSERT_NE(groupingExpr, nullptr);
+    EXPECT_EQ(groupingExpr->getExpression()->getType(), "BINARY_EXPRESSION");
+    auto innerBinaryExpr =
+        std::dynamic_pointer_cast<BinaryExpression>(groupingExpr->getExpression());
+    ASSERT_NE(innerBinaryExpr, nullptr);
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(innerBinaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    EXPECT_EQ(innerBinaryExpr->getOperator(), "+");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(innerBinaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "2");
+    EXPECT_EQ(binaryExpr->getOperator(), "*");
+    EXPECT_EQ(binaryExpr->getRight()->getType(), "LITERAL_EXPRESSION");
+    right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "3");
+}
+
+TEST_F(ParserTest, Expression_Empty)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    Parser parser(tokens);
+    auto expr = parser.parse();
+    EXPECT_EQ(expr, nullptr);
+}
+
+TEST_F(ParserTest, Expression_Error_EndOfFileToken)
+{
+    auto eofToken = std::make_shared<Token>(TokenType::END_OF_FILE, "", LineFile(1, 1, 0, 0));
+    Parser parser({eofToken});
+    auto expr = parser.parse();
+    EXPECT_EQ(expr, nullptr);
+}
+
+TEST_F(ParserTest, Expression_Error_NonEofToken)
+{
+    auto numToken = std::make_shared<Token>(TokenType::NUMBER, "42", LineFile(1, 1, 0, 0));
+    Parser parser({numToken});
+    auto expr = parser.parse();
+    EXPECT_NE(expr, nullptr);
+    EXPECT_EQ(expr->getType(), "LITERAL_EXPRESSION");
+    auto literalExpr = std::dynamic_pointer_cast<LiteralExpression>(expr);
+    ASSERT_NE(literalExpr, nullptr);
+    EXPECT_EQ(literalExpr->getValue(), "42");
+}
+
+TEST_F(ParserTest, Expression_Invalid)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
+    // Missing right operand
+    Parser parser(tokens);
+    auto expr = parser.parse();
+    EXPECT_EQ(expr, nullptr);
+}
+
+TEST_F(ParserTest, Expression_ComplexWithUnary)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::MINUS, "-", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_PAREN, "(", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "5", LineFile(1, 3, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "3", LineFile(1, 5, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_PAREN, ")", LineFile(1, 6, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "UNARY_EXPRESSION");
+    auto unaryExpr = std::dynamic_pointer_cast<UnaryExpression>(expr);
+    ASSERT_NE(unaryExpr, nullptr);
+    EXPECT_EQ(unaryExpr->getOperator(), "-");
+    EXPECT_EQ(unaryExpr->getRight()->getType(), "GROUPING_EXPRESSION");
+    auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(unaryExpr->getRight());
+    ASSERT_NE(groupingExpr, nullptr);
+    EXPECT_EQ(groupingExpr->getExpression()->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(groupingExpr->getExpression());
+    ASSERT_NE(binaryExpr, nullptr);
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "5");
+    EXPECT_EQ(binaryExpr->getOperator(), "+");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "3");
+}
+
+TEST_F(ParserTest, Expression_Equality_WithNumbers)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::EQUAL_EQUAL, "==", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getOperator(), "==");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "2");
+}
+
+TEST_F(ParserTest, Expression_Inequality_WithNumbers)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::BANG_EQUAL, "!=", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 3, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getOperator(), "!=");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "2");
+}
