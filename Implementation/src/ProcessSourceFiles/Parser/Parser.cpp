@@ -40,11 +40,29 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
 {
     std::string typesStr;
 
-    if (isAtEnd(token)) return false;
+    if (isAtEnd(token))
+    {
+        Logger::getInstance().log(" [Parser][match] token is at end, returning false.");
+        return false;
+    }
+    if (tokenTypesToMatch.size() == 0)
+    {
+        Logger::getInstance().log(" [Parser][match] No token types to match, returning false.");
+        return false;
+    }
+
+    Logger::getInstance().log(" [Parser][match] tokenTypesToMatch.size()=" +
+                              std::to_string(tokenTypesToMatch.size()));
 
     for (auto& typeToMatch : tokenTypesToMatch)
     {
         typesStr += TokenTypeNameSpace::toString(typeToMatch) + " ";
+        Logger::getInstance().log(
+            " [Parser][match] Checking token type: " +
+            std::to_string(token->getTypeEnum() == typeToMatch) + " typesStr : " + typesStr +
+            " typeToMatch: " + std::to_string((int)typeToMatch) +
+            ", token->getTypeEnum(): " + std::to_string((int)token->getTypeEnum()) +
+            ", token=" + token->toString() + ", current=" + std::to_string(current));
 
         if (token->getTypeEnum() == typeToMatch)
         {
@@ -57,7 +75,7 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
 
     Logger::getInstance().log(" [Parser][match] tokenTypesToMatch=" + typesStr +
                               ", token=" + (token ? token->toString() : "nullptr") +
-                              ", current=" + std::to_string(current));
+                              ", current = " + std::to_string(current));
 
     return false;
 }
@@ -281,10 +299,12 @@ std::shared_ptr<Expression> Parser::primary()
     if (match({TokenType::IDENTIFIER}, currentToken, m_current))
         return std::make_shared<LiteralExpression>(currentToken);
 
-    if (match({TokenType::LEFT_PAREN}, peekCurrentToken(), m_current))
+    if (match({TokenType::LEFT_PAREN}, currentToken, m_current))
     {
+        Logger::getInstance().log(" [Parser][primary] Grouping expression found.");
         auto expr = expression();
         consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
+        Logger::getInstance().log(" [Parser][primary] Returning GroupingExpression.");
         return std::make_shared<GroupingExpression>(expr);
     }
 
