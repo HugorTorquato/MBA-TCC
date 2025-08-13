@@ -16,7 +16,7 @@ TEST_F(ScannerTest, ScanTokens_EmptyInput)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_TRUE(tokens.empty());
+    ASSERT_EQ(tokens.size(), 0);
 }
 
 TEST_F(ScannerTest, ScanTokens_WhiteSpaceInput)
@@ -26,7 +26,8 @@ TEST_F(ScannerTest, ScanTokens_WhiteSpaceInput)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_TRUE(tokens.empty());
+    ASSERT_EQ(tokens.size(), 1);
+    EXPECT_EQ(tokens[0]->getType(), "END_OF_FILE");
 }
 
 TEST_F(ScannerTest, ScanTokens_SingleCharacter_LEFT_PAREN)
@@ -36,7 +37,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_LEFT_PAREN)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "LEFT_PAREN");
     EXPECT_EQ(tokens[0]->getLexeme(), "(");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -49,7 +50,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_RIGHT_PAREN)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "RIGHT_PAREN");
     EXPECT_EQ(tokens[0]->getLexeme(), ")");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -62,7 +63,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_LEFT_BRACE)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "LEFT_BRACE");
     EXPECT_EQ(tokens[0]->getLexeme(), "{");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -75,7 +76,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_RIGHT_BRACE)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "RIGHT_BRACE");
     EXPECT_EQ(tokens[0]->getLexeme(), "}");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -88,7 +89,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_COMMA)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "COMMA");
     EXPECT_EQ(tokens[0]->getLexeme(), ",");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -101,7 +102,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_DOT)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DOT");
     EXPECT_EQ(tokens[0]->getLexeme(), ".");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -114,7 +115,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_MINUS)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "MINUS");
     EXPECT_EQ(tokens[0]->getLexeme(), "-");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -127,7 +128,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_PLUS)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "PLUS");
     EXPECT_EQ(tokens[0]->getLexeme(), "+");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -140,7 +141,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_SEMICOLON)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "SEMICOLON");
     EXPECT_EQ(tokens[0]->getLexeme(), ";");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -153,7 +154,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_STAR)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "STAR");
     EXPECT_EQ(tokens[0]->getLexeme(), "*");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -166,7 +167,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_BANG)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BANG");
     EXPECT_EQ(tokens[0]->getLexeme(), "!");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -179,7 +180,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_BANG_EQUAL)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BANG_EQUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "!=");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -192,7 +193,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_EQUAL)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "EQUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "=");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -205,7 +206,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_EQUAL_EQUAL)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "EQUAL_EQUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "==");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -218,7 +219,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_GREATER)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "GREATER");
     EXPECT_EQ(tokens[0]->getLexeme(), ">");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -231,7 +232,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_GREATER_EQUAL)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "GREATER_EQUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), ">=");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -244,7 +245,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_LESS)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "LESS");
     EXPECT_EQ(tokens[0]->getLexeme(), "<");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -257,7 +258,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_LESS_EQUAL)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "LESS_EQUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "<=");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -270,7 +271,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_SLASH)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "SLASH");
     EXPECT_EQ(tokens[0]->getLexeme(), "/");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -283,7 +284,7 @@ TEST_F(ScannerTest, ScanToken_SLASH_SLASH_Do_Not_Add_Comments_To_Token_Vector)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 0);
+    ASSERT_EQ(tokens.size(), 1);
 }
 
 // MULTILINEcomment
@@ -294,7 +295,7 @@ TEST_F(ScannerTest, ScanTokens_SLASH_STAR_Do_Not_Add_Comments_To_Token_Vector)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 0);
+    ASSERT_EQ(tokens.size(), 1);
 }
 
 TEST_F(ScannerTest, ScanTokens_MultiLineComment_SLASH_STAR_Do_Not_Add_Comments_To_Token_Vector)
@@ -304,7 +305,7 @@ TEST_F(ScannerTest, ScanTokens_MultiLineComment_SLASH_STAR_Do_Not_Add_Comments_T
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 0);
+    ASSERT_EQ(tokens.size(), 1);
 }
 
 TEST_F(ScannerTest, ScanTokens_lineBreak)
@@ -314,7 +315,7 @@ TEST_F(ScannerTest, ScanTokens_lineBreak)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 2);
+    ASSERT_EQ(tokens.size(), 3);
     EXPECT_EQ(tokens[0]->getType(), "LESS");
     EXPECT_EQ(tokens[0]->getLexeme(), "<");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -329,7 +330,7 @@ TEST_F(ScannerTest, ScanTokens_Multiple_Single_Char_and_comment_code_to_scann)
     Scanner scanner(code);
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
-    ASSERT_EQ(tokens.size(), 6);
+    ASSERT_EQ(tokens.size(), 7);
     EXPECT_EQ(tokens[0]->getType(), "LEFT_PAREN");
     EXPECT_EQ(tokens[0]->getLexeme(), "(");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -357,7 +358,7 @@ TEST_F(ScannerTest, ScanTokens_Multiple_Single_and_Two_Char_and_comment_code_to_
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 10);
+    ASSERT_EQ(tokens.size(), 11);
     EXPECT_EQ(tokens[0]->getType(), "BANG");
     EXPECT_EQ(tokens[0]->getLexeme(), "!");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -397,7 +398,7 @@ TEST_F(ScannerTest, ScanTokens_SingleCharacter_STRING)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "STRING");
     EXPECT_EQ(tokens[0]->getLexeme(), "x");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -410,7 +411,7 @@ TEST_F(ScannerTest, ScanTokens_MultiCharacter_STRING)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "STRING");
     EXPECT_EQ(tokens[0]->getLexeme(), "Hello");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -423,7 +424,7 @@ TEST_F(ScannerTest, ScanTokens_MultiLine_STRING)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "STRING");
     EXPECT_EQ(tokens[0]->getLexeme(), "Hello\nWorld");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -436,7 +437,7 @@ TEST_F(ScannerTest, ScanTokens_Unterminated_STRING)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);  // Expect no tokens due to unterminated string
+    ASSERT_EQ(tokens.size(), 2);  // Expect no tokens due to unterminated string
     EXPECT_EQ(tokens[0]->getType(), "UNKNOWN");
     EXPECT_EQ(tokens[0]->getLexeme(), "");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -450,7 +451,7 @@ TEST_F(ScannerTest, ScanTokens_SingleDigitNumber)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "5");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -463,7 +464,7 @@ TEST_F(ScannerTest, ScanTokens_MultiDigitNumber)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "12345");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -476,7 +477,7 @@ TEST_F(ScannerTest, ScanTokens_NumberWithDecimal)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "3.14");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -490,7 +491,7 @@ TEST_F(ScannerTest, ScanTokens_NumberWithNoDecimalButContinsDot)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 2);
+    ASSERT_EQ(tokens.size(), 3);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "3");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -506,7 +507,7 @@ TEST_F(ScannerTest, ScanTokens_NumberWithNoDecimalButContinsDot)
 
 //     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-//     ASSERT_EQ(tokens.size(), 1);
+//     ASSERT_EQ(tokens.size(), 2);
 //     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
 //     EXPECT_EQ(tokens[0]->getLexeme(), ".456");
 //     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -519,7 +520,7 @@ TEST_F(ScannerTest, ScanTokens_NumberWithLeadingZero)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NUMBER");
     EXPECT_EQ(tokens[0]->getLexeme(), "0123");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -533,7 +534,7 @@ TEST_F(ScannerTest, ScanTokens_Identifier)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "IDENTIFIER");
     EXPECT_EQ(tokens[0]->getLexeme(), "variableName");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -546,7 +547,7 @@ TEST_F(ScannerTest, ScanTokens_IdentifierWithNumbers)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "IDENTIFIER");
     EXPECT_EQ(tokens[0]->getLexeme(), "var123");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -559,7 +560,7 @@ TEST_F(ScannerTest, ScanTokens_IdentifierWithUnderscore)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "IDENTIFIER");
     EXPECT_EQ(tokens[0]->getLexeme(), "_varName");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -572,7 +573,7 @@ TEST_F(ScannerTest, ScanTokens_IdentifierWithMixedCase)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "IDENTIFIER");
     EXPECT_EQ(tokens[0]->getLexeme(), "VarName");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -586,7 +587,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_if)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "IF");
     EXPECT_EQ(tokens[0]->getLexeme(), "if");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -599,7 +600,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_else)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "ELSE");
     EXPECT_EQ(tokens[0]->getLexeme(), "else");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -612,7 +613,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_while)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "WHILE");
     EXPECT_EQ(tokens[0]->getLexeme(), "while");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -625,7 +626,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_for)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "FOR");
     EXPECT_EQ(tokens[0]->getLexeme(), "for");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -638,7 +639,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_return)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "RETURN");
     EXPECT_EQ(tokens[0]->getLexeme(), "return");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -651,7 +652,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_class)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CLASS");
     EXPECT_EQ(tokens[0]->getLexeme(), "class");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -664,7 +665,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_static)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "STATIC");
     EXPECT_EQ(tokens[0]->getLexeme(), "static");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -677,7 +678,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_public)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "PUBLIC");
     EXPECT_EQ(tokens[0]->getLexeme(), "public");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -690,7 +691,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_private)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "PRIVATE");
     EXPECT_EQ(tokens[0]->getLexeme(), "private");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -703,7 +704,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_protected)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "PROTECTED");
     EXPECT_EQ(tokens[0]->getLexeme(), "protected");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -716,7 +717,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_new)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "NEW");
     EXPECT_EQ(tokens[0]->getLexeme(), "new");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -729,7 +730,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_delete)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DELETE");
     EXPECT_EQ(tokens[0]->getLexeme(), "delete");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -742,7 +743,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_void)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "VOID");
     EXPECT_EQ(tokens[0]->getLexeme(), "void");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -755,7 +756,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_virtual)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "VIRTUAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "virtual");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -768,7 +769,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_int)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "INT");
     EXPECT_EQ(tokens[0]->getLexeme(), "int");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -781,7 +782,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_and)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "AND");
     EXPECT_EQ(tokens[0]->getLexeme(), "and");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -794,7 +795,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_and_eq)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "AND_EQ");
     EXPECT_EQ(tokens[0]->getLexeme(), "and_eq");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -807,7 +808,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_asm)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "ASM");
     EXPECT_EQ(tokens[0]->getLexeme(), "asm");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -820,7 +821,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_auto)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "AUTO");
     EXPECT_EQ(tokens[0]->getLexeme(), "auto");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -833,7 +834,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_bitand)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BITAND");
     EXPECT_EQ(tokens[0]->getLexeme(), "bitand");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -846,7 +847,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_bitor)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BITOR");
     EXPECT_EQ(tokens[0]->getLexeme(), "bitor");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -859,7 +860,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_bool)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BOOL");
     EXPECT_EQ(tokens[0]->getLexeme(), "bool");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -872,7 +873,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_break)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "BREAK");
     EXPECT_EQ(tokens[0]->getLexeme(), "break");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -885,7 +886,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_case)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CASE");
     EXPECT_EQ(tokens[0]->getLexeme(), "case");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -898,7 +899,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_catch)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CATCH");
     EXPECT_EQ(tokens[0]->getLexeme(), "catch");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -911,7 +912,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_char)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CHAR");
     EXPECT_EQ(tokens[0]->getLexeme(), "char");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -924,7 +925,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_char8_t)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CHAR8_T");
     EXPECT_EQ(tokens[0]->getLexeme(), "char8_t");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -937,7 +938,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_char16_t)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CHAR16_T");
     EXPECT_EQ(tokens[0]->getLexeme(), "char16_t");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -950,7 +951,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_char32_t)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CHAR32_T");
     EXPECT_EQ(tokens[0]->getLexeme(), "char32_t");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -963,7 +964,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_compl)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "COMPL");
     EXPECT_EQ(tokens[0]->getLexeme(), "compl");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -976,7 +977,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_concept)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONCEPT");
     EXPECT_EQ(tokens[0]->getLexeme(), "concept");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -989,7 +990,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_const)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONST");
     EXPECT_EQ(tokens[0]->getLexeme(), "const");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1002,7 +1003,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_consteval)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONSTEVAL");
     EXPECT_EQ(tokens[0]->getLexeme(), "consteval");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1015,7 +1016,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_constexpr)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONSTEXPR");
     EXPECT_EQ(tokens[0]->getLexeme(), "constexpr");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1028,7 +1029,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_constinit)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONSTINIT");
     EXPECT_EQ(tokens[0]->getLexeme(), "constinit");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1041,7 +1042,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_const_cast)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONST_CAST");
     EXPECT_EQ(tokens[0]->getLexeme(), "const_cast");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1054,7 +1055,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_continue)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CONTINUE");
     EXPECT_EQ(tokens[0]->getLexeme(), "continue");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1067,7 +1068,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_co_await)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CO_AWAIT");
     EXPECT_EQ(tokens[0]->getLexeme(), "co_await");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1080,7 +1081,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_co_return)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CO_RETURN");
     EXPECT_EQ(tokens[0]->getLexeme(), "co_return");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1093,7 +1094,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_co_yield)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "CO_YIELD");
     EXPECT_EQ(tokens[0]->getLexeme(), "co_yield");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1106,7 +1107,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_decltype)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DECLTYPE");
     EXPECT_EQ(tokens[0]->getLexeme(), "decltype");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1119,7 +1120,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_default)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DEFAULT");
     EXPECT_EQ(tokens[0]->getLexeme(), "default");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1132,7 +1133,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_do)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DO");
     EXPECT_EQ(tokens[0]->getLexeme(), "do");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1145,7 +1146,7 @@ TEST_F(ScannerTest, ScanTokens_Keyword_double)
 
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
 
-    ASSERT_EQ(tokens.size(), 1);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0]->getType(), "DOUBLE");
     EXPECT_EQ(tokens[0]->getLexeme(), "double");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1196,7 +1197,7 @@ TEST_F(ScannerTest, variableAssigment)
     Scanner scanner(code);
     std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
     ASSERT_EQ(tokens.size(),
-              5);  // Expect 5 tokens: type, identifier, assignment, number, semicolon
+              6);  // Expect 5 tokens: type, identifier, assignment, number, semicolon
     EXPECT_EQ(tokens[0]->getType(), "DOUBLE");
     EXPECT_EQ(tokens[0]->getLexeme(), "double");
     EXPECT_EQ(tokens[0]->getLineFile(), "[LineFile] Line: 1, Col: 1, End Line: 0, End Col: 0");
@@ -1309,4 +1310,38 @@ TEST_F(ScannerTest, ScanTokens_ComplexCode)
     EXPECT_EQ(tokens[15]->getType(), "RIGHT_BRACE");
     EXPECT_EQ(tokens[15]->getLexeme(), "}");
     EXPECT_EQ(tokens[15]->getLineFile(), "[LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0");
+}
+
+TEST_F(ScannerTest, ScanTokens_EmptyCode)
+{
+    std::string code = "";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 0);  // Expect no tokens for empty code
+}
+
+TEST_F(ScannerTest, ScanTokens_WhitespaceOnly)
+{
+    std::string code = "   \n\t  ";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_EQ(tokens.size(), 1);  // Expect no tokens for whitespace only
+}
+
+// TokenType::END_OF_FILE
+TEST_F(ScannerTest, ScanTokens_EndOfFile)
+{
+    std::string code = "int main() {}";
+    Scanner scanner(code);
+
+    std::vector<std::shared_ptr<IToken>> tokens = scanner.scanTokens(code);
+
+    ASSERT_GT(tokens.size(), 0);  // Expect some tokens to be generated
+    EXPECT_EQ(tokens.back()->getType(), "END_OF_FILE");
+    EXPECT_EQ(tokens.back()->getLexeme(), "");
+    EXPECT_EQ(tokens.back()->getLineFile(), "[LineFile] Line: 1, Col: 14, End Line: 0, End Col: 0");
 }

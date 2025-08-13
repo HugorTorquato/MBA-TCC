@@ -469,6 +469,8 @@ std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawS
         scanToken(rawSourceCode, start, current, line, col);
     }
 
+    addToken(TokenType::END_OF_FILE, m_tokens, "", line, col);
+
     logTokens(m_tokens);  // Only for Debug - REMOVE
 
     return m_tokens;

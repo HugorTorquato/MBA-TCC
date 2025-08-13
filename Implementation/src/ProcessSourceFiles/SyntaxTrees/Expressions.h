@@ -1,62 +1,71 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
+#include "../Scanner/IToken.h"
 #include "IPrettyPrintVisitor.h"
-
-// TODO: A good exercise is to convert this to smart pointers and use them in the visitor
-//   to avoid manual memory management. This will help prevent memory leaks and make the code safer.
 
 class Expression
 {
    public:
     virtual ~Expression() = default;
     virtual std::string accept(class IPrettyPrintVisitor* visitor) = 0;
+    virtual std::string getType() const = 0;
 };
 
 // "Binary : Expr left, Token operator, Expr right",
 class BinaryExpression : public Expression
 {
    public:
-    BinaryExpression(Expression* left, Expression* right, const std::string& op);
+    BinaryExpression(std::shared_ptr<Expression> left, std::shared_ptr<Expression> right,
+                     std::shared_ptr<IToken> op);
 
     std::string accept(IPrettyPrintVisitor* visitor) override
     {
         return visitor->visitBinaryExpression(this);
     }
 
-    Expression* getLeft() const;
-    Expression* getRight() const;
+    std::shared_ptr<Expression> getLeft() const;
+    std::shared_ptr<Expression> getRight() const;
     std::string getOperator() const;
+    std::string getType() const override
+    {
+        return "BINARY_EXPRESSION";
+    }
 
    private:
-    Expression* left;
-    Expression* right;
-    std::string op;
+    std::shared_ptr<Expression> left;
+    std::shared_ptr<Expression> right;
+    std::shared_ptr<IToken> op;
 };
 
 // "Grouping : Expr expression",
 class GroupingExpression : public Expression
 {
    public:
-    GroupingExpression(Expression* expression);
+    GroupingExpression(std::shared_ptr<Expression> expression);
 
     std::string accept(IPrettyPrintVisitor* visitor) override
     {
         return visitor->visitGroupingExpression(this);
     }
 
-    Expression* getExpression() const;
+    std::shared_ptr<Expression> getExpression() const;
+    std::string getType() const override
+    {
+        return "GROUPING_EXPRESSION";
+    }
 
    private:
-    Expression* expression;
+    std::shared_ptr<Expression> expression;
 };
 
 // "Literal : Object value",
 class LiteralExpression : public Expression
 {
    public:
-    LiteralExpression(const std::string& value);
+    LiteralExpression(std::shared_ptr<IToken> value);
 
     std::string accept(IPrettyPrintVisitor* visitor) override
     {
@@ -64,16 +73,21 @@ class LiteralExpression : public Expression
     }
 
     std::string getValue() const;
+    std::string getType() const override
+    {
+        return "LITERAL_EXPRESSION";
+    }
+    // std::string getLexeme() const { return value->getLexeme(); }
 
    private:
-    std::string value;
+    std::shared_ptr<IToken> value;
 };
 
 // "Unary : Token operator, Expr right"
 class UnaryExpression : public Expression
 {
    public:
-    UnaryExpression(const std::string& op, Expression* right);
+    UnaryExpression(std::shared_ptr<IToken> op, std::shared_ptr<Expression> right);
 
     std::string accept(IPrettyPrintVisitor* visitor) override
     {
@@ -81,9 +95,13 @@ class UnaryExpression : public Expression
     }
 
     std::string getOperator() const;
-    Expression* getRight() const;
+    std::shared_ptr<Expression> getRight() const;
+    std::string getType() const override
+    {
+        return "UNARY_EXPRESSION";
+    }
 
    private:
-    std::string op;
-    Expression* right;
+    std::shared_ptr<IToken> op;
+    std::shared_ptr<Expression> right;
 };
