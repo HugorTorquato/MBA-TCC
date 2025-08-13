@@ -71,6 +71,12 @@ bool match(const std::initializer_list<TokenType> tokenTypesToMatch,
                                       TokenTypeNameSpace::toString(typeToMatch));
             return true;
         }
+        else
+        {
+            Logger::getInstance().log(" [Parser][match] type mismatch: expected=" +
+                                      TokenTypeNameSpace::toString(typeToMatch) + ", found=" +
+                                      TokenTypeNameSpace::toString(token->getTypeEnum()));
+        }
     }
 
     Logger::getInstance().log(" [Parser][match] tokenTypesToMatch=" + typesStr +
