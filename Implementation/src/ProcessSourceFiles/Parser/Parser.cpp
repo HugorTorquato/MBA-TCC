@@ -179,11 +179,16 @@ void Parser::error(std::shared_ptr<IToken> token, const std::string& message)
     }
 }
 
-std::shared_ptr<Expression> Parser::parse()
+std::shared_ptr<CommonParserType> Parser::parse()
 {
     Logger::getInstance().log(" [Parser][parse] m_current=" + std::to_string(m_current));
     try
     {
+        if (match({TokenType::CLASS}, peekCurrentToken(), m_current))
+        {
+            Logger::getInstance().log(" [Parser][parse] Class token found, parsing class.");
+            return classDeclaration();
+        }
         return expression();
     }
     catch (const std::runtime_error& e)
@@ -191,6 +196,14 @@ std::shared_ptr<Expression> Parser::parse()
         Logger::getInstance().log(" [Parser][parse] Exception: " + std::string(e.what()));
         return nullptr;
     }
+}
+
+std::shared_ptr<ClassDeclaration> Parser::classDeclaration()
+{
+    Logger::getInstance().log(" [Parser][classDeclaration] m_current=" + std::to_string(m_current));
+    // Placeholder for class declaration parsing logic
+    // This should parse class declarations and return a Class object
+    return nullptr;  // Replace with actual implementation
 }
 
 // ----------------- grammar functions -----------------

@@ -1,17 +1,16 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "../Scanner/IToken.h"
+#include "CommonParserType.h"
 #include "IPrettyPrintVisitor.h"
 
-class Expression
+class Expression : public CommonParserType
 {
    public:
-    virtual ~Expression() = default;
-    virtual std::string accept(class IPrettyPrintVisitor* visitor) = 0;
-    virtual std::string getType() const = 0;
+    virtual std::string accept(class IPrettyPrintVisitor* visitor) override = 0;
+    virtual std::string getType() const override = 0;
 };
 
 // "Binary : Expr left, Token operator, Expr right",

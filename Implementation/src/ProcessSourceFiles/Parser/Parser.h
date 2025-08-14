@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "IParser.h"
 
 class Parser : public IParser
@@ -10,7 +12,7 @@ class Parser : public IParser
 
     std::vector<std::string> ListIncomingTokens() const override;
     std::shared_ptr<Expression> expression();
-    std::shared_ptr<Expression> parse();  // define an initial method to kick it off.
+    std::shared_ptr<CommonParserType> parse();  // define an initial method to kick it off.
     std::shared_ptr<IToken> peekIndex(const int tokenIndex) const;
 
    private:
@@ -35,6 +37,8 @@ class Parser : public IParser
     unary();  // Placeholder for the actual implementation of unary parsing
     std::shared_ptr<Expression>
     primary();  // Placeholder for the actual implementation of primary parsing
+
+    std::shared_ptr<ClassDeclaration> classDeclaration();  // Parses class declarations
 
    private:
     int m_current = 0;
