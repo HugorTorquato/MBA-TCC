@@ -2,6 +2,9 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+#include <stdexcept>
+
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/Expressions.h"
 
@@ -125,9 +128,10 @@ TEST_F(ParserTest, ConsumeTokenType)
 {
     std::vector<std::shared_ptr<IToken>> tokens;
     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "123", LineFile(1, 1, 0, 0)));
-    Parser parser(tokens);
 
+    Parser parser(tokens);
     auto token = parser.parse();
+
     ASSERT_NE(token, nullptr);
     auto literalExpr = std::dynamic_pointer_cast<LiteralExpression>(token);
     ASSERT_NE(literalExpr, nullptr);
@@ -365,8 +369,7 @@ TEST_F(ParserTest, Expression_Invalid)
     tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
     // Missing right operand
     Parser parser(tokens);
-    auto expr = parser.parse();
-    EXPECT_EQ(expr, nullptr);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
 }
 
 TEST_F(ParserTest, Expression_ComplexWithUnary)
@@ -494,6 +497,56 @@ TEST_F(ParserTest, Expression_RightParam)
     EXPECT_EQ(right->getValue(), "2");
 }
 
+TEST_F(ParserTest, Class_SimpleDeclaration_Missing_IDENTIFIER)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass_Missing_Access_Type)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass_Missing_ParentClss_IDENTIFIER)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclaration_Missing_RightBrace)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
 TEST_F(ParserTest, Class_SimpleDeclaration)
 {
     std::vector<std::shared_ptr<IToken>> tokens;
@@ -502,6 +555,40 @@ TEST_F(ParserTest, Class_SimpleDeclaration)
         std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
     tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
     tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthMultipleParentClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COMMA, ",", LineFile(1, 39, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass2", LineFile(1, 25, 0, 0)));
 
     Parser parser(tokens);
     auto expr = parser.parse();
