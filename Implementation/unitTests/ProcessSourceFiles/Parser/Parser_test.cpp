@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
+#include "../../../src/ProcessSourceFiles/SyntaxTrees/ClassST.h"
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/Expressions.h"
 
 class ParserTest : public ::testing::Test
@@ -592,4 +593,105 @@ TEST_F(ParserTest, Class_SimpleDeclarationWthMultipleParentClass)
 
     Parser parser(tokens);
     auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_TRUE(classObj->getInherencyArray().empty());
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser_WithBaseClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    const auto MyParentClass = "MyParentClass";
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass, LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_FALSE(classObj->getInherencyArray().empty());
+
+    auto baseClassArray = classObj->getInherencyArray();
+    std::vector<std::string> expectedNames = {MyParentClass};
+
+    EXPECT_FALSE(baseClassArray.empty());
+    EXPECT_EQ(baseClassArray.size(), 1);
+
+    for (size_t i = 0; i < baseClassArray.size(); ++i)
+    {
+        EXPECT_EQ(baseClassArray[i].first->getTypeEnum(), TokenType::PUBLIC);
+        EXPECT_EQ(baseClassArray[i].second->getTypeEnum(), TokenType::IDENTIFIER);
+        EXPECT_EQ(baseClassArray[i].second->getLexeme(), expectedNames[i]);
+    }
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser_WithMultipleBaseClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    const auto MyParentClass = "MyParentClass";
+    const auto MyParentClass2 = "MyParentClass2";
+    const auto baseClassAccessType = "public";
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::PUBLIC, baseClassAccessType, LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass, LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COMMA, ",", LineFile(1, 39, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::PUBLIC, baseClassAccessType, LineFile(1, 41, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass2, LineFile(1, 48, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_FALSE(classObj->getInherencyArray().empty());
+
+    auto baseClassArray = classObj->getInherencyArray();
+    std::vector<std::string> expectedNames = {MyParentClass, MyParentClass2};
+
+    EXPECT_FALSE(baseClassArray.empty());
+    EXPECT_EQ(baseClassArray.size(), 2);
+
+    for (size_t i = 0; i < baseClassArray.size(); ++i)
+    {
+        EXPECT_EQ(baseClassArray[i].first->getTypeEnum(), TokenType::PUBLIC);
+        EXPECT_EQ(baseClassArray[i].second->getTypeEnum(), TokenType::IDENTIFIER);
+        EXPECT_EQ(baseClassArray[i].second->getLexeme(), expectedNames[i]);
+    }
 }

@@ -233,12 +233,11 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
 
     auto classNameIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
 
-    ClassST classObject(classNameIdentifier);
+    auto classObject = std::make_shared<ClassST>(classNameIdentifier);
 
     // TODO: HANGTO CLASS STORAGE INSTEAD OF TOKEN
     std::vector<std::shared_ptr<IToken>> parentClassTokens;
 
-    // TODO: Add the class name and the inherency classes
     if (match({TokenType::COLON}, peekCurrentToken(), m_current))
     {
         Logger::getInstance().log(" [Parser][classDeclaration] Found inheritance structure.");
@@ -266,7 +265,8 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
                 auto parentClassAccessType = previous();
                 auto parentClassIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
 
-                classObject.addInherencyToClassObject(parentClassAccessType, parentClassIdentifier);
+                classObject->addInherencyToClassObject(parentClassAccessType,
+                                                       parentClassIdentifier);
 
                 Logger::getInstance().log(
                     " [Parser][classDeclaration] Parent class access type: " +
@@ -301,7 +301,7 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
         }
     }
 
-    return nullptr;  // Replace with actual implementation
+    return classObject;  // Replace with actual implementation
 }
 
 // ----------------- grammar functions -----------------
