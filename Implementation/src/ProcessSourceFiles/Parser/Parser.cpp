@@ -225,17 +225,18 @@ std::shared_ptr<CommonParserType> Parser::parse()
     }
 }
 
-std::shared_ptr<ClassDeclaration> Parser::classDeclaration()
+std::shared_ptr<ClassST> Parser::classDeclaration()
 {
     Logger::getInstance().log(" [Parser][classDeclaration] m_current=" + std::to_string(m_current));
     // Placeholder for class declaration parsing logic
     // This should parse class declarations and return a Class object
 
-    auto nameToken = consume(TokenType::IDENTIFIER, "Expect class name.");
+    auto classNameIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
 
     // TODO: HANGTO CLASS STORAGE INSTEAD OF TOKEN
     std::vector<std::shared_ptr<IToken>> parentClassTokens;
 
+    // TODO: Add the class name and the inherency classes
     if (match({TokenType::COLON}, peekCurrentToken(), m_current))
     {
         Logger::getInstance().log(" [Parser][classDeclaration] Found inheritance structure.");
@@ -275,23 +276,9 @@ std::shared_ptr<ClassDeclaration> Parser::classDeclaration()
                 error(currentToken, "Expect access type for parent class.");
             }
         }
-
-        // TODO: Make it recursive to handle multiple inheritance
-        // class Base1 {
-        // public:
-        //     void foo();
-        // };
-
-        // class Base2 {
-        // public:
-        //     void bar();
-        // };
-
-        // class Derived : public Base1, public Base2 {
-        //     // Inherits members from both Base1 and Base2
-        // };
     }
 
+    // TODO: Add the list of tokens to the statement property
     if (match({TokenType::LEFT_BRACE}, peekCurrentToken(), m_current))
     {
         Logger::getInstance().log(" [Parser][classDeclaration] Class body found.");

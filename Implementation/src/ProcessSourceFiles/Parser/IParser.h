@@ -5,7 +5,7 @@
 
 #include "../Scanner/IToken.h"
 #include "../Scanner/TokenType.h"
-#include "../SyntaxTrees/ClassDeclaration.h"
+#include "../SyntaxTrees/ClassST.h"
 #include "../SyntaxTrees/Expressions.h"
 
 class IParser

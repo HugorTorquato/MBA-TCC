@@ -38,7 +38,7 @@ class Parser : public IParser
     std::shared_ptr<Expression>
     primary();  // Placeholder for the actual implementation of primary parsing
 
-    std::shared_ptr<ClassDeclaration> classDeclaration();  // Parses class declarations
+    std::shared_ptr<ClassST> classDeclaration();  // Parses class declarations
 
    private:
     int m_current = 0;

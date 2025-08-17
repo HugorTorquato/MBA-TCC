@@ -1,10 +1,13 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
-class CommonParserType{
+#include "../Scanner/IToken.h"
 
-public:
+class CommonParserType
+{
+   public:
     virtual ~CommonParserType() = default;
 
     virtual std::string accept(class IPrettyPrintVisitor* visitor) = 0;

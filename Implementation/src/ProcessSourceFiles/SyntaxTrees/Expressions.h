@@ -1,8 +1,5 @@
 #pragma once
 
-#include <memory>
-
-#include "../Scanner/IToken.h"
 #include "CommonParserType.h"
 #include "IPrettyPrintVisitor.h"
 
