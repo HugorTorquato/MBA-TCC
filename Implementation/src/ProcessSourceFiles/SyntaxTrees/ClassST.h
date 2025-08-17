@@ -1,9 +1,13 @@
 #pragma once
 
+#include <memory>
+
 #include "CommonParserType.h"
 
 class ClassST : public CommonParserType
 {
+    using baseClassPair = std::pair<std::shared_ptr<IToken>, std::shared_ptr<IToken>>;
+
    public:
     ClassST() = delete;
 
@@ -21,7 +25,14 @@ class ClassST : public CommonParserType
     }
 
     std::string getClassName() const;
+    std::vector<ClassST::baseClassPair> getInherencyArray() const;
+
+    void addInherencyToClassObject(std::shared_ptr<IToken> accessType,
+                                   std::shared_ptr<IToken> className);
 
    private:
     std::string m_className;
+    std::vector<baseClassPair>
+        m_inherencyArray;  // Store Array of IDENTIFIER tokens for base classes using pair to store
+                           // access type and class IDENTIFIER token
 };

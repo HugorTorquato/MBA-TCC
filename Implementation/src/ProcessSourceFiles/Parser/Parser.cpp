@@ -233,6 +233,8 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
 
     auto classNameIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
 
+    ClassST classObject(classNameIdentifier);
+
     // TODO: HANGTO CLASS STORAGE INSTEAD OF TOKEN
     std::vector<std::shared_ptr<IToken>> parentClassTokens;
 
@@ -262,14 +264,14 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
                     " [Parser][classDeclaration] Parent class access type found.");
                 // Consume the access type token
                 auto parentClassAccessType = previous();
-                auto parentClassName = consume(TokenType::IDENTIFIER, "Expect class name.");
+                auto parentClassIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
 
-                Logger::getInstance().log(" [Parser][classDeclaration] Parent class access type: " +
-                                          parentClassAccessType->toString() +
-                                          ", Parent class name: " + parentClassName->toString());
+                classObject.addInherencyToClassObject(parentClassAccessType, parentClassIdentifier);
 
-                parentClassTokens.push_back(parentClassAccessType);
-                parentClassTokens.push_back(parentClassName);
+                Logger::getInstance().log(
+                    " [Parser][classDeclaration] Parent class access type: " +
+                    parentClassAccessType->toString() +
+                    ", Parent class name: " + parentClassIdentifier->toString());
             }
             else
             {
