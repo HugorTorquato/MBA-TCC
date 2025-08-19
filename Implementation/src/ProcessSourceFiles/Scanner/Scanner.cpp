@@ -54,11 +54,11 @@ void updateCurrentAndLineFiles(const std::string& sourceCode, int& current, int&
 }
 
 void addToken(TokenType type, std::vector<std::shared_ptr<IToken>>& tokens,
-              const std::string& lexeme, int line, int col)
+              const std::string& lexeme, int line, int col, const std::string& fileName)
 {
     // TODO: May need to come back and refactor this function to handle end line and column ( hard
     // codded to zero for now)
-    tokens.push_back(std::make_shared<Token>(type, lexeme, LineFile(line, col, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(type, lexeme, LineFile(line, col, 0, 0, fileName)));
     Logger::getInstance().log("[Scanner][addToken] Added token: " + lexeme);
 }
 
@@ -221,7 +221,7 @@ Scanner::Scanner(const std::string& sourceCode) : m_sourceCode(sourceCode)
 }
 
 void Scanner::scanToken(const std::string& sourceCode, int& start, int& current, int& line,
-                        int& col)
+                        int& col, const std::string& fileName)
 {
     const int sourceLength = sourceCode.length();
 
@@ -262,19 +262,19 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             break;
         // Single char tokens
         case '(':
-            addToken(TokenType::LEFT_PAREN, m_tokens, "(", line, col);
+            addToken(TokenType::LEFT_PAREN, m_tokens, "(", line, col, fileName);
             break;
         case ')':
-            addToken(TokenType::RIGHT_PAREN, m_tokens, ")", line, col);
+            addToken(TokenType::RIGHT_PAREN, m_tokens, ")", line, col, fileName);
             break;
         case '{':
-            addToken(TokenType::LEFT_BRACE, m_tokens, "{", line, col);
+            addToken(TokenType::LEFT_BRACE, m_tokens, "{", line, col, fileName);
             break;
         case '}':
-            addToken(TokenType::RIGHT_BRACE, m_tokens, "}", line, col);
+            addToken(TokenType::RIGHT_BRACE, m_tokens, "}", line, col, fileName);
             break;
         case ',':
-            addToken(TokenType::COMMA, m_tokens, ",", line, col);
+            addToken(TokenType::COMMA, m_tokens, ",", line, col, fileName);
             break;
         case '.':
             // if (!isAtEndOfSource(sourceLength, current) && isAnyDigit(sourceCode[current + 1]))
@@ -282,66 +282,66 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             //     // This is a number starting with . and not a real DOT ( .1234)
             //     break;
             // }
-            addToken(TokenType::DOT, m_tokens, ".", line, col);
+            addToken(TokenType::DOT, m_tokens, ".", line, col, fileName);
             break;
         case '-':
-            addToken(TokenType::MINUS, m_tokens, "-", line, col);
+            addToken(TokenType::MINUS, m_tokens, "-", line, col, fileName);
             break;
         case '+':
-            addToken(TokenType::PLUS, m_tokens, "+", line, col);
+            addToken(TokenType::PLUS, m_tokens, "+", line, col, fileName);
             break;
         case ':':
-            addToken(TokenType::COLON, m_tokens, ":", line, col);
+            addToken(TokenType::COLON, m_tokens, ":", line, col, fileName);
             break;
         case ';':
-            addToken(TokenType::SEMICOLON, m_tokens, ";", line, col);
+            addToken(TokenType::SEMICOLON, m_tokens, ";", line, col, fileName);
             break;
         case '*':
-            addToken(TokenType::STAR, m_tokens, "*", line, col);
+            addToken(TokenType::STAR, m_tokens, "*", line, col, fileName);
             break;
         // 2 char operators
         case '!':
             if (match('=', sourceLength, current, sourceCode))
             {
-                addToken(TokenType::BANG_EQUAL, m_tokens, "!=", line, col);
+                addToken(TokenType::BANG_EQUAL, m_tokens, "!=", line, col, fileName);
                 current++;  // Consume the '=' character
             }
             else
             {
-                addToken(TokenType::BANG, m_tokens, "!", line, col);
+                addToken(TokenType::BANG, m_tokens, "!", line, col, fileName);
             }
             break;
         case '=':
             if (match('=', sourceLength, current, sourceCode))
             {
-                addToken(TokenType::EQUAL_EQUAL, m_tokens, "==", line, col);
+                addToken(TokenType::EQUAL_EQUAL, m_tokens, "==", line, col, fileName);
                 current++;  // Consume the '=' character
             }
             else
             {
-                addToken(TokenType::EQUAL, m_tokens, "=", line, col);
+                addToken(TokenType::EQUAL, m_tokens, "=", line, col, fileName);
             }
             break;
         case '>':
             if (match('=', sourceLength, current, sourceCode))
             {
-                addToken(TokenType::GREATER_EQUAL, m_tokens, ">=", line, col);
+                addToken(TokenType::GREATER_EQUAL, m_tokens, ">=", line, col, fileName);
                 current++;  // Consume the '=' character
             }
             else
             {
-                addToken(TokenType::GREATER, m_tokens, ">", line, col);
+                addToken(TokenType::GREATER, m_tokens, ">", line, col, fileName);
             }
             break;
         case '<':
             if (match('=', sourceLength, current, sourceCode))
             {
-                addToken(TokenType::LESS_EQUAL, m_tokens, "<=", line, col);
+                addToken(TokenType::LESS_EQUAL, m_tokens, "<=", line, col, fileName);
                 current++;  // Consume the '=' character
             }
             else
             {
-                addToken(TokenType::LESS, m_tokens, "<", line, col);
+                addToken(TokenType::LESS, m_tokens, "<", line, col, fileName);
             }
             break;
 
@@ -380,14 +380,14 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             // Only add single slash tokens if they are not part of a comment ( division )
             else
             {
-                addToken(TokenType::SLASH, m_tokens, "/", line, col);
+                addToken(TokenType::SLASH, m_tokens, "/", line, col, fileName);
             }
             break;
         // String Literals
         case '"':
         {
             auto lexeme = stringLiterals(sourceCode, current, line, col);
-            addToken(TokenType::STRING, m_tokens, lexeme, line, col);
+            addToken(TokenType::STRING, m_tokens, lexeme, line, col, fileName);
             col += lexeme.length() - 1;
             break;
         }
@@ -400,7 +400,7 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
             if (isAnyDigit(currentChar))
             {
                 auto lexeme = numberLiterals(sourceCode, current, line, col);
-                addToken(TokenType::NUMBER, m_tokens, lexeme, line, col);
+                addToken(TokenType::NUMBER, m_tokens, lexeme, line, col, fileName);
                 col += lexeme.length() - 1;  // Update column based on the length of the identifier
                 break;
             }
@@ -417,14 +417,14 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
                     Logger::getInstance().log("[Scanner][scanToken] keyword found: " + lexeme +
                                               " at line: " + std::to_string(line) +
                                               ", col: " + std::to_string(col));
-                    addToken(it->second, m_tokens, lexeme, line, col);
+                    addToken(it->second, m_tokens, lexeme, line, col, fileName);
                 }
                 else
                 {
                     Logger::getInstance().log("[Scanner][scanToken] Identifier found: " + lexeme +
                                               " at line: " + std::to_string(line) +
                                               ", col: " + std::to_string(col));
-                    addToken(TokenType::IDENTIFIER, m_tokens, lexeme, line, col);
+                    addToken(TokenType::IDENTIFIER, m_tokens, lexeme, line, col, fileName);
                 }
                 col += lexeme.length() - 1;  // Update column based on the length of the identifier
                 break;
@@ -442,9 +442,11 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
     updateCurrentAndLineFiles(sourceCode, current, line, col);
 }
 
-std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawSourceCode)
+std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawSourceCode,
+                                                         const std::string& fileName)
 {
-    Logger::getInstance().log("[Scanner][scanTokens] rawSourceCode: " + rawSourceCode);
+    Logger::getInstance().log("[Scanner][scanTokens] rawSourceCode: " + rawSourceCode +
+                              " from file: " + fileName);
     if (!isValidSourceCode(rawSourceCode)) return {};
 
     m_tokens.clear();  // Clear to avoid issues reusing the scanToken method
@@ -466,10 +468,10 @@ std::vector<std::shared_ptr<IToken>> Scanner::scanTokens(const std::string& rawS
                                   std::to_string(current));
 
         start = current;
-        scanToken(rawSourceCode, start, current, line, col);
+        scanToken(rawSourceCode, start, current, line, col, fileName);
     }
 
-    addToken(TokenType::END_OF_FILE, m_tokens, "", line, col);
+    addToken(TokenType::END_OF_FILE, m_tokens, "", line, col, fileName);
 
     logTokens(m_tokens);  // Only for Debug - REMOVE
 

@@ -12,6 +12,7 @@ class ClassSTTest : public ::testing::Test
 {
    protected:
     LineFile DefaultLineFile{1, 2, 3, 4};
+    LineFile DefaultLineFileWithFileName{1, 2, 3, 4};
 
    protected:
     void SetUp() override {}
@@ -165,4 +166,159 @@ TEST_F(ClassSTTest, ClassST_AddInherency_ValidAccessTypeAndClassName)
         std::make_shared<Token>(TokenType::IDENTIFIER, "BaseClass", DefaultLineFile);
 
     EXPECT_NO_THROW(simpleClass.addInherencyToClassObject(accessType, classToken));
+}
+
+TEST_F(ClassSTTest, GetClassToken_ReturnsCorrectToken_WithFileName)
+{
+    auto className = "TestClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST classST(token);
+
+    auto returnedToken = classST.getClassToken();
+    ASSERT_NE(returnedToken, nullptr);
+    EXPECT_EQ(returnedToken->getLexeme(), className);
+    EXPECT_EQ(returnedToken->getTypeEnum(), TokenType::IDENTIFIER);
+    EXPECT_EQ(returnedToken->getLineFile(), DefaultLineFileWithFileName.getLineFileAsString());
+}
+
+TEST_F(ClassSTTest, GetClassToken_ReturnsNullptr_WhenConstructedWithString)
+{
+    auto className = "TestClass";
+    ClassST classST(className);
+
+    auto returnedToken = classST.getClassToken();
+    EXPECT_EQ(returnedToken, nullptr);
+}
+
+TEST_F(ClassSTTest, GetClassToken_AfterAddingInherency_WithFileName)
+{
+    auto className = "TestClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST classST(token);
+
+    std::shared_ptr<IToken> accessType =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> baseClassToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "BaseClass", DefaultLineFileWithFileName);
+
+    classST.addInherencyToClassObject(accessType, baseClassToken);
+
+    auto returnedToken = classST.getClassToken();
+    ASSERT_NE(returnedToken, nullptr);
+    EXPECT_EQ(returnedToken->getLexeme(), className);
+    EXPECT_EQ(returnedToken->getLineFile(), DefaultLineFileWithFileName.getLineFileAsString());
+}
+
+TEST_F(ClassSTTest, GetClassToken_LineFileIsCorrect_ForDifferentLineFile)
+{
+    auto className = "AnotherClass";
+    LineFile customLineFile{10, 20, 30, 40};
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, customLineFile);
+    ClassST classST(token);
+
+    auto returnedToken = classST.getClassToken();
+    ASSERT_NE(returnedToken, nullptr);
+    EXPECT_EQ(returnedToken->getLineFile(), customLineFile.getLineFileAsString());
+}
+
+TEST_F(ClassSTTest, SimpleClassSTConstructor_ReceivingInvalidToken_WithFileName)
+{
+    std::string className;
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::BANG, className, DefaultLineFileWithFileName);
+
+    EXPECT_THROW(ClassST simpleClass(token), std::runtime_error);
+}
+
+TEST_F(ClassSTTest, SimpleClassWith_MultipleInherencies_WithFileName)
+{
+    auto className = "SimpleClass";
+    auto baseClassName = "SimpleBaseClass";
+    auto baseClassName2 = "SimpleBaseClass2";
+
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST simpleClass(token);
+
+    EXPECT_EQ(simpleClass.getClassName(), className);
+    EXPECT_TRUE(simpleClass.getInherencyArray().empty());
+
+    std::shared_ptr<IToken> accessBaseClass =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> tokenBaseClass =
+        std::make_shared<Token>(TokenType::IDENTIFIER, baseClassName, DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> accessBaseClass2 =
+        std::make_shared<Token>(TokenType::PROTECTED, "protected", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> tokenBaseClass2 =
+        std::make_shared<Token>(TokenType::IDENTIFIER, baseClassName2, DefaultLineFileWithFileName);
+
+    simpleClass.addInherencyToClassObject(accessBaseClass, tokenBaseClass);
+    simpleClass.addInherencyToClassObject(accessBaseClass2, tokenBaseClass2);
+
+    auto baseClassArray = simpleClass.getInherencyArray();
+    EXPECT_EQ(baseClassArray.size(), 2);
+    EXPECT_EQ(baseClassArray[0].first->getLexeme(), "public");
+    EXPECT_EQ(baseClassArray[0].second->getLexeme(), baseClassName);
+    EXPECT_EQ(baseClassArray[0].second->getLineFile(),
+              DefaultLineFileWithFileName.getLineFileAsString());
+    EXPECT_EQ(baseClassArray[1].first->getLexeme(), "protected");
+    EXPECT_EQ(baseClassArray[1].second->getLexeme(), baseClassName2);
+    EXPECT_EQ(baseClassArray[1].second->getLineFile(),
+              DefaultLineFileWithFileName.getLineFileAsString());
+}
+
+TEST_F(ClassSTTest, ClassST_AddInherency_InvalidAccessType_WithFileName)
+{
+    auto className = "SimpleClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST simpleClass(token);
+
+    std::shared_ptr<IToken> invalidAccessType =
+        std::make_shared<Token>(TokenType::BANG, "invalid", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> baseClassToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "BaseClass", DefaultLineFileWithFileName);
+
+    EXPECT_THROW(simpleClass.addInherencyToClassObject(invalidAccessType, baseClassToken),
+                 std::runtime_error);
+}
+
+TEST_F(ClassSTTest, ClassST_AddInherency_InvalidClassName_WithFileName)
+{
+    auto className = "SimpleClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST simpleClass(token);
+
+    std::shared_ptr<IToken> accessType =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> invalidClassToken =
+        std::make_shared<Token>(TokenType::BANG, "invalid", DefaultLineFileWithFileName);
+
+    EXPECT_THROW(simpleClass.addInherencyToClassObject(accessType, invalidClassToken),
+                 std::runtime_error);
+}
+
+TEST_F(ClassSTTest, ClassST_AddInherency_ValidAccessTypeAndClassName_WithFileName)
+{
+    auto className = "SimpleClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFileWithFileName);
+    ClassST simpleClass(token);
+
+    std::shared_ptr<IToken> accessType =
+        std::make_shared<Token>(TokenType::PRIVATE, "private", DefaultLineFileWithFileName);
+    std::shared_ptr<IToken> classToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "BaseClass", DefaultLineFileWithFileName);
+
+    EXPECT_NO_THROW(simpleClass.addInherencyToClassObject(accessType, classToken));
+    auto baseClassArray = simpleClass.getInherencyArray();
+    EXPECT_EQ(baseClassArray.size(), 1);
+    EXPECT_EQ(baseClassArray.front().first->getLexeme(), "private");
+    EXPECT_EQ(baseClassArray.front().second->getLexeme(), "BaseClass");
+    EXPECT_EQ(baseClassArray.front().second->getLineFile(),
+              DefaultLineFileWithFileName.getLineFileAsString());
 }

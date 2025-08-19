@@ -19,11 +19,17 @@ ClassST::ClassST(std::shared_ptr<IToken> classToken)
     }
 
     m_className = classToken->getLexeme();
+    m_classToken = classToken;
 }
 
 std::string ClassST::getClassName() const
 {
     return m_className;
+}
+
+std::shared_ptr<IToken> ClassST::getClassToken() const
+{
+    return m_classToken;
 }
 
 std::vector<ClassST::baseClassPair> ClassST::getInherencyArray() const

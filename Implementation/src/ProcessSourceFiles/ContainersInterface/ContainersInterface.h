@@ -22,7 +22,7 @@ class ContainersInterface
 
     void addClass(std::shared_ptr<ClassST> classST);
     std::vector<std::shared_ptr<ClassST>> getClasses() const;
-    std::shared_ptr<ClassST> getClassByName(const std::string& className) const;
+    std::shared_ptr<ClassST> getClassByName(const std::string& className) const;  // Problematic
 
    private:
     std::vector<std::shared_ptr<ClassST>> m_classesContainer;
