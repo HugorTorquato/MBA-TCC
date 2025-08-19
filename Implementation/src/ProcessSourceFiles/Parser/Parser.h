@@ -21,6 +21,7 @@ class Parser : public IParser
     std::shared_ptr<IToken> advance();
     std::shared_ptr<IToken> consume(TokenType type, const std::string& message);
     std::shared_ptr<IToken> previous();  // previous() returns the most recently consumed token.
+
     void error(std::shared_ptr<IToken> token, const std::string& message);
     bool check(
         const TokenType type) const;  // check() checks if the current token is of a specific type

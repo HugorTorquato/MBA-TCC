@@ -52,8 +52,8 @@ make -j$(nproc)
 
 echo "<> Build finished."
 
-# echo "<> Running unit tests..."
-# ./my_tests
+echo "<> Running unit tests..."
+./my_tests
 
 
 # echo "<> Starting the API..."
