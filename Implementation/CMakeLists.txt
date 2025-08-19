@@ -19,6 +19,8 @@ file(GLOB_RECURSE TEST_SOURCES_TO_TEST
     "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/*.cpp" # ProcessSourceFiles source code under test
     "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/util/*.cpp" # ProcessSourceFiles source code under test
     "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/Scanner/*.cpp" # ProcessSourceFiles source code under test
+    "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/ContainersInterface/*.cpp" # ProcessSourceFiles source code under test
+    "${CMAKE_SOURCE_DIR}/src/ProcessSourceFiles/Parser/*.cpp" # ProcessSourceFiles source code under test
     "${CMAKE_SOURCE_DIR}/src/utils/util/*.cpp"
     )
 
