@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "../../Logger/Log.h"
 #include "CommonParserType.h"
 
 class ClassST : public CommonParserType

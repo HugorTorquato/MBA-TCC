@@ -143,3 +143,81 @@ TEST_F(ContainerInterfaceTest, AddDuplicateClassThrows)
         EXPECT_EQ(classes[i]->getClassName(), expectedClasses[i]->getClassName());
     }
 }
+
+TEST_F(ContainerInterfaceTest, ClearClassesContainer)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "ClearClass", DefaultLineFile);
+    auto classST = std::make_shared<ClassST>(token);
+    container.addClass(classST);
+
+    ASSERT_FALSE(container.getClasses().empty());
+
+    container.clearClassesContainer();
+    EXPECT_TRUE(container.getClasses().empty());
+}
+
+TEST_F(ContainerInterfaceTest, RetrieveClassIsCaseSensitive)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "CaseClass", DefaultLineFile);
+    auto classST = std::make_shared<ClassST>(token);
+    container.addClass(classST);
+
+    auto retrievedLower = container.getClassByName("caseclass");
+    EXPECT_EQ(retrievedLower, nullptr);  // Should not match
+
+    auto retrievedExact = container.getClassByName("CaseClass");
+    EXPECT_NE(retrievedExact, nullptr);  // Should match
+}
+
+TEST_F(ContainerInterfaceTest, AddNullptrClassDoesNothing)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    container.addClass(nullptr);  // Simulate accidental nullptr
+
+    auto allClasses = container.getClasses();
+    EXPECT_TRUE(std::all_of(allClasses.begin(), allClasses.end(),
+                            [](auto& cls) { return cls != nullptr; }));
+}
+
+TEST_F(ContainerInterfaceTest, MultipleRetrievalConsistency)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "RepeatClass", DefaultLineFile);
+    auto classST = std::make_shared<ClassST>(token);
+    container.addClass(classST);
+
+    auto firstRetrieval = container.getClassByName("RepeatClass");
+    auto secondRetrieval = container.getClassByName("RepeatClass");
+
+    EXPECT_EQ(firstRetrieval, secondRetrieval);  // Same shared_ptr
+}
+
+TEST_F(ContainerInterfaceTest, StressTestAddManyClasses)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    for (int i = 0; i < 1000; ++i)
+    {
+        auto name = "Class_" + std::to_string(i);
+        auto token = std::make_shared<Token>(TokenType::IDENTIFIER, name, DefaultLineFile);
+        auto classST = std::make_shared<ClassST>(token);
+        container.addClass(classST);
+    }
+
+    EXPECT_EQ(container.getClasses().size(), 1000);
+    EXPECT_NE(container.getClassByName("Class_500"), nullptr);
+}
+
+TEST_F(ContainerInterfaceTest, EmptyContainerReturnsNull)
+{
+    ContainersInterface& container = ContainersInterface::getInstance();
+
+    auto retrieved = container.getClassByName("NothingHere");
+    EXPECT_EQ(retrieved, nullptr);
+}

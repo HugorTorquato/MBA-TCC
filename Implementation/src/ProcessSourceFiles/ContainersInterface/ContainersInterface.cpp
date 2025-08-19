@@ -10,23 +10,31 @@ ContainersInterface& ContainersInterface::getInstance()
     // call, the same instance object is returned. This is a thread-safe way to implement a
     // singleton in C++11 and later. Note: The static variable is initialized the first time this
     // function is called. It is destroyed when the program exits.
-
+    Logger::getInstance().log("[ContainersInterface::getInstance]");
     static ContainersInterface instance;
     return instance;
 }
 
 void ContainersInterface::addClass(std::shared_ptr<ClassST> classST)
 {
-    m_classesContainer.push_back(classST);
+    if (classST)
+    {
+        Logger::getInstance().log("[ContainersInterface::addClass] class IDENTIFIER " +
+                                  classST->getClassName());
+        m_classesContainer.push_back(classST);
+    }
+    Logger::getInstance().log("[ContainersInterface::addClass] Problems addding class IDENTIFIER ");
 }
 
 std::vector<std::shared_ptr<ClassST>> ContainersInterface::getClasses() const
 {
+    Logger::getInstance().log("[ContainersInterface::getClasses]");
     return m_classesContainer;
 }
 
 std::shared_ptr<ClassST> ContainersInterface::getClassByName(const std::string& className) const
 {
+    Logger::getInstance().log("[ContainersInterface::getClassByName] className " + className);
     for (const auto& classST : m_classesContainer)
     {
         if (classST->getClassName() == className)
@@ -39,5 +47,6 @@ std::shared_ptr<ClassST> ContainersInterface::getClassByName(const std::string& 
 
 void ContainersInterface::clearClassesContainer()
 {
+    Logger::getInstance().log("[ContainersInterface::clearClassesContainer]");
     m_classesContainer.clear();
 }
