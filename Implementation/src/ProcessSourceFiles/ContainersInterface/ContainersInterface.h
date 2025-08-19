@@ -4,8 +4,9 @@
 #include <vector>
 
 #include "../SyntaxTrees/ClassST.h"
+#include "IContainersInterface.h"
 
-class ContainersInterface
+class ContainersInterface : public IContainersInterface
 {
    private:
     // Private constructor to prevent direct instantiation

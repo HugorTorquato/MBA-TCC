@@ -302,7 +302,7 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
         }
     }
 
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
     container.addClass(classObject);
 
     return classObject;  // Replace with actual implementation

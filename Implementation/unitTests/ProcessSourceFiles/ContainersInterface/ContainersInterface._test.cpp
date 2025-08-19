@@ -1,14 +1,27 @@
 #include "../../../src/ProcessSourceFiles/ContainersInterface/ContainersInterface.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/ClassST.h"
 
+class MockContainersInterface : public IContainersInterface
+{
+    // When you mock something like IContainersInterface, you are not testing the container itself —
+    // you already did that with your real implementation tests. Instead, you are testing code that
+    // depends on the container.
+   public:
+    MOCK_METHOD(void, addClass, (std::shared_ptr<ClassST> classST), (override));
+    MOCK_METHOD(std::vector<std::shared_ptr<ClassST>>, getClasses, (), (const, override));
+    MOCK_METHOD(std::shared_ptr<ClassST>, getClassByName, (const std::string&), (const, override));
+    MOCK_METHOD(void, clearClassesContainer, (), (override));
+};
+
 TEST(ContainersInterfaceTest, SingletonReturnsSameInstance)
 {
-    ContainersInterface& instance1 = ContainersInterface::getInstance();
-    ContainersInterface& instance2 = ContainersInterface::getInstance();
+    IContainersInterface& instance1 = ContainersInterface::getInstance();
+    IContainersInterface& instance2 = ContainersInterface::getInstance();
 
     // Check that both references point to the same object
     EXPECT_EQ(&instance1, &instance2);
@@ -25,14 +38,14 @@ class ContainerInterfaceTest : public ::testing::Test
 
     void TearDown() override
     {
-        ContainersInterface& container = ContainersInterface::getInstance();
+        IContainersInterface& container = ContainersInterface::getInstance();
         container.clearClassesContainer();
     }
 };
 
 TEST_F(ContainerInterfaceTest, AddAndRetrieveClass)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto className = "TestClass";
     std::shared_ptr<IToken> token =
@@ -47,7 +60,7 @@ TEST_F(ContainerInterfaceTest, AddAndRetrieveClass)
 
 TEST_F(ContainerInterfaceTest, RetrieveNonExistentClass)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto retrievedClass = container.getClassByName("NonExistentClass");
     EXPECT_EQ(retrievedClass, nullptr);
@@ -55,7 +68,7 @@ TEST_F(ContainerInterfaceTest, RetrieveNonExistentClass)
 
 TEST_F(ContainerInterfaceTest, AddMultipleClassesAndRetrieve)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto className1 = "FirstClass";
     std::shared_ptr<IToken> token1 =
@@ -81,7 +94,7 @@ TEST_F(ContainerInterfaceTest, AddMultipleClassesAndRetrieve)
 
 TEST_F(ContainerInterfaceTest, RetreveAllClasses)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto className1 = "AlphaClass";
     std::shared_ptr<IToken> token1 =
@@ -121,7 +134,7 @@ TEST_F(ContainerInterfaceTest, RetreveAllClasses)
 
 TEST_F(ContainerInterfaceTest, AddDuplicateClassThrows)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto className = "DuplicateClass";
     std::shared_ptr<IToken> token1 =
@@ -146,7 +159,7 @@ TEST_F(ContainerInterfaceTest, AddDuplicateClassThrows)
 
 TEST_F(ContainerInterfaceTest, ClearClassesContainer)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "ClearClass", DefaultLineFile);
     auto classST = std::make_shared<ClassST>(token);
@@ -160,7 +173,7 @@ TEST_F(ContainerInterfaceTest, ClearClassesContainer)
 
 TEST_F(ContainerInterfaceTest, RetrieveClassIsCaseSensitive)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "CaseClass", DefaultLineFile);
     auto classST = std::make_shared<ClassST>(token);
@@ -175,7 +188,7 @@ TEST_F(ContainerInterfaceTest, RetrieveClassIsCaseSensitive)
 
 TEST_F(ContainerInterfaceTest, AddNullptrClassDoesNothing)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     container.addClass(nullptr);  // Simulate accidental nullptr
 
@@ -186,7 +199,7 @@ TEST_F(ContainerInterfaceTest, AddNullptrClassDoesNothing)
 
 TEST_F(ContainerInterfaceTest, MultipleRetrievalConsistency)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "RepeatClass", DefaultLineFile);
     auto classST = std::make_shared<ClassST>(token);
@@ -200,7 +213,7 @@ TEST_F(ContainerInterfaceTest, MultipleRetrievalConsistency)
 
 TEST_F(ContainerInterfaceTest, StressTestAddManyClasses)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     for (int i = 0; i < 1000; ++i)
     {
@@ -216,8 +229,54 @@ TEST_F(ContainerInterfaceTest, StressTestAddManyClasses)
 
 TEST_F(ContainerInterfaceTest, EmptyContainerReturnsNull)
 {
-    ContainersInterface& container = ContainersInterface::getInstance();
+    IContainersInterface& container = ContainersInterface::getInstance();
 
     auto retrieved = container.getClassByName("NothingHere");
     EXPECT_EQ(retrieved, nullptr);
+}
+
+// These tests don’t use the real singleton anymore. Instead, they validate how your business logic
+// would interact with IContainersInterface.
+
+TEST(MockContainersInterfaceTest, AddClassIsCalled)
+{
+    MockContainersInterface mock;
+
+    auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "MockClass",
+                                         LineFile{1, 2, 3, 4, "MockFile.cpp"});
+    auto classST = std::make_shared<ClassST>(token);
+
+    EXPECT_CALL(mock, addClass(classST)).Times(1);
+
+    // Act
+    mock.addClass(classST);
+}
+
+TEST(MockContainersInterfaceTest, GetClassByNameReturnsStub)
+{
+    MockContainersInterface mock;
+
+    auto token = std::make_shared<Token>(TokenType::IDENTIFIER, "StubClass",
+                                         LineFile{1, 2, 3, 4, "StubFile.cpp"});
+    auto expectedClass = std::make_shared<ClassST>(token);
+
+    // I create the method call that i expect and than... it returns the value. This is the first
+    // level, how about second?
+    EXPECT_CALL(mock, getClassByName("StubClass")).WillOnce(testing::Return(expectedClass));
+
+    auto result = mock.getClassByName("StubClass");
+
+    ASSERT_NE(result, nullptr);
+    EXPECT_EQ(result->getClassName(), "StubClass");
+}
+
+TEST(MockContainersInterfaceTest, GetClassesReturnsEmpty)
+{
+    MockContainersInterface mock;
+
+    EXPECT_CALL(mock, getClasses())
+        .WillOnce(testing::Return(std::vector<std::shared_ptr<ClassST>>{}));
+
+    auto classes = mock.getClasses();
+    EXPECT_TRUE(classes.empty());
 }
