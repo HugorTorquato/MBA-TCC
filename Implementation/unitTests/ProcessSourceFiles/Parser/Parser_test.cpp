@@ -2,7 +2,11 @@
 
 #include <gtest/gtest.h>
 
+#include <memory>
+#include <stdexcept>
+
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
+#include "../../../src/ProcessSourceFiles/SyntaxTrees/ClassST.h"
 #include "../../../src/ProcessSourceFiles/SyntaxTrees/Expressions.h"
 
 class ParserTest : public ::testing::Test
@@ -125,11 +129,15 @@ TEST_F(ParserTest, ConsumeTokenType)
 {
     std::vector<std::shared_ptr<IToken>> tokens;
     tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "123", LineFile(1, 1, 0, 0)));
-    Parser parser(tokens);
 
+    Parser parser(tokens);
     auto token = parser.parse();
+
     ASSERT_NE(token, nullptr);
-    EXPECT_EQ(token->getType(), "LITERAL_EXPRESSION");
+    auto literalExpr = std::dynamic_pointer_cast<LiteralExpression>(token);
+    ASSERT_NE(literalExpr, nullptr);
+    EXPECT_EQ(literalExpr->getValue(), "123");
+    EXPECT_EQ(literalExpr->getType(), "LITERAL_EXPRESSION");
     // EXPECT_EQ(token->getValue(), "int");
 }
 
@@ -156,7 +164,6 @@ TEST_F(ParserTest, SixLayersExpression)
 
     ASSERT_NE(expr, nullptr);
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     ASSERT_NE(binaryExpr, nullptr);
     EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
@@ -210,7 +217,6 @@ TEST_F(ParserTest, Expression_Equality)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
     auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
@@ -233,7 +239,7 @@ TEST_F(ParserTest, Expression_Grouping)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "GROUPING_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(expr);
     ASSERT_NE(groupingExpr, nullptr);
     EXPECT_EQ(groupingExpr->getExpression()->getType(), "BINARY_EXPRESSION");
@@ -257,7 +263,7 @@ TEST_F(ParserTest, Expression_Unary)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "UNARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto unaryExpr = std::dynamic_pointer_cast<UnaryExpression>(expr);
     ASSERT_NE(unaryExpr, nullptr);
     EXPECT_EQ(unaryExpr->getOperator(), "-");
@@ -277,7 +283,7 @@ TEST_F(ParserTest, Expression_Binary)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     ASSERT_NE(binaryExpr, nullptr);
     EXPECT_EQ(binaryExpr->getLeft()->getType(), "LITERAL_EXPRESSION");
@@ -305,7 +311,7 @@ TEST_F(ParserTest, Expression_Complex)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     ASSERT_NE(binaryExpr, nullptr);
     EXPECT_EQ(binaryExpr->getLeft()->getType(), "GROUPING_EXPRESSION");
@@ -351,10 +357,10 @@ TEST_F(ParserTest, Expression_Error_NonEofToken)
     Parser parser({numToken});
     auto expr = parser.parse();
     EXPECT_NE(expr, nullptr);
-    EXPECT_EQ(expr->getType(), "LITERAL_EXPRESSION");
     auto literalExpr = std::dynamic_pointer_cast<LiteralExpression>(expr);
     ASSERT_NE(literalExpr, nullptr);
     EXPECT_EQ(literalExpr->getValue(), "42");
+    EXPECT_EQ(literalExpr->getType(), "LITERAL_EXPRESSION");
 }
 
 TEST_F(ParserTest, Expression_Invalid)
@@ -364,8 +370,7 @@ TEST_F(ParserTest, Expression_Invalid)
     tokens.push_back(std::make_shared<Token>(TokenType::PLUS, "+", LineFile(1, 2, 0, 0)));
     // Missing right operand
     Parser parser(tokens);
-    auto expr = parser.parse();
-    EXPECT_EQ(expr, nullptr);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
 }
 
 TEST_F(ParserTest, Expression_ComplexWithUnary)
@@ -381,7 +386,7 @@ TEST_F(ParserTest, Expression_ComplexWithUnary)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "UNARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto unaryExpr = std::dynamic_pointer_cast<UnaryExpression>(expr);
     ASSERT_NE(unaryExpr, nullptr);
     EXPECT_EQ(unaryExpr->getOperator(), "-");
@@ -410,7 +415,7 @@ TEST_F(ParserTest, Expression_Equality_WithNumbers)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     ASSERT_NE(binaryExpr, nullptr);
     EXPECT_EQ(binaryExpr->getOperator(), "==");
@@ -432,7 +437,7 @@ TEST_F(ParserTest, Expression_Inequality_WithNumbers)
     Parser parser(tokens);
     auto expr = parser.parse();
 
-    EXPECT_EQ(expr->getType(), "BINARY_EXPRESSION");
+    EXPECT_NE(expr, nullptr);
     auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(expr);
     ASSERT_NE(binaryExpr, nullptr);
     EXPECT_EQ(binaryExpr->getOperator(), "!=");
@@ -442,4 +447,251 @@ TEST_F(ParserTest, Expression_Inequality_WithNumbers)
     auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
     ASSERT_NE(right, nullptr);
     EXPECT_EQ(right->getValue(), "2");
+}
+
+// Right Param
+
+TEST_F(ParserTest, Expression_RightParam_simple)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_PAREN, "(", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_PAREN, ")", LineFile(1, 3, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_NE(expr, nullptr);
+    auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(expr);
+    ASSERT_NE(groupingExpr, nullptr);
+    EXPECT_EQ(groupingExpr->getExpression()->getType(), "LITERAL_EXPRESSION");
+    auto literalExpr = std::dynamic_pointer_cast<LiteralExpression>(groupingExpr->getExpression());
+    ASSERT_NE(literalExpr, nullptr);
+    EXPECT_EQ(literalExpr->getValue(), "1");
+}
+
+TEST_F(ParserTest, Expression_RightParam)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_PAREN, "(", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "1", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::BANG_EQUAL, "!=", LineFile(1, 4, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::NUMBER, "2", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_PAREN, ")", LineFile(1, 8, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    EXPECT_NE(expr, nullptr);
+    auto groupingExpr = std::dynamic_pointer_cast<GroupingExpression>(expr);
+    ASSERT_NE(groupingExpr, nullptr);
+    EXPECT_EQ(groupingExpr->getType(), "GROUPING_EXPRESSION");
+    EXPECT_NE(groupingExpr->getExpression(), nullptr);
+    auto binaryExpr = std::dynamic_pointer_cast<BinaryExpression>(groupingExpr->getExpression());
+    ASSERT_NE(binaryExpr, nullptr);
+    EXPECT_EQ(binaryExpr->getOperator(), "!=");
+    auto left = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getLeft());
+    ASSERT_NE(left, nullptr);
+    EXPECT_EQ(left->getValue(), "1");
+    auto right = std::dynamic_pointer_cast<LiteralExpression>(binaryExpr->getRight());
+    ASSERT_NE(right, nullptr);
+    EXPECT_EQ(right->getValue(), "2");
+}
+
+TEST_F(ParserTest, Class_SimpleDeclaration_Missing_IDENTIFIER)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass_Missing_Access_Type)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass_Missing_ParentClss_IDENTIFIER)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclaration_Missing_RightBrace)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+
+    Parser parser(tokens);
+    EXPECT_THROW(parser.parse(), std::runtime_error);
+}
+
+TEST_F(ParserTest, Class_SimpleDeclaration)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthParentClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_SimpleDeclarationWthMultipleParentClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass", LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COMMA, ",", LineFile(1, 39, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyParentClass2", LineFile(1, 25, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_TRUE(classObj->getInherencyArray().empty());
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser_WithBaseClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    const auto MyParentClass = "MyParentClass";
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass, LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_FALSE(classObj->getInherencyArray().empty());
+
+    auto baseClassArray = classObj->getInherencyArray();
+    std::vector<std::string> expectedNames = {MyParentClass};
+
+    EXPECT_FALSE(baseClassArray.empty());
+    EXPECT_EQ(baseClassArray.size(), 1);
+
+    for (size_t i = 0; i < baseClassArray.size(); ++i)
+    {
+        EXPECT_EQ(baseClassArray[i].first->getTypeEnum(), TokenType::PUBLIC);
+        EXPECT_EQ(baseClassArray[i].second->getTypeEnum(), TokenType::IDENTIFIER);
+        EXPECT_EQ(baseClassArray[i].second->getLexeme(), expectedNames[i]);
+    }
+}
+
+TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser_WithMultipleBaseClass)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    const auto MyParentClass = "MyParentClass";
+    const auto MyParentClass2 = "MyParentClass2";
+    const auto baseClassAccessType = "public";
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::PUBLIC, baseClassAccessType, LineFile(1, 22, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass, LineFile(1, 25, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COMMA, ",", LineFile(1, 39, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::PUBLIC, baseClassAccessType, LineFile(1, 41, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, MyParentClass2, LineFile(1, 48, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_FALSE(classObj->getInherencyArray().empty());
+
+    auto baseClassArray = classObj->getInherencyArray();
+    std::vector<std::string> expectedNames = {MyParentClass, MyParentClass2};
+
+    EXPECT_FALSE(baseClassArray.empty());
+    EXPECT_EQ(baseClassArray.size(), 2);
+
+    for (size_t i = 0; i < baseClassArray.size(); ++i)
+    {
+        EXPECT_EQ(baseClassArray[i].first->getTypeEnum(), TokenType::PUBLIC);
+        EXPECT_EQ(baseClassArray[i].second->getTypeEnum(), TokenType::IDENTIFIER);
+        EXPECT_EQ(baseClassArray[i].second->getLexeme(), expectedNames[i]);
+    }
 }

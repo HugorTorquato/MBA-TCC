@@ -4,7 +4,7 @@
 #include <iostream>
 // #include <string>
 
-#define CERRlOGS 0
+#define CERR_LOGS 1
 
 Logger::Logger()
 {
@@ -36,7 +36,7 @@ void Logger::setEnabledLogs(const bool enabled)
 
 void Logger::log(const std::string& msg)
 {
-    if (CERRlOGS) std::cerr << msg << std::endl;
+    if (CERR_LOGS) std::cerr << msg << std::endl;
     if (!m_enabledLogs) return;
 
     std::ofstream file("app.log", std::ios::app);  // Append mode
