@@ -24,6 +24,8 @@ class ContainersInterface
     std::vector<std::shared_ptr<ClassST>> getClasses() const;
     std::shared_ptr<ClassST> getClassByName(const std::string& className) const;  // Problematic
 
+    void clearClassesContainer();
+
    private:
     std::vector<std::shared_ptr<ClassST>> m_classesContainer;
 };

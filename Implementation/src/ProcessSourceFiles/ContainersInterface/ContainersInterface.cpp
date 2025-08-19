@@ -36,3 +36,8 @@ std::shared_ptr<ClassST> ContainersInterface::getClassByName(const std::string& 
     }
     return nullptr;  // Return nullptr if the class with the given name is not found
 }
+
+void ContainersInterface::clearClassesContainer()
+{
+    m_classesContainer.clear();
+}
