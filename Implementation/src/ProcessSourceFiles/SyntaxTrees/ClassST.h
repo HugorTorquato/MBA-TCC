@@ -28,6 +28,8 @@ class ClassST : public CommonParserType
     std::string getClassName() const;
     std::shared_ptr<IToken> getClassToken() const;
     std::vector<ClassST::baseClassPair> getInherencyArray() const;
+    bool hasBaseClasses() const;
+    std::string toString() const;
 
     void addInherencyToClassObject(std::shared_ptr<IToken> accessType,
                                    std::shared_ptr<IToken> className);

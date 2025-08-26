@@ -69,3 +69,14 @@ void ClassST::addInherencyToClassObject(std::shared_ptr<IToken> accessType,
 
     m_inherencyArray.emplace_back(basClassToAdd);
 }
+
+bool ClassST::hasBaseClasses() const
+{
+    return !m_inherencyArray.empty();
+}
+
+std::string ClassST::toString() const
+{
+    // TODO: Ad the list of children in a filestream and append to the return
+    return "[ClassST] Class name: " + m_className;
+}

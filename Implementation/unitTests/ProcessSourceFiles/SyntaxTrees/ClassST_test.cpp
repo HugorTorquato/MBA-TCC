@@ -205,6 +205,8 @@ TEST_F(ClassSTTest, GetClassToken_AfterAddingInherency_WithFileName)
 
     classST.addInherencyToClassObject(accessType, baseClassToken);
 
+    EXPECT_TRUE(classST.hasBaseClasses());
+
     auto returnedToken = classST.getClassToken();
     ASSERT_NE(returnedToken, nullptr);
     EXPECT_EQ(returnedToken->getLexeme(), className);
@@ -218,6 +220,8 @@ TEST_F(ClassSTTest, GetClassToken_LineFileIsCorrect_ForDifferentLineFile)
     std::shared_ptr<IToken> token =
         std::make_shared<Token>(TokenType::IDENTIFIER, className, customLineFile);
     ClassST classST(token);
+
+    EXPECT_FALSE(classST.hasBaseClasses());
 
     auto returnedToken = classST.getClassToken();
     ASSERT_NE(returnedToken, nullptr);
@@ -257,6 +261,8 @@ TEST_F(ClassSTTest, SimpleClassWith_MultipleInherencies_WithFileName)
 
     simpleClass.addInherencyToClassObject(accessBaseClass, tokenBaseClass);
     simpleClass.addInherencyToClassObject(accessBaseClass2, tokenBaseClass2);
+
+    EXPECT_TRUE(simpleClass.hasBaseClasses());
 
     auto baseClassArray = simpleClass.getInherencyArray();
     EXPECT_EQ(baseClassArray.size(), 2);
@@ -315,6 +321,9 @@ TEST_F(ClassSTTest, ClassST_AddInherency_ValidAccessTypeAndClassName_WithFileNam
         std::make_shared<Token>(TokenType::IDENTIFIER, "BaseClass", DefaultLineFileWithFileName);
 
     EXPECT_NO_THROW(simpleClass.addInherencyToClassObject(accessType, classToken));
+
+    EXPECT_TRUE(simpleClass.hasBaseClasses());
+
     auto baseClassArray = simpleClass.getInherencyArray();
     EXPECT_EQ(baseClassArray.size(), 1);
     EXPECT_EQ(baseClassArray.front().first->getLexeme(), "private");
