@@ -8,7 +8,7 @@
 
 class IContainersInterface
 {
-public:
+   public:
     virtual ~IContainersInterface() = default;
 
     // Add a class into the container
