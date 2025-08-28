@@ -27,6 +27,14 @@ std::unordered_set<std::shared_ptr<ClassST>> ClassGraph::getAllClasses() const
     return m_nodes;
 }
 
+void ClassGraph::clear()
+{
+    m_parents.clear();
+    m_children.clear();
+    m_nodes.clear();
+    m_edgeCount = 0;
+}
+
 void ClassGraph::buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes)
 {
     Logger::getInstance().log("[ClassGraph::buildGraph]");

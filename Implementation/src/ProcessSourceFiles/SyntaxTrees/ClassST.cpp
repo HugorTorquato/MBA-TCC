@@ -12,7 +12,7 @@ ClassST::ClassST(std::shared_ptr<IToken> classToken)
     {
         // If emtpy lexeme, the TOKEN logic will add an TokenType::UNKNOWN type
         auto message =
-            "[ClassST::ClassST][] Token is not an IDENTIFIER, can't create CLASS object. Token : " +
+            "[ClassST::ClassST] Token is not an IDENTIFIER, can't create CLASS object. Token : " +
             classToken->toString();
         Logger::getInstance().log(message);
         throw std::runtime_error(message);

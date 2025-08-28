@@ -16,6 +16,7 @@ class ClassGraph : public IClassGraph
     void buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes) override;
 
     std::unordered_set<std::shared_ptr<ClassST>> getAllClasses() const;
+    void clear() override;
 
    private:
     // TODO: This will not be string to string. ClassST or token?

@@ -12,4 +12,5 @@ class IClassGraph
     virtual ~IClassGraph() = default;
 
     virtual void buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes) = 0;
+    virtual void clear() = 0;
 };
