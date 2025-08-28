@@ -174,3 +174,52 @@ TEST_F(ClassGraphTest, ToDotContainsEdges)
     EXPECT_NE(dot.find("\"a\" -> \"c\""), std::string::npos);
     EXPECT_NE(dot.find("\"g\" -> \"a\""), std::string::npos);
 }
+
+TEST_F(ClassGraphTest, DuplicateEdgePrevention)
+{
+    g.addClassWithBases("A", {"B"});
+    g.addClassWithBases("A", {"B"});
+    EXPECT_EQ(g.edgeCount(), 1u);
+    EXPECT_EQ(g.basesOf("A"), std::vector<std::string>{"B"});
+    EXPECT_EQ(g.derivedOf("B"), std::vector<std::string>{"A"});
+}
+
+TEST_F(ClassGraphTest, SelfInheritance)
+{
+    g.addClassWithBases("A", {"A"});
+    EXPECT_EQ(g.basesOf("A"), std::vector<std::string>{"A"});
+    EXPECT_EQ(g.derivedOf("A"), std::vector<std::string>{"A"});
+}
+
+TEST_F(ClassGraphTest, ClearAndReuse)
+{
+    g.addClassWithBases("A", {"B"});
+    g.clear();
+    EXPECT_EQ(g.nodeCount(), 0u);
+    EXPECT_EQ(g.edgeCount(), 0u);
+    g.addClassWithBases("C", {"D"});
+    EXPECT_EQ(g.nodeCount(), 2u);
+    EXPECT_EQ(g.edgeCount(), 1u);
+}
+
+TEST_F(ClassGraphTest, AncestorTraversalWithMultipleLevels)
+{
+    g.addClassWithBases("A", {"B"});
+    g.addClassWithBases("B", {"C"});
+    g.addClassWithBases("C", {"D"});
+    auto ancestors = g.allAncestors("A");
+    EXPECT_EQ(ancestors, (std::vector<std::string>{"B", "C", "D"}));
+}
+
+TEST_F(ClassGraphTest, DOTandJSONOutputConsistency)
+{
+    g.addClassWithBases("X", {"Y", "Z"});
+    auto dot = g.toDot("Graph");
+    EXPECT_NE(dot.find("\"X\" -> \"Y\""), std::string::npos);
+    EXPECT_NE(dot.find("\"X\" -> \"Z\""), std::string::npos);
+
+    auto json = g.toJson();
+    EXPECT_NE(json.find("\"X\""), std::string::npos);
+    EXPECT_NE(json.find("\"Y\""), std::string::npos);
+    EXPECT_NE(json.find("\"Z\""), std::string::npos);
+}

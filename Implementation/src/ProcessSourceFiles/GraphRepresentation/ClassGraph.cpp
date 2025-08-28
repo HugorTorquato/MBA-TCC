@@ -281,7 +281,8 @@ std::string ClassGraph::toDot(const std::string& graphName) const
     return out;
 }
 
-std::string ClassGraph::toJson() const {
+std::string ClassGraph::toJson() const
+{
     Logger::getInstance().log("[ClassGraph::toJson] Generating JSON representation of the graph.");
     std::string out = "{";
     bool firstNode = true;
@@ -290,20 +291,24 @@ std::string ClassGraph::toJson() const {
     std::sort(nodesVec.begin(), nodesVec.end());
     Logger::getInstance().log("[ClassGraph::toJson] Sorted nodes for deterministic output.");
 
-    for (const auto& n : nodesVec) {
+    for (const auto& n : nodesVec)
+    {
         if (!firstNode) out += ",";
         firstNode = false;
 
         Logger::getInstance().log("[ClassGraph::toJson] Processing node: " + n);
         out += "\"" + n + "\":[";
         auto it = m_parents.find(n);
-        if (it != m_parents.end()) {
+        if (it != m_parents.end())
+        {
             auto v = it->second;
             std::sort(v.begin(), v.end());
             Logger::getInstance().log("[ClassGraph::toJson] Sorted parents for node: " + n);
-            for (size_t i = 0; i < v.size(); ++i) {
+            for (size_t i = 0; i < v.size(); ++i)
+            {
                 if (i) out += ",";
-                Logger::getInstance().log("[ClassGraph::toJson] Adding parent: " + v[i] + " to node: " + n);
+                Logger::getInstance().log("[ClassGraph::toJson] Adding parent: " + v[i] +
+                                          " to node: " + n);
                 out += "\"" + v[i] + "\"";
             }
         }

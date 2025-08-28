@@ -40,6 +40,6 @@ class IClassGraph
 
     // Exporting
     virtual std::string toDot(const std::string& graphName) const = 0;
-    //TODO: Convert this to use the JSON structure for the APIs
+    // TODO: Convert this to use the JSON structure for the APIs
     virtual std::string toJson() const = 0;
 };
