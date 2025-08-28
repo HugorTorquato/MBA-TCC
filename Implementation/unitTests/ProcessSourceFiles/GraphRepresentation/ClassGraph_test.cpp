@@ -43,7 +43,7 @@ TEST_F(ClassGraphTest, BuildGraph_WithClasses)
     EXPECT_EQ(allClasses.size(), 2);
     for (const auto& cls : allClasses)
     {
-        EXPECT_TRUE(cls == classST1 || cls == classST2);
+        EXPECT_TRUE(cls == classST1->getClassName() || cls == classST2->getClassName());
     }
 }
 

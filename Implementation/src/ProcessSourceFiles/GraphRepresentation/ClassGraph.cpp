@@ -1,5 +1,8 @@
 #include "ClassGraph.h"
 
+#include <string>
+#include <vector>
+
 #include "../../Logger/Log.h"
 
 namespace
@@ -22,7 +25,7 @@ bool buildGraphValidations(const std::shared_ptr<ClassST>& cls)
 }
 }  // namespace
 
-std::unordered_set<std::shared_ptr<ClassST>> ClassGraph::getAllClasses() const
+std::unordered_set<std::string> ClassGraph::getAllClasses() const
 {
     return m_nodes;
 }
@@ -35,6 +38,20 @@ void ClassGraph::clear()
     m_edgeCount = 0;
 }
 
+void ClassGraph::ensureNode(const std::string& clsName)
+{
+    if (clsName.empty()) return;
+
+    if (m_nodes.insert(clsName).second)
+    {
+        // First Time we see this node we ensure that entries exists creating a parent and a
+        // children
+        Logger::getInstance().log("[ClassGraph::ensureNode] Added new node: " + clsName);
+        (void)m_parents.emplace(clsName, std::vector<std::string>{});
+        (void)m_children.emplace(clsName, std::vector<std::string>{});
+    }
+}
+
 void ClassGraph::buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes)
 {
     Logger::getInstance().log("[ClassGraph::buildGraph]");
@@ -45,7 +62,8 @@ void ClassGraph::buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes
         auto className = cls->getClassName();
         Logger::getInstance().log("[ClassGraph::buildGraph] Adding class: " + className);
 
-        m_nodes.emplace(cls);
+        ensureNode(className);
+        // m_nodes.emplace(cls);
         auto inherencies = cls->getInherencyArray();
 
         // TODO: Need to ensure that there is no duplicated edges
@@ -55,8 +73,8 @@ void ClassGraph::buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes
                                       " inherits from: " + baseClassToken->getLexeme() +
                                       " with access type: " + accessTypeToken->getLexeme());
 
-            m_parents[cls->getClassToken()] = {accessTypeToken, baseClassToken};
-            m_children[baseClassToken].push_back({accessTypeToken, cls->getClassToken()});
+            // m_parents[cls->getClassToken()] = {accessTypeToken, baseClassToken};
+            // m_children[baseClassToken].push_back({accessTypeToken, cls->getClassToken()});
             m_edgeCount++;
         }
     }
