@@ -12,18 +12,24 @@ ClassST::ClassST(std::shared_ptr<IToken> classToken)
     {
         // If emtpy lexeme, the TOKEN logic will add an TokenType::UNKNOWN type
         auto message =
-            "[ClassST::ClassST][] Token is not an IDENTIFIER, can't create CLASS object. Token : " +
+            "[ClassST::ClassST] Token is not an IDENTIFIER, can't create CLASS object. Token : " +
             classToken->toString();
         Logger::getInstance().log(message);
         throw std::runtime_error(message);
     }
 
     m_className = classToken->getLexeme();
+    m_classToken = classToken;
 }
 
 std::string ClassST::getClassName() const
 {
     return m_className;
+}
+
+std::shared_ptr<IToken> ClassST::getClassToken() const
+{
+    return m_classToken;
 }
 
 std::vector<ClassST::baseClassPair> ClassST::getInherencyArray() const
@@ -62,4 +68,15 @@ void ClassST::addInherencyToClassObject(std::shared_ptr<IToken> accessType,
         basClassToAdd.first->toString() + ", " + basClassToAdd.second->toString());
 
     m_inherencyArray.emplace_back(basClassToAdd);
+}
+
+bool ClassST::hasBaseClasses() const
+{
+    return !m_inherencyArray.empty();
+}
+
+std::string ClassST::toString() const
+{
+    // TODO: Ad the list of children in a filestream and append to the return
+    return "[ClassST] Class name: " + m_className;
 }

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "../ContainersInterface/ContainersInterface.h"
 #include "../Scanner/IToken.h"
 #include "../Scanner/TokenType.h"
 #include "../SyntaxTrees/ClassST.h"

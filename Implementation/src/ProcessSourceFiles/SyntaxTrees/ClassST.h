@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "../../Logger/Log.h"
 #include "CommonParserType.h"
 
 class ClassST : public CommonParserType
@@ -25,13 +26,17 @@ class ClassST : public CommonParserType
     }
 
     std::string getClassName() const;
+    std::shared_ptr<IToken> getClassToken() const;
     std::vector<ClassST::baseClassPair> getInherencyArray() const;
+    bool hasBaseClasses() const;
+    std::string toString() const;
 
     void addInherencyToClassObject(std::shared_ptr<IToken> accessType,
                                    std::shared_ptr<IToken> className);
 
    private:
     std::string m_className;
+    std::shared_ptr<IToken> m_classToken;
     std::vector<baseClassPair>
         m_inherencyArray;  // Store Array of IDENTIFIER tokens for base classes using pair to store
                            // access type and class IDENTIFIER token

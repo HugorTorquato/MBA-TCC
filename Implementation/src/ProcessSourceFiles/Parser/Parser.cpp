@@ -182,6 +182,7 @@ std::shared_ptr<IToken> Parser::consume(TokenType type, const std::string& messa
                               TokenTypeNameSpace::toString(type) + ", but found " +
                               currentToken->toString() + ". Message: " + message);
     error(currentToken, message);
+    return nullptr;  // Unreachable, but avoids compiler warning
 }
 
 void Parser::error(std::shared_ptr<IToken> token, const std::string& message)
@@ -300,6 +301,9 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
             error(previousToken, "Expect '}' in the end of the class body statement.");
         }
     }
+
+    IContainersInterface& container = ContainersInterface::getInstance();
+    container.addClass(classObject);
 
     return classObject;  // Replace with actual implementation
 }

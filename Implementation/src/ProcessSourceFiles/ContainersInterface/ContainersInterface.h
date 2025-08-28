@@ -4,8 +4,9 @@
 #include <vector>
 
 #include "../SyntaxTrees/ClassST.h"
+#include "IContainersInterface.h"
 
-class ContainersInterface
+class ContainersInterface : public IContainersInterface
 {
    private:
     // Private constructor to prevent direct instantiation
@@ -22,7 +23,9 @@ class ContainersInterface
 
     void addClass(std::shared_ptr<ClassST> classST);
     std::vector<std::shared_ptr<ClassST>> getClasses() const;
-    std::shared_ptr<ClassST> getClassByName(const std::string& className) const;
+    std::shared_ptr<ClassST> getClassByName(const std::string& className) const;  // Problematic
+
+    void clearClassesContainer();
 
    private:
     std::vector<std::shared_ptr<ClassST>> m_classesContainer;

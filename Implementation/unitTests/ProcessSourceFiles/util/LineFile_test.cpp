@@ -77,3 +77,67 @@ TEST_F(LineFileTest, SettersUpdateValues)
     EXPECT_EQ(lineFile.getEndLine(), 3);
     EXPECT_EQ(lineFile.getEndCol(), 4);
 }
+
+TEST_F(LineFileTest, SettersWithNegativeValues)
+{
+    LineFile lineFile;
+
+    lineFile.setLine(-1);
+    lineFile.setCol(-2);
+    lineFile.setEndLine(-3);
+    lineFile.setEndCol(-4);
+
+    EXPECT_EQ(lineFile.getLine(), -1);
+    EXPECT_EQ(lineFile.getCol(), -2);
+    EXPECT_EQ(lineFile.getEndLine(), -3);
+    EXPECT_EQ(lineFile.getEndCol(), -4);
+}
+
+TEST_F(LineFileTest, SettersWithZeroValues)
+{
+    LineFile lineFile;
+
+    lineFile.setLine(0);
+    lineFile.setCol(0);
+    lineFile.setEndLine(0);
+    lineFile.setEndCol(0);
+
+    EXPECT_EQ(lineFile.getLine(), 0);
+    EXPECT_EQ(lineFile.getCol(), 0);
+    EXPECT_EQ(lineFile.getEndLine(), 0);
+    EXPECT_EQ(lineFile.getEndCol(), 0);
+}
+
+TEST_F(LineFileTest, SettersWithFileName)
+{
+    LineFile lineFile(1, 2, 3, 4, "test_file.cpp");
+
+    EXPECT_EQ(lineFile.getLine(), 1);
+    EXPECT_EQ(lineFile.getCol(), 2);
+    EXPECT_EQ(lineFile.getEndLine(), 3);
+    EXPECT_EQ(lineFile.getEndCol(), 4);
+    EXPECT_EQ(lineFile.getLineFileAsString(),
+              "[LineFile] Line: 1, Col: 2, End Line: 3, End Col: 4 with file name: test_file.cpp");
+}
+
+TEST_F(LineFileTest, SetFileName)
+{
+    LineFile lineFile;
+    lineFile.setFileName("test_file.cpp");
+
+    EXPECT_EQ(lineFile.getFileName(), "test_file.cpp");
+    EXPECT_EQ(lineFile.getLineFileAsString(),
+              "[LineFile] Line: 0, Col: 0, End Line: 0, End Col: 0 with file name: test_file.cpp");
+}
+
+TEST_F(LineFileTest, EmptyFileName)
+{
+    LineFile lineFile(1, 2, 3, 4, "");
+
+    EXPECT_EQ(lineFile.getLine(), 1);
+    EXPECT_EQ(lineFile.getCol(), 2);
+    EXPECT_EQ(lineFile.getEndLine(), 3);
+    EXPECT_EQ(lineFile.getEndCol(), 4);
+    EXPECT_EQ(lineFile.getLineFileAsString(),
+              "[LineFile] Line: 1, Col: 2, End Line: 3, End Col: 4");
+}

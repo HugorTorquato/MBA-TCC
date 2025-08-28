@@ -16,6 +16,12 @@ LineFile::LineFile(int line, int col, int endLine, int endCol)
     Logger::getInstance().log(getLineFileAsString());
 }
 
+LineFile::LineFile(int line, int col, int endLine, int endCol, const std::string& fileName)
+    : m_line(line), m_col(col), m_endLine(endLine), m_endCol(endCol), m_fileName(fileName)
+{
+    Logger::getInstance().log(getLineFileAsString() + " with file name: " + m_fileName);
+}
+
 int LineFile::getLine() const
 {
     return m_line;
@@ -31,6 +37,11 @@ int LineFile::getEndLine() const
 int LineFile::getEndCol() const
 {
     return m_endCol;
+}
+
+std::string LineFile::getFileName() const
+{
+    return m_fileName;
 }
 
 void LineFile::setLine(int line)
@@ -50,8 +61,14 @@ void LineFile::setEndCol(int endCol)
     m_endCol = endCol;
 }
 
+void LineFile::setFileName(const std::string& fileName)
+{
+    m_fileName = fileName;
+}
+
 std::string LineFile::getLineFileAsString() const
 {
     return "[LineFile] Line: " + std::to_string(m_line) + ", Col: " + std::to_string(m_col) +
-           ", End Line: " + std::to_string(m_endLine) + ", End Col: " + std::to_string(m_endCol);
+           ", End Line: " + std::to_string(m_endLine) + ", End Col: " + std::to_string(m_endCol) +
+           (m_fileName.empty() ? "" : " with file name: " + m_fileName);
 }

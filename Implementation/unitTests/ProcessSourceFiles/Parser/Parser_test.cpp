@@ -695,3 +695,68 @@ TEST_F(ParserTest, Class_ObtainClassObjectFromClassDeclarationParser_WithMultipl
         EXPECT_EQ(baseClassArray[i].second->getLexeme(), expectedNames[i]);
     }
 }
+
+TEST_F(ParserTest, ListIncomingTokens_WithFileName)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::INT, "int", LineFile(1, 1, 0, 0, "main.cpp")));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "var", LineFile(2, 3, 0, 0, "main.cpp")));
+    Parser parser(tokens);
+
+    auto result = parser.ListIncomingTokens();
+    ASSERT_EQ(result.size(), 2);
+    EXPECT_TRUE(result[0].find("LineFile: [LineFile] Line: 1, Col: 1") != std::string::npos);
+    EXPECT_TRUE(result[0].find("main.cpp") != std::string::npos);
+    EXPECT_TRUE(result[1].find("LineFile: [LineFile] Line: 2, Col: 3") != std::string::npos);
+    EXPECT_TRUE(result[1].find("main.cpp") != std::string::npos);
+}
+
+TEST_F(ParserTest, PeekIndex_WithFileName)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::NUMBER, "42", LineFile(10, 5, 0, 0, "test.cpp")));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::PLUS, "+", LineFile(10, 7, 0, 0, "test.cpp")));
+    Parser parser(tokens);
+
+    auto token0 = parser.peekIndex(0);
+    ASSERT_NE(token0, nullptr);
+    EXPECT_EQ(token0->getType(), "NUMBER");
+    EXPECT_EQ(token0->getLexeme(), "42");
+    EXPECT_EQ(token0->getLineFile(),
+              "[LineFile] Line: 10, Col: 5, End Line: 0, End Col: 0 with file name: test.cpp");
+
+    auto token1 = parser.peekIndex(1);
+    ASSERT_NE(token1, nullptr);
+    EXPECT_EQ(token1->getType(), "PLUS");
+    EXPECT_EQ(token1->getLexeme(), "+");
+    EXPECT_EQ(token1->getLineFile(),
+              "[LineFile] Line: 10, Col: 7, End Line: 0, End Col: 0 with file name: test.cpp");
+}
+
+TEST_F(ParserTest, Class_Declaration_WithFileName)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0, "class.cpp")));
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass",
+                                             LineFile(1, 7, 0, 0, "class.cpp")));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(1, 15, 0, 0, "class.cpp")));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(1, 16, 0, 0, "class.cpp")));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_TRUE(classObj->getInherencyArray().empty());
+    EXPECT_EQ(classObj->getClassToken()->getLineFile(),
+              "[LineFile] Line: 1, Col: 7, End Line: 0, End Col: 0 with file name: class.cpp");
+}

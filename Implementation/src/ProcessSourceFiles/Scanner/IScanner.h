@@ -13,5 +13,6 @@ class IScanner
    public:
     virtual ~IScanner() = default;
 
-    virtual std::vector<std::shared_ptr<IToken>> scanTokens(const std::string& rawSourceCode) = 0;
+    virtual std::vector<std::shared_ptr<IToken>> scanTokens(const std::string& rawSourceCode,
+                                                            const std::string& fileName) = 0;
 };
