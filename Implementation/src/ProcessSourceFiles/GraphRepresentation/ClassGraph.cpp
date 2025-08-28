@@ -2,6 +2,26 @@
 
 #include "../../Logger/Log.h"
 
+namespace
+{
+bool buildGraphValidations(const std::shared_ptr<ClassST>& cls)
+{
+    if (!cls)
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::buildGraph] Warning: Null class pointer encountered, skipping.");
+        return false;
+    }
+    if (cls->getClassName().empty())
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::buildGraph] Warning: Class with empty name encountered, skipping.");
+        return false;
+    }
+    return true;
+}
+}  // namespace
+
 std::unordered_set<std::shared_ptr<ClassST>> ClassGraph::getAllClasses() const
 {
     return m_nodes;
@@ -12,25 +32,15 @@ void ClassGraph::buildGraph(const std::vector<std::shared_ptr<ClassST>>& classes
     Logger::getInstance().log("[ClassGraph::buildGraph]");
     for (auto& cls : classes)
     {
-        if(!cls)
-        {
-            Logger::getInstance().log(
-                "[ClassGraph::buildGraph] Warning: Null class pointer encountered, skipping.");
-            continue;
-        }
+        if (buildGraphValidations(cls) == false) continue;
+
         auto className = cls->getClassName();
-        if (className.empty())
-        {
-            Logger::getInstance().log(
-                "[ClassGraph::buildGraph] Warning: Class with empty name encountered, skipping.");
-            continue;
-        }
         Logger::getInstance().log("[ClassGraph::buildGraph] Adding class: " + className);
 
         m_nodes.emplace(cls);
         auto inherencies = cls->getInherencyArray();
 
-        //TODO: Need to ensure that there is no duplicated edges
+        // TODO: Need to ensure that there is no duplicated edges
         for (const auto& [accessTypeToken, baseClassToken] : inherencies)
         {
             Logger::getInstance().log("[ClassGraph::buildGraph] Class: " + className +
