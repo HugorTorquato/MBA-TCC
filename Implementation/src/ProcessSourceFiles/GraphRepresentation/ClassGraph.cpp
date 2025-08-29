@@ -33,6 +33,25 @@ std::vector<std::string> sortReturnVector(const std::vector<std::string>& v)
     std::sort(vCopy.begin(), vCopy.end());
     return vCopy;
 }
+
+bool validateDerivedAndBaseClassNames(const std::string& derived, const std::string& base)
+{
+    if (derived.empty() || base.empty())
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::addEdge] Empty derived or base class name, skipping edge addition.");
+        return false;
+    }
+    if (derived == base)
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::addEdge] Derived and base class names are identical, skipping edge "
+            "addition.");
+        return false;
+    }
+
+    return true;
+}
 }  // namespace
 
 std::unordered_set<std::string> ClassGraph::getAllClasses() const
@@ -99,6 +118,8 @@ void ClassGraph::ensureNode(const std::string& clsName)
 
 void ClassGraph::addEdge(const std::string& derived, const std::string& base)
 {
+    if (!validateDerivedAndBaseClassNames(derived, base)) return;
+
     ensureNode(derived);
     ensureNode(base);
 
