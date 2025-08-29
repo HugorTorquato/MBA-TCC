@@ -211,7 +211,7 @@ TEST_F(ClassGraphTest, DOTandJSONOutputConsistency)
     EXPECT_NE(dot.find("\"X\" -> \"Y\""), std::string::npos);
     EXPECT_NE(dot.find("\"X\" -> \"Z\""), std::string::npos);
 
-    auto json = g.toJson();
+    auto json = g.toJsonAsString();
     EXPECT_NE(json.find("\"X\""), std::string::npos);
     EXPECT_NE(json.find("\"Y\""), std::string::npos);
     EXPECT_NE(json.find("\"Z\""), std::string::npos);
@@ -250,10 +250,10 @@ TEST_F(ClassGraphTest, NodesAndEdgesAfterMultipleAdditions)
     EXPECT_EQ(g.edgeCount(), 3u);  // A->B, C->D, C->E
 }
 
-TEST_F(ClassGraphTest, ToJsonFormatCheck)
+TEST_F(ClassGraphTest, ToJsonAsStringFormatCheck)
 {
     g.addClassWithBases("M", {"N"});
-    auto json = g.toJson();
+    auto json = g.toJsonAsString();
     EXPECT_NE(json.find("\"M\""), std::string::npos);
     EXPECT_NE(json.find("\"N\""), std::string::npos);
     EXPECT_NE(json.find("["), std::string::npos);
@@ -359,4 +359,73 @@ TEST_F(ClassGraphTest, AddClassWithBases_MultipleClassesAndBases)
     EXPECT_EQ(ancestorsH, (std::vector<std::string>{"C", "D", "E", "F", "I"}));
     std::sort(ancestorsH.begin(), ancestorsH.end());
     EXPECT_EQ(ancestorsH, (std::vector<std::string>{"C", "D", "E", "F", "I"}));
+}
+
+TEST_F(ClassGraphTest, ToJsonFormatCheck)
+{
+    g.addClassWithBases("M", {"N"});
+
+    EXPECT_TRUE(g.hasNode("M"));
+    EXPECT_TRUE(g.hasNode("N"));
+    EXPECT_EQ(g.nodeCount(), 2u);
+    EXPECT_EQ(g.edgeCount(), 1u);
+
+    auto json = g.toJson();
+    auto jsonStr = g.toJson().dump();  // convert to string
+
+    EXPECT_NE(jsonStr.find("\"M\""), std::string::npos);
+    EXPECT_NE(jsonStr.find("\"N\""), std::string::npos);
+    EXPECT_NE(jsonStr.find("["), std::string::npos);
+    EXPECT_NE(jsonStr.find("]"), std::string::npos);
+}
+
+// Example:
+// {
+//   "A": ["B", "C"],
+//   "B": [],
+//   "C": ["D"]
+// }
+TEST_F(ClassGraphTest, ToJsonContentCheck)
+{
+    g.addClassWithBases("A", {"B", "C"});
+    g.addClassWithBases("C", {"D"});
+
+    EXPECT_TRUE(g.hasNode("A"));
+    EXPECT_TRUE(g.hasNode("B"));
+    EXPECT_TRUE(g.hasNode("C"));
+    EXPECT_TRUE(g.hasNode("D"));
+    EXPECT_EQ(g.nodeCount(), 4u);
+    EXPECT_EQ(g.edgeCount(), 3u);
+
+    auto json = g.toJson().dump();
+
+    EXPECT_NE(json.find("\"A\""), std::string::npos);
+    EXPECT_NE(json.find("\"B\""), std::string::npos);
+    EXPECT_NE(json.find("\"C\""), std::string::npos);
+    EXPECT_NE(json.find("\"D\""), std::string::npos);
+
+    // Check specific relationships
+    EXPECT_NE(json.find("\"A\":[\"B\",\"C\"]"), std::string::npos);
+    EXPECT_NE(json.find("\"B\":[]"), std::string::npos);
+    EXPECT_NE(json.find("\"C\":[\"D\"]"), std::string::npos);
+    EXPECT_NE(json.find("\"D\":[]"), std::string::npos);
+}
+
+// export to dot file
+TEST_F(ClassGraphTest, ExportToDotFile)
+{
+    g.addClassWithBases("A", {"B", "C"});
+    g.addClassWithBases("C", {"D"});
+
+    EXPECT_TRUE(g.hasNode("A"));
+    EXPECT_TRUE(g.hasNode("B"));
+    EXPECT_TRUE(g.hasNode("C"));
+    EXPECT_TRUE(g.hasNode("D"));
+    EXPECT_EQ(g.nodeCount(), 4u);
+    EXPECT_EQ(g.edgeCount(), 3u);
+
+    // Export to DOT file
+    EXPECT_NO_THROW(g.toDot("test_graph", true));
+
+    std::remove("test_graph.dot");
 }

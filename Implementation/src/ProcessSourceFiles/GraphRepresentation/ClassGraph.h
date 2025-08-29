@@ -24,8 +24,9 @@ class ClassGraph : public IClassGraph
     std::vector<std::string> derivedOf(const std::string& name) const override;  // children
     std::vector<std::string> allAncestors(const std::string& name) const override;
 
-    std::string toDot(const std::string& graphName) const override;
-    std::string toJson() const override;
+    std::string toDot(const std::string& graphName, bool exportToFile = false) const override;
+    std::string toJsonAsString() const override;
+    json toJson() const override;
 
    private:
     // First Time we see this node we ensure that entries exists creating a parent and a children.
