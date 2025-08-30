@@ -107,5 +107,44 @@ class ProcessSourceFiles
                         jsonResult.dump());
                     return crow::response(jsonResult.dump());
                 });
+
+        CROW_ROUTE(app, "/api/v1/processSourceCode")
+            .methods("POST"_method)(
+                [](const crow::request& req)
+                {
+                    Logger::getInstance().log("Accessing /api/v1/processSourceCode route.");
+                    auto body = crow::json::load(req.body);
+
+                    if (!body) return crow::response(400, "Invalid JSON");
+
+                    const std::string source_code = "";
+                    const std::string git_url = body["url"].s();
+
+                    crow::json::wvalue res;
+                    res["message"] = "Received Source Code";
+                    res["length"] = source_code.length();
+
+                    auto readerFactory = [](const std::string& path)
+                    { return std::make_unique<SourceReaderAsString>(path); };
+
+                    // Instanciar o downloader
+                    auto downloader = std::make_shared<DownloadFiles>(
+                        git_url, std::make_unique<CurlHttpClient>());
+                    // Instanciar o scanner
+                    ScannerCoordinator scanner(downloader->downloadURLContentIntoTempFolder(),
+                                               readerFactory);
+                    // Processar o source file e retornar o json
+                    json jsonResult = scanner.downloadAndRetrieveSourceFileContent(git_url);
+
+                    Logger::getInstance().log(
+                        "[ProcessSourceFiles][downloadAndRetreveSourceFileContent] response: " +
+                        jsonResult.dump());
+
+                    // TODO: Add logic to trigger the scanner and parser
+
+
+                    Logger::getInstance().log("Ending /api/v1/processSourceCode route.");
+                    return crow::response(res);
+                });
     }
 };

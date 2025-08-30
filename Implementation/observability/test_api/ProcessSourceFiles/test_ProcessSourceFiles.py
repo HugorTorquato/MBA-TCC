@@ -137,3 +137,16 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
         assert content == expected_content, f"Content - Expected {expected_content}, but got {content} at position {idx}"
         assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
         assert isinstance(content, str), f"Expected string as content, got {type(content)}"
+
+def test_api():
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
+    }
+
+    logger.info(f"test_api")
+    logger.info(f"Input JSON: {input_json}")
+
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    logger.info(f"Response: {response.status_code} - {response.text}")
+    data = response.json()
+    assert response.status_code == 200  
