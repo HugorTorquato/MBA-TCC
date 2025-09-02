@@ -22,7 +22,7 @@ bool isAtEnd(const std::shared_ptr<IToken> token)
 {
     Logger::getInstance().log(" [Parser][isAtEnd] token=" +
                               (token ? token->toString() : "nullptr"));
-    if (token == nullptr) return true;
+    if (!token) return true;
     if (token->getType() == "END_OF_FILE")
     {
         return true;
@@ -209,6 +209,7 @@ std::shared_ptr<CommonParserType> Parser::parse()
     Logger::getInstance().log(" [Parser][parse] m_current=" + std::to_string(m_current));
     try
     {
+        // TODO: Add a loop structure to parse everything when not class or expression
         if (match({TokenType::CLASS}, peekCurrentToken(), m_current))
         {
             Logger::getInstance().log(" [Parser][parse] Class token found, parsing class.");
@@ -224,6 +225,40 @@ std::shared_ptr<CommonParserType> Parser::parse()
         Logger::getInstance().log(" [Parser][parse] Exception: " + std::string(e.what()));
         throw runtime_error("Parse Error: " + std::string(e.what()));
     }
+}
+
+std::vector<std::shared_ptr<CommonParserType>> Parser::parseAll()
+{
+    Logger::getInstance().log(" [Parser][parse] Starting parse process.");
+
+    std::vector<std::shared_ptr<CommonParserType>> parsedTypes;
+    Logger::getInstance().log(" [Parser][parse] m_current=" + std::to_string(m_current));
+
+    while (!isAtEnd(peekCurrentToken()))
+    {
+        if (match({TokenType::CLASS}, peekCurrentToken(), m_current))
+        {
+            Logger::getInstance().log(" [Parser][parse] Class token found, parsing class.");
+            parsedTypes.push_back(classDeclaration());
+        }
+        // TODO: Not covering 100% of the cases yet. Let this parse looking only for classes.
+        //  else if (auto expr = expression())
+        //  {
+        //      parsedTypes.push_back(expr);
+        //  }
+        else
+        {
+            if (!isAtEnd(peekCurrentToken()))
+            {
+                ::advance(m_current);
+            }
+            else
+            {
+                continue;
+            }
+        }
+    }
+    return parsedTypes;
 }
 
 std::shared_ptr<ClassST> Parser::classDeclaration()
@@ -430,5 +465,7 @@ std::shared_ptr<Expression> Parser::primary()
     }
 
     error(currentToken, "Expect expression.");
+    Logger::getInstance().log(
+        " [Parser][primary] No valid primary expression found, returning nullptr.");
     return nullptr;
 }

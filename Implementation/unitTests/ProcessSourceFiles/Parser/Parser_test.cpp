@@ -780,10 +780,17 @@ TEST_F(ParserTest, Class_Declaration_WithPragmaOnce)
     tokens.push_back(std::make_shared<Token>(TokenType::SEMICOLON, ";", LineFile(3, 14, 0, 0)));
 
     Parser parser(tokens);
-    auto expr = parser.parse();
+    auto expr = parser.parseAll();
 
-    ASSERT_NE(expr, nullptr);
-    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_FALSE(expr.empty());
+    //     Here you’re assuming that expr[0] is the pragma-related parse result and expr[1] is the
+    //     class.
+    // But in your current parseAll() implementation, you only push back things returned by
+    // classDeclaration() (lines 242+):
+    auto classexpr = expr[0];  // Get the class declaration, ignoring the pragma once
+
+    ASSERT_NE(classexpr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(classexpr);
     ASSERT_NE(classObj, nullptr);
     EXPECT_EQ(classObj->getClassName(), "hugo");
     EXPECT_TRUE(classObj->getInherencyArray().empty());
