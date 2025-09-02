@@ -760,3 +760,31 @@ TEST_F(ParserTest, Class_Declaration_WithFileName)
     EXPECT_EQ(classObj->getClassToken()->getLineFile(),
               "[LineFile] Line: 1, Col: 7, End Line: 0, End Col: 0 with file name: class.cpp");
 }
+
+// #pragma once
+
+// class hugo {
+
+// };
+
+TEST_F(ParserTest, Class_Declaration_WithPragmaOnce)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::HASH, "#", LineFile(1, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PRAGMA, "pragma", LineFile(1, 2, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::ONCE, "once", LineFile(1, 9, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(3, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "hugo", LineFile(3, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(3, 12, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(3, 13, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::SEMICOLON, ";", LineFile(3, 14, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parse();
+
+    ASSERT_NE(expr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(expr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "hugo");
+    EXPECT_TRUE(classObj->getInherencyArray().empty());
+}

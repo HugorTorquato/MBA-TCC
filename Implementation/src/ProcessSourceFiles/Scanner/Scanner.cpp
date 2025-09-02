@@ -299,6 +299,9 @@ void Scanner::scanToken(const std::string& sourceCode, int& start, int& current,
         case '*':
             addToken(TokenType::STAR, m_tokens, "*", line, col, fileName);
             break;
+        case '#':
+            addToken(TokenType::HASH, m_tokens, "#", line, col, fileName);
+            break;
         // 2 char operators
         case '!':
             if (match('=', sourceLength, current, sourceCode))
