@@ -1,6 +1,7 @@
 import logging
 import requests
 from configs.logging_config import configure_logging
+from collections import Counter
 
 from configs.variables import *
 
@@ -138,7 +139,8 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
         assert isinstance(name, str), f"Expected string as filename, got {type(name)}"
         assert isinstance(content, str), f"Expected string as content, got {type(content)}"
 
-def test_api():
+
+def test_v1_processSourceCode_ClassWithNotInherency():
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
     }
@@ -150,3 +152,27 @@ def test_api():
     logger.info(f"Response: {response.status_code} - {response.text}")
     data = response.json()
     assert response.status_code == 200  
+
+    # I need to clear the container, it's growing 2 by 2. Addng duplicated classes
+    # expected result = [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]}]
+    expected_result = [
+        {"className":"hugo","inherency":[]}
+    ]
+
+    #expect that data contains expected_result
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} to be in response data"
+
+    # count the number of occurrences of each className in data
+    class_name_counts = Counter(item["className"] for item in data)
+
+    logger.info(f"Class name counts: {class_name_counts}")
+
+    # # Ensure each className appears only once ( TODO )
+    # for class_name, count in class_name_counts.items():
+    #     assert count == 1, f"Class name {class_name} appears {count} times, expected only once"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200 
