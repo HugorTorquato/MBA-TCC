@@ -8,6 +8,6 @@ class Tayna {
 
 };
 
-class Derived : public hugo, public Tayna {
+class Derived : public hugo, private Tayna {
 
 };
