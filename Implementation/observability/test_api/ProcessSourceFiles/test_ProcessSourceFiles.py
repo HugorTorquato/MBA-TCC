@@ -140,12 +140,12 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
         assert isinstance(content, str), f"Expected string as content, got {type(content)}"
 
 
-def test_v1_processSourceCode_ClassWithNotInherency():
+def test_v1_processSourceCode_ClassWithNoInherency():
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
     }
 
-    logger.info(f"test_api")
+    logger.info(f"test_v1_processSourceCode_ClassWithNoInherency")
     logger.info(f"Input JSON: {input_json}")
 
     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
@@ -157,6 +157,46 @@ def test_v1_processSourceCode_ClassWithNotInherency():
     # expected result = [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]}]
     expected_result = [
         {"className":"hugo","inherency":[]}
+    ]
+
+    #expect that data contains expected_result
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} to be in response data"
+
+    # count the number of occurrences of each className in data
+    class_name_counts = Counter(item["className"] for item in data)
+
+    logger.info(f"Class name counts: {class_name_counts}")
+
+    # # Ensure each className appears only once ( TODO )
+    # for class_name, count in class_name_counts.items():
+    #     assert count == 1, f"Class name {class_name} appears {count} times, expected only once"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200 
+
+def test_v1_processSourceCode_ClassWithInherency():
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCodeWithInherency"
+    }
+
+    logger.info(f"test_v1_processSourceCode_ClassWithInherency")
+    logger.info(f"Input JSON: {input_json}")
+
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    logger.info(f"Response: {response.status_code} - {response.text}")
+    data = response.json()
+    assert response.status_code == 200  
+
+    # I need to clear the container, it's growing 2 by 2. Addng duplicated classes
+    # classesJson: [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]}]
+
+    expected_result = [
+        {"className":"hugo","inherency":[]},
+        {"className":"Tayna","inherency":[]},
+        {"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"private","type":"PRIVATE"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]}
     ]
 
     #expect that data contains expected_result
