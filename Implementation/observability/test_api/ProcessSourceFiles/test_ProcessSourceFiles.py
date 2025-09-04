@@ -216,3 +216,40 @@ def test_v1_processSourceCode_ClassWithInherency():
     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
 
     assert response.status_code == 200 
+
+def test_v1_processSourceCode_ClassWithInherencyDifferentFiles():
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/ThreeFileSourceCodeWithInherency"
+    }
+
+    logger.info(f"test_v1_processSourceCode_ClassWithInherencyDifferentFiles")
+    logger.info(f"Input JSON: {input_json}")
+
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    logger.info(f"Response: {response.status_code} - {response.text}")
+    data = response.json()
+    assert response.status_code == 200  
+
+    expected_result = [
+        {"className":"hugo","inherency":[]},
+        {"className":"bla","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}}]}
+    ]
+
+    #expect that data contains expected_result
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} to be in response data"
+
+    # count the number of occurrences of each className in data
+    class_name_counts = Counter(item["className"] for item in data)
+
+    logger.info(f"Class name counts: {class_name_counts}")
+
+    # # Ensure each className appears only once ( TODO )
+    # for class_name, count in class_name_counts.items():
+    #     assert count == 1, f"Class name {class_name} appears {count} times, expected only once"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
