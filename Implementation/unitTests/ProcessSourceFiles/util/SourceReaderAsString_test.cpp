@@ -10,17 +10,23 @@
 class SourceReaderAsStringTest : public ::testing::Test
 {
    protected:
-    const std::filesystem::path testFilePath = "/app/temp/test.txt";
-    const std::string testFilePathName = "test.txt";
+    const std::filesystem::path testFilePath = "/app/temp/test.h";
+    const std::filesystem::path testInvalidFilePath = "/app/temp/test.txt";
+    const std::string testFilePathName = "test.h";
+    const std::string testInvalidFilePathName = "test.txt";
     const std::string testFileContent = "This is a test file content.";
 
     // Helper function to create a test file with specified content
     void createTestFile(const std::string& content)
     {
         std::filesystem::create_directories(testFilePath.parent_path());
+        std::filesystem::create_directories(testInvalidFilePath.parent_path());
         std::ofstream testFile(testFilePath);
+        std::ofstream testInvalidFile(testInvalidFilePath);
         testFile << content;
         testFile.close();
+        testInvalidFile << content;
+        testInvalidFile.close();
     }
 
     // Helper function to clean up the test file
@@ -45,7 +51,7 @@ TEST_F(SourceReaderAsStringTest, ReadFilePathEmpty)
 TEST_F(SourceReaderAsStringTest, ReadFileNotFound)
 {
     SourceReaderAsString sourceReader(testFilePathName);
-    EXPECT_THROW(sourceReader.readFile("non_existent_file.txt"), std::runtime_error);
+    EXPECT_THROW(sourceReader.readFile("non_existent_file.h"), std::runtime_error);
 }
 
 // Test for reading file content
@@ -139,6 +145,18 @@ TEST_F(SourceReaderAsStringTest, ReadFileWithWhitespaceOnly)
     std::string content = sourceReader.readFile(testFilePathName);
 
     EXPECT_EQ(content, whitespaceContent);
+
+    removeTestFile();
+}
+
+TEST_F(SourceReaderAsStringTest, ReadFileUnsupportedFileType)
+{
+    createTestFile(testFileContent);
+
+    SourceReaderAsString sourceReader(testInvalidFilePathName);
+    std::string content = sourceReader.readFile(testInvalidFilePathName);
+
+    EXPECT_EQ(content, "");  // Expecting empty content for unsupported file type
 
     removeTestFile();
 }
