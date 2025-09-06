@@ -33,6 +33,11 @@ std::string Token::getLineFile() const
     return m_lineFile.getLineFileAsString();
 }
 
+LineFile Token::getLineFileObj() const
+{
+    return m_lineFile;
+}
+
 std::string Token::toString() const
 {
     return "Token Type: " + TokenTypeNameSpace::toString(m_type) + ", Lexeme: " + m_lexeme +
