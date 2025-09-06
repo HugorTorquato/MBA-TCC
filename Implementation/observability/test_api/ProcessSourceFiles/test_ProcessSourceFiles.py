@@ -275,6 +275,287 @@ def test_v1_processSourceCode_ClassWithInherencyDifferentFiles(request):
 
     assert response.status_code == 200
 
+def test_v1_processSourceCode_ClassWithMultipleInherency(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/ClassWithMultipleInherency"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithMultipleInherency")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    expected_result = [
+        {"className": "A", "inherency": []},
+        {"className": "B", "inherency": []},
+        {"className": "C", "inherency": [
+            {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "A", "type": "IDENTIFIER"}},
+            {"first": {"lexeme": "private", "type": "PRIVATE"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}},
+        ]},
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithChain(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/chain"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithChain")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    expected_result = [
+        {"className": "A", "inherency": []},
+        {"className": "B", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "A", "type": "IDENTIFIER"}}]},
+        {"className": "C", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}}]},
+        {"className": "D", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "C", "type": "IDENTIFIER"}}]},
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithDiamond(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/diamond"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithDiamond")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    expected_result = [
+        {"className": "A", "inherency": []},
+        {"className": "B", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "A", "type": "IDENTIFIER"}}]},
+        {"className": "C", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "A", "type": "IDENTIFIER"}}]},
+        {"className": "D", "inherency": [
+            {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}},
+            {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "C", "type": "IDENTIFIER"}}
+        ]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithForward_and_external(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/forward_and_external"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithForward_and_external")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    expected_result = [
+        {"className": "ExternalBase", "inherency": []},
+        {"className": "Derived", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "ExternalBase", "type": "IDENTIFIER"}}]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithmultiple_inheritance(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/multiple_inheritance"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithmultiple_inheritance")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    expected_result = [
+        {"className": "A", "inherency": []},
+        {"className": "B", "inherency": []},
+        {"className": "C", "inherency": [
+            {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "A", "type": "IDENTIFIER"}},
+            {"first": {"lexeme": "private", "type": "PRIVATE"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}},
+        ]},
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+# TODO: Not supported yet - need to handle nested classes in the parser - Process the statement to query classes
+# def test_v1_processSourceCode_ClassWithNested(request):
+#     input_json = {
+#         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/nested"
+#     }
+
+#     logger.info("test_v1_processSourceCode_ClassWithNested")
+#     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+#     data = response.json()
+#     assert response.status_code == 200
+
+#     request.node.last_response = data  # register for JSON dump
+
+#     expected_result = [
+#         {"className": "Outer", "inherency": []},
+#         {"className": "Inner", "inherency": []},
+#         {"className": "DerivedNested", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Outer::Inner", "type": "IDENTIFIER"}}]}
+#     ]
+
+#     for expected in expected_result:
+#         assert expected in data, f"Expected {expected} in response"
+
+#     logger.info(f"RemoveTempFolder")
+#     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+#     assert response.status_code == 200
+
+# TODO: Not supported yet - need to handle structs in the parser - Process the statement to query classes
+# TODO: Not supported yet - need to handle default visibility in the parser - Process the statement to query classes
+# def test_v1_processSourceCode_ClassWithStruct_default(request):
+#     input_json = {
+#         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/struct_default"
+#     }
+
+#     logger.info("test_v1_processSourceCode_ClassWithStruct_default")
+#     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+#     data = response.json()
+#     assert response.status_code == 200
+
+#     request.node.last_response = data  # register for JSON dump
+
+#     expected_result = [
+#         {"className": "Base", "inherency": []},
+#         {"className": "S", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Base", "type": "IDENTIFIER"}}]},
+#         {"className": "Cx", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Base", "type": "IDENTIFIER"}}]}
+#     ]
+
+#     for expected in expected_result:
+#         assert expected in data, f"Expected {expected} in response"
+
+#     logger.info(f"RemoveTempFolder")
+#     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+#     assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithTemplate_base(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/template_base"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithTemplate_base")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    # TODO: Is it suppose to be BaseT or BaseT<T> or BaseT<int> ?
+    expected_result = [
+        {"className": "BaseT", "inherency": []},
+        {"className": "Derived", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "BaseT", "type": "IDENTIFIER"}}]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+# # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
+# def test_v1_processSourceCode_ClassWithVirtual_diamond(request):
+#     input_json = {
+#         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/virtual_diamond"
+#     }
+
+#     logger.info("test_v1_processSourceCode_ClassWithVirtual_diamond")
+#     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+#     data = response.json()
+#     assert response.status_code == 200
+
+#     request.node.last_response = data  # register for JSON dump
+
+    
+#     expected_result = [
+#         {"className": "A", "inherency": []},
+#         # {"className": "B", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "virtual A", "type": "IDENTIFIER"}}]},
+#         # {"className": "C", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "virtual A", "type": "IDENTIFIER"}}]},
+#         {"className": "D", "inherency": [
+#             {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}},
+#             {"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "C", "type": "IDENTIFIER"}}
+#         ]}
+#     ]
+
+#     for expected in expected_result:
+#         assert expected in data, f"Expected {expected} in response"
+
+#     logger.info(f"RemoveTempFolder")
+#     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+#     assert response.status_code == 200
+
+def test_v1_processSourceCode_ClassWithSingle_inheritance(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/single_inheritance"
+    }
+
+    logger.info("test_v1_processSourceCode_ClassWithSingle_inheritance")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
+    expected_result = [
+        {"className": "B", "inherency": []},
+        {"className": "A", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "B", "type": "IDENTIFIER"}}]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+
+
 # def test_v1_processSourceCode_LargerProject():
 #     input_json = {
 #         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation"
