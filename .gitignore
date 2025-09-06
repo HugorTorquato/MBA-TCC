@@ -118,3 +118,6 @@ coverage/
 
 .env
 /app/temp
+
+# ignore test output files
+**/api_test_results/

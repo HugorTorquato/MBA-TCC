@@ -9,7 +9,7 @@ from configs.variables import *
 configure_logging()
 logger = logging.getLogger("[ProcessSourceFilesTests]")
 
-def test_v1_listFilesInUrl_SimpleMainFile():
+def test_v1_listFilesInUrl_SimpleMainFile(request):
 
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/4---API-Observability-and-Tests/Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleMainFile"
@@ -17,6 +17,8 @@ def test_v1_listFilesInUrl_SimpleMainFile():
 
     response = requests.post(f"{BASE_URL}/api/v1/listFilesInUrl", json=input_json)
     data = response.json()
+    # register so fixture can dump automatically
+    request.node.last_response = data
     
     # Response is valid JSON and not empty
     assert response.status_code == 200  
@@ -27,7 +29,7 @@ def test_v1_listFilesInUrl_SimpleMainFile():
         assert item["name"] == "main.cpp", f"Expected name 'main.cpp', but got {item['name']}"
         assert item["type"] == "file", f"Expected a file, but got {item['type']}"
 
-def test_v1_downloadFilesInUrl_EmptyProjectFoldeStructure():
+def test_v1_downloadFilesInUrl_EmptyProjectFoldeStructure(request):
 
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/5---Download-gitHub-files-in-a-local-temp-folder/Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure"
@@ -39,6 +41,8 @@ def test_v1_downloadFilesInUrl_EmptyProjectFoldeStructure():
 
     data = response.json()
     assert isinstance(data, dict), "Expected a dictionary response"
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     expected_order = [
         ("File1.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp", "Implementation/observability/source_code_for_testing/ProcessSourceFiles/EmptyProjectFoldeStructure/File1.cpp"),
@@ -66,7 +70,7 @@ def test_v1_downloadFilesInUrl_EmptyProjectFoldeStructure():
 
     assert response.status_code == 200 
 
-def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
+def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment(request):
 
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests"
@@ -77,6 +81,9 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
     
     # Response is valid JSON and not empty
     assert response.status_code == 200  
+
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     expected_order = [
         ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp",
@@ -99,6 +106,9 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
     data = response.json()
     assert response.status_code == 200  
 
+    # register so fixture can dump automatically
+    request.node.last_response = data
+
     expected_result = [
         ("main.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/SimpleSorceExampleForReaderTests/main.cpp","// First Example only with text content that must be displayed in the source reader as comment")
     ]
@@ -115,7 +125,7 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment():
 
     assert response.status_code == 200 
 
-def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Files():
+def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Files(request):
 
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
@@ -124,6 +134,9 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
     response = requests.post(f"{BASE_URL}/api/v1/downloadAndRetreveSourceFileContent", json=input_json)
     data = response.json()
     assert response.status_code == 200  
+
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     expected_result = [
         ("classDef.h:Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode/classDef.h",
@@ -140,7 +153,7 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
         assert isinstance(content, str), f"Expected string as content, got {type(content)}"
 
 
-def test_v1_processSourceCode_ClassWithNoInherency():
+def test_v1_processSourceCode_ClassWithNoInherency(request):
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
     }
@@ -152,6 +165,9 @@ def test_v1_processSourceCode_ClassWithNoInherency():
     logger.info(f"Response: {response.status_code} - {response.text}")
     data = response.json()
     assert response.status_code == 200  
+
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     # I need to clear the container, it's growing 2 by 2. Addng duplicated classes
     # expected result = [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]}]
@@ -177,7 +193,7 @@ def test_v1_processSourceCode_ClassWithNoInherency():
 
     assert response.status_code == 200 
 
-def test_v1_processSourceCode_ClassWithInherency():
+def test_v1_processSourceCode_ClassWithInherency(request):
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCodeWithInherency"
     }
@@ -189,6 +205,9 @@ def test_v1_processSourceCode_ClassWithInherency():
     logger.info(f"Response: {response.status_code} - {response.text}")
     data = response.json()
     assert response.status_code == 200  
+
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     # I need to clear the container, it's growing 2 by 2. Addng duplicated classes
     # classesJson: [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]}]
@@ -217,7 +236,7 @@ def test_v1_processSourceCode_ClassWithInherency():
 
     assert response.status_code == 200 
 
-def test_v1_processSourceCode_ClassWithInherencyDifferentFiles():
+def test_v1_processSourceCode_ClassWithInherencyDifferentFiles(request):
     input_json = {
         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/ThreeFileSourceCodeWithInherency"
     }
@@ -229,6 +248,9 @@ def test_v1_processSourceCode_ClassWithInherencyDifferentFiles():
     logger.info(f"Response: {response.status_code} - {response.text}")
     data = response.json()
     assert response.status_code == 200  
+
+    # register so fixture can dump automatically
+    request.node.last_response = data
 
     expected_result = [
         {"className":"hugo","inherency":[]},
@@ -253,3 +275,14 @@ def test_v1_processSourceCode_ClassWithInherencyDifferentFiles():
 
     assert response.status_code == 200
 
+# def test_v1_processSourceCode_LargerProject():
+#     input_json = {
+#         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation"
+#     }
+#     logger.info(f"test_v1_processSourceCode_LargerProject")
+#     logger.info(f"Input JSON: {input_json}")
+
+#     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+#     logger.info(f"Response: {response.status_code} - {response.text}")
+#     data = response.json()
+#     assert response.status_code == 200  
