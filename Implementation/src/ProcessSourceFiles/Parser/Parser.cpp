@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "../../Logger/Log.h"
+#include "../Scanner/Token.h"  // This is wrong.. too much couplig with Token
 
 using std::runtime_error;
 
@@ -299,7 +300,53 @@ std::shared_ptr<ClassST> Parser::classDeclaration()
                     " [Parser][classDeclaration] Parent class access type found.");
                 // Consume the access type token
                 auto parentClassAccessType = previous();
-                auto parentClassIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
+                // advance();
+
+                Logger::getInstance().log(
+                    " [Parser][ClassDeclaration] peekCurrentToken() value : " +
+                    (peekCurrentToken() ? peekCurrentToken()->toString() : "nullptr"));
+
+                // class ParserTest : public ::testing::Test
+                std::string groupedTokenTypes = "";
+                while (
+                    match({TokenType::IDENTIFIER, TokenType::COLON}, peekCurrentToken(), m_current))
+                {
+                    auto classIdentifierToAppend = previous();
+
+                    Logger::getInstance().log(
+                        " [Parser][ClassDeclaration] classIdentifierToAppend is valid : " +
+                        (classIdentifierToAppend ? classIdentifierToAppend->toString()
+                                                 : "nullptr"));
+
+                    groupedTokenTypes += classIdentifierToAppend->getLexeme();
+
+                    Logger::getInstance().log(" [Parser][ClassDeclaration] groupedTokenTypes -> " +
+                                              groupedTokenTypes);
+                }
+
+                Logger::getInstance().log(
+                    " [Parser][ClassDeclaration] Final groupedTokenTypes -> " + groupedTokenTypes);
+
+                // create token with lexeme groupedTokenTypes and type IDENTIFIER
+                std::shared_ptr<IToken> parentClassIdentifier;
+                if (!groupedTokenTypes.empty())
+                {
+                    Logger::getInstance().log(" [Parser][ClassDeclaration] not empty -> " +
+                                              groupedTokenTypes);
+                    parentClassIdentifier = std::make_shared<Token>(
+                        TokenType::IDENTIFIER, groupedTokenTypes, currentToken->getLineFileObj());
+                }
+                else
+                {
+                    Logger::getInstance().log(" [Parser][ClassDeclaration] empty -> " +
+                                              groupedTokenTypes);
+                    parentClassIdentifier = consume(TokenType::IDENTIFIER, "Expect class name.");
+                }
+
+                if (!parentClassIdentifier)
+                {
+                    error(currentToken, "Expect class name.");
+                }
 
                 classObject->addInherencyToClassObject(parentClassAccessType,
                                                        parentClassIdentifier);

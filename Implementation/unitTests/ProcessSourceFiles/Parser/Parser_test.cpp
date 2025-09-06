@@ -795,3 +795,37 @@ TEST_F(ParserTest, Class_Declaration_WithPragmaOnce)
     EXPECT_EQ(classObj->getClassName(), "hugo");
     EXPECT_TRUE(classObj->getInherencyArray().empty());
 }
+
+// class MyClass : public ::testing::Test
+TEST_F(ParserTest, Class_Declaration_With_InherencyDiferentThanIdentifier)
+{
+    std::vector<std::shared_ptr<IToken>> tokens;
+    tokens.push_back(std::make_shared<Token>(TokenType::CLASS, "class", LineFile(1, 1, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MyClass", LineFile(1, 7, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 15, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::PUBLIC, "public", LineFile(1, 17, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 24, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 25, 0, 0)));
+    tokens.push_back(
+        std::make_shared<Token>(TokenType::IDENTIFIER, "testing", LineFile(1, 26, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 33, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::COLON, ":", LineFile(1, 34, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::IDENTIFIER, "Test", LineFile(1, 35, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::LEFT_BRACE, "{", LineFile(2, 1, 0, 0)));
+    tokens.push_back(std::make_shared<Token>(TokenType::RIGHT_BRACE, "}", LineFile(3, 1, 0, 0)));
+
+    Parser parser(tokens);
+    auto expr = parser.parseAll();
+    ASSERT_FALSE(expr.empty());
+    auto classexpr = expr[0];  // Get the class declaration, ignoring the pragma once
+
+    ASSERT_NE(classexpr, nullptr);
+    auto classObj = std::dynamic_pointer_cast<ClassST>(classexpr);
+    ASSERT_NE(classObj, nullptr);
+    EXPECT_EQ(classObj->getClassName(), "MyClass");
+    EXPECT_FALSE(classObj->getInherencyArray().empty());
+    auto baseClassArray = classObj->getInherencyArray();
+    std::vector<std::string> expectedNames = {"::testing::Test"};
+    EXPECT_EQ(baseClassArray[0].second->getLexeme(), "::testing::Test");
+}
