@@ -1,6 +1,7 @@
 #include "ClassGraph.h"
 
 #include <algorithm>
+#include <fstream>
 #include <stack>
 #include <string>
 #include <unordered_set>
@@ -32,6 +33,39 @@ std::vector<std::string> sortReturnVector(const std::vector<std::string>& v)
     auto vCopy = v;
     std::sort(vCopy.begin(), vCopy.end());
     return vCopy;
+}
+
+bool validateDerivedAndBaseClassNames(const std::string& derived, const std::string& base)
+{
+    if (derived.empty() || base.empty())
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::addEdge] Empty derived or base class name, skipping edge addition.");
+        return false;
+    }
+    if (derived == base)
+    {
+        Logger::getInstance().log(
+            "[ClassGraph::addEdge] Derived and base class names are identical, skipping edge "
+            "addition.");
+        return false;
+    }
+
+    return true;
+}
+
+void exportToDotFile(const std::string& filename, const std::string& content, bool exportToFile)
+{
+    if (exportToFile)
+    {
+        std::ofstream out(filename + ".dot");
+        Logger::getInstance().log("[ClassGraph::toDot] Exporting DOT to file: " + filename);
+        if (!out)
+        {
+            throw std::runtime_error("Could not open file: " + filename);
+        }
+        out << content;
+    }
 }
 }  // namespace
 
@@ -99,6 +133,8 @@ void ClassGraph::ensureNode(const std::string& clsName)
 
 void ClassGraph::addEdge(const std::string& derived, const std::string& base)
 {
+    if (!validateDerivedAndBaseClassNames(derived, base)) return;
+
     ensureNode(derived);
     ensureNode(base);
 
@@ -255,7 +291,7 @@ std::vector<std::string> ClassGraph::allAncestors(const std::string& name) const
     return sortReturnVector(result);
 }
 
-std::string ClassGraph::toDot(const std::string& graphName) const
+std::string ClassGraph::toDot(const std::string& graphName, bool exportToFile) const
 {
     Logger::getInstance().log("[ClassGraph::toDot] Generating DOT representation for graph: " +
                               graphName);
@@ -278,10 +314,13 @@ std::string ClassGraph::toDot(const std::string& graphName) const
     }
     out += "}\n";
     Logger::getInstance().log("[ClassGraph::toDot] DOT generation complete.");
+
+    exportToDotFile(graphName, out, exportToFile);
     return out;
 }
 
-std::string ClassGraph::toJson() const
+// TODO: convert this to json output
+std::string ClassGraph::toJsonAsString() const
 {
     Logger::getInstance().log("[ClassGraph::toJson] Generating JSON representation of the graph.");
     std::string out = "{";
@@ -317,4 +356,45 @@ std::string ClassGraph::toJson() const
     out += "}";
     Logger::getInstance().log("[ClassGraph::toJson] JSON generation complete.");
     return out;
+}
+
+// json responseResult = json::object();
+//  Returns a nlohmann::json object representing the class graph.
+//  The JSON object maps each class name to an array of its base class names.
+//  Example:
+//  {
+//    "A": ["B", "C"],
+//    "B": [],
+//    "C": ["D"]
+//  }
+json ClassGraph::toJson() const
+{
+    Logger::getInstance().log(
+        "[ClassGraph::toJsonObject] Generating JSON object representation of the graph.");
+    nlohmann::json result = nlohmann::json::object();
+
+    // deterministic order
+    std::vector<std::string> nodesVec{m_nodes.begin(), m_nodes.end()};
+    std::sort(nodesVec.begin(), nodesVec.end());
+
+    for (const auto& n : nodesVec)
+    {
+        Logger::getInstance().log("[ClassGraph::toJsonObject] Processing node: " + n);
+        nlohmann::json bases = nlohmann::json::array();
+        auto it = m_parents.find(n);
+        if (it != m_parents.end())
+        {
+            auto v = it->second;
+            std::sort(v.begin(), v.end());
+            for (const auto& base : v)
+            {
+                Logger::getInstance().log("[ClassGraph::toJsonObject] Adding parent: " + base +
+                                          " to node: " + n);
+                bases.push_back(base);
+            }
+        }
+        result[n] = bases;
+    }
+    Logger::getInstance().log("[ClassGraph::toJsonObject] JSON object generation complete.");
+    return result;
 }

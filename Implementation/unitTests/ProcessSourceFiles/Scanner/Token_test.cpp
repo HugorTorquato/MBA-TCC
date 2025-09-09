@@ -72,3 +72,13 @@ TEST_F(TokenTest, ToStringWithDefaultConstructor)
 }
 
 // TODO: Add more tests with valid tokens and valid line files
+
+TEST_F(TokenTest, GetLineFileObjReturnsCorrectLineFileObject)
+{
+    Token token(TokenType::IDENTIFIER, "myVar", DefaultLineFile);
+    LineFile lineFile = token.getLineFileObj();
+    EXPECT_EQ(lineFile.getLine(), 1);
+    EXPECT_EQ(lineFile.getCol(), 2);
+    EXPECT_EQ(lineFile.getEndLine(), 3);
+    EXPECT_EQ(lineFile.getEndCol(), 4);
+}

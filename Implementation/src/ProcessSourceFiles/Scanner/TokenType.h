@@ -125,6 +125,9 @@ enum class TokenType
     WHILE,
     XOR,
     XOR_EQ,
+    HASH,
+    PRAGMA,
+    ONCE,
     // Not Defined
     UNKNOWN,
     END_OF_FILE
@@ -366,6 +369,12 @@ inline std::string toString(TokenType type)
             return "XOR";
         case TokenType::XOR_EQ:
             return "XOR_EQ";
+        case TokenType::HASH:
+            return "HASH";
+        case TokenType::PRAGMA:
+            return "PRAGMA";
+        case TokenType::ONCE:
+            return "ONCE";
         case TokenType::END_OF_FILE:
             return "END_OF_FILE";
         default:
@@ -473,5 +482,8 @@ static std::unordered_map<std::string, TokenType> keywordsMap = {
     {"plus", TokenType::PLUS},
     {"semicolon", TokenType::SEMICOLON},
     {"slash", TokenType::SLASH},
+    {"hash", TokenType::HASH},
+    {"pragma", TokenType::PRAGMA},
+    {"once", TokenType::ONCE},
     {"star", TokenType::STAR}};
 };  // namespace TokenTypeNameSpace

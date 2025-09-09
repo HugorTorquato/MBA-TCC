@@ -7,6 +7,9 @@
 #include <vector>
 
 #include "../../../src/ProcessSourceFiles/Scanner/Token.h"
+#include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
+
+using json = nlohmann::json;
 
 class ClassSTTest : public ::testing::Test
 {
@@ -330,4 +333,141 @@ TEST_F(ClassSTTest, ClassST_AddInherency_ValidAccessTypeAndClassName_WithFileNam
     EXPECT_EQ(baseClassArray.front().second->getLexeme(), "BaseClass");
     EXPECT_EQ(baseClassArray.front().second->getLineFile(),
               DefaultLineFileWithFileName.getLineFileAsString());
+}
+
+TEST_F(ClassSTTest, ExportClassWithoutInherency)
+{
+    // Arrange
+    ClassST classST("NoBase");
+
+    // Act
+    json classInfo;
+    classInfo["className"] = classST.getClassName();
+    classInfo["inherency"] = json::array();
+
+    // Assert
+    EXPECT_EQ(classInfo["className"], "NoBase");
+    EXPECT_TRUE(classInfo["inherency"].empty());
+}
+
+TEST_F(ClassSTTest, ExportClassWithSingleInherency)
+{
+    // Arrange
+    std::shared_ptr<IToken> classToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Derived", DefaultLineFile);
+    ClassST classST(classToken);
+
+    std::shared_ptr<IToken> accessToken =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFile);
+    std::shared_ptr<IToken> baseClassToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Base", DefaultLineFile);
+
+    classST.addInherencyToClassObject(accessToken, baseClassToken);
+
+    // Act
+    json inherencyArray = json::array();
+    for (const auto& pair : classST.getInherencyArray())
+    {
+        json entry;
+        entry["access"] = pair.first->getLexeme();
+        entry["baseClass"] = pair.second->getLexeme();
+        inherencyArray.push_back(entry);
+    }
+
+    json classInfo;
+    classInfo["className"] = classST.getClassName();
+    classInfo["inherency"] = inherencyArray;
+
+    // Assert
+    EXPECT_EQ(classInfo["className"], "Derived");
+    ASSERT_EQ(classInfo["inherency"].size(), 1);
+    EXPECT_EQ(classInfo["inherency"][0]["access"], "public");
+    EXPECT_EQ(classInfo["inherency"][0]["baseClass"], "Base");
+}
+
+TEST_F(ClassSTTest, ExportClassWithMultipleInherencies)
+{
+    // Arrange
+    std::shared_ptr<IToken> classToken =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "MultiDerived", DefaultLineFile);
+    ClassST classST(classToken);
+
+    std::shared_ptr<IToken> publicToken =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFile);
+    std::shared_ptr<IToken> protectedToken =
+        std::make_shared<Token>(TokenType::PROTECTED, "protected", DefaultLineFile);
+
+    std::shared_ptr<IToken> base1 =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Base1", DefaultLineFile);
+    std::shared_ptr<IToken> base2 =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Base2", DefaultLineFile);
+
+    classST.addInherencyToClassObject(publicToken, base1);
+    classST.addInherencyToClassObject(protectedToken, base2);
+
+    // Act
+    json inherencyArray = json::array();
+    for (const auto& pair : classST.getInherencyArray())
+    {
+        json entry;
+        entry["access"] = pair.first->getLexeme();
+        entry["baseClass"] = pair.second->getLexeme();
+        inherencyArray.push_back(entry);
+    }
+
+    json classInfo;
+    classInfo["className"] = classST.getClassName();
+    classInfo["inherency"] = inherencyArray;
+
+    // Assert
+    EXPECT_EQ(classInfo["className"], "MultiDerived");
+    ASSERT_EQ(classInfo["inherency"].size(), 2);
+    EXPECT_EQ(classInfo["inherency"][0]["access"], "public");
+    EXPECT_EQ(classInfo["inherency"][0]["baseClass"], "Base1");
+    EXPECT_EQ(classInfo["inherency"][1]["access"], "protected");
+    EXPECT_EQ(classInfo["inherency"][1]["baseClass"], "Base2");
+}
+
+TEST_F(ClassSTTest, ExportInherencyArray_ToJson)
+{
+    auto className = "DerivedClass";
+    std::shared_ptr<IToken> token =
+        std::make_shared<Token>(TokenType::IDENTIFIER, className, DefaultLineFile);
+    ClassST derivedClass(token);
+
+    // Add two base classes
+    std::shared_ptr<IToken> accessBaseClass1 =
+        std::make_shared<Token>(TokenType::PUBLIC, "public", DefaultLineFile);
+    std::shared_ptr<IToken> tokenBaseClass1 =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Base1", DefaultLineFile);
+
+    std::shared_ptr<IToken> accessBaseClass2 =
+        std::make_shared<Token>(TokenType::PROTECTED, "protected", DefaultLineFile);
+    std::shared_ptr<IToken> tokenBaseClass2 =
+        std::make_shared<Token>(TokenType::IDENTIFIER, "Base2", DefaultLineFile);
+
+    derivedClass.addInherencyToClassObject(accessBaseClass1, tokenBaseClass1);
+    derivedClass.addInherencyToClassObject(accessBaseClass2, tokenBaseClass2);
+
+    // --- Convert to JSON ---
+    json inherenciesJson = json::array();
+    for (const auto& pair : derivedClass.getInherencyArray())
+    {
+        json inh;
+        inh["access"] = pair.first->getLexeme();
+        inh["baseClass"] = pair.second->getLexeme();
+        inh["lineFile"] = pair.second->getLineFile();
+        inherenciesJson.push_back(inh);
+    }
+
+    // --- Assertions ---
+    ASSERT_EQ(inherenciesJson.size(), 2);
+
+    EXPECT_EQ(inherenciesJson[0]["access"], "public");
+    EXPECT_EQ(inherenciesJson[0]["baseClass"], "Base1");
+    EXPECT_EQ(inherenciesJson[0]["lineFile"], DefaultLineFile.getLineFileAsString());
+
+    EXPECT_EQ(inherenciesJson[1]["access"], "protected");
+    EXPECT_EQ(inherenciesJson[1]["baseClass"], "Base2");
+    EXPECT_EQ(inherenciesJson[1]["lineFile"], DefaultLineFile.getLineFileAsString());
 }

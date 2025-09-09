@@ -3,8 +3,11 @@
 #include <memory>
 
 #include "../ContainersInterface/IContainersInterface.h"
+#include "/app/includes/nlohmann/json.hpp"  // https://github.com/nlohmann/json
 
 class ClassST;  // forward declare so we can accept it in buildFrom
+
+using json = nlohmann::json;
 
 class IClassGraph
 {
@@ -39,7 +42,8 @@ class IClassGraph
     virtual std::vector<std::string> allAncestors(const std::string& name) const = 0;
 
     // Exporting
-    virtual std::string toDot(const std::string& graphName) const = 0;
+    virtual std::string toDot(const std::string& graphName, bool exportToFile = false) const = 0;
     // TODO: Convert this to use the JSON structure for the APIs
-    virtual std::string toJson() const = 0;
+    virtual std::string toJsonAsString() const = 0;
+    virtual json toJson() const = 0;
 };

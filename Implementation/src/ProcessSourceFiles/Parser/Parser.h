@@ -13,6 +13,8 @@ class Parser : public IParser
     std::vector<std::string> ListIncomingTokens() const override;
     std::shared_ptr<Expression> expression();
     std::shared_ptr<CommonParserType> parse();  // define an initial method to kick it off.
+    std::vector<std::shared_ptr<CommonParserType>>
+    parseAll();  // Parse all tokens from a vector of tokens
     std::shared_ptr<IToken> peekIndex(const int tokenIndex) const;
 
    private:

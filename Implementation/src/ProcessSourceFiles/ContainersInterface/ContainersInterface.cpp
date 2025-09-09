@@ -19,11 +19,16 @@ void ContainersInterface::addClass(std::shared_ptr<ClassST> classST)
 {
     if (classST)
     {
+        // TODO: Check if class already exists... what to do? Ignore? Throw?
         Logger::getInstance().log("[ContainersInterface::addClass] class IDENTIFIER " +
                                   classST->getClassName());
         m_classesContainer.push_back(classST);
     }
-    Logger::getInstance().log("[ContainersInterface::addClass] Problems addding class IDENTIFIER ");
+    else
+    {
+        Logger::getInstance().log(
+            "[ContainersInterface::addClass] Problems addding class IDENTIFIER ");
+    }
 }
 
 std::vector<std::shared_ptr<ClassST>> ContainersInterface::getClasses() const

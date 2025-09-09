@@ -18,6 +18,16 @@ std::string readFile(const std::string& filePath)
         throw std::invalid_argument("[::readFile] File path is empty");
     }
 
+    // I can only read .h or .cpp files
+    if (!(filePath.size() >= 2 && filePath.compare(filePath.size() - 2, 2, ".h") == 0) &&
+        !(filePath.size() >= 4 && filePath.compare(filePath.size() - 4, 4, ".cpp") == 0))
+    {
+        Logger::getInstance().log(
+            "[::readFile] Unsupported file type. Only .h and .cpp files are supported: " +
+            filePath);
+        return "";
+    }
+
     std::filesystem::path basePath("/app/temp");
     std::filesystem::path fullPath = basePath / filePath;
 
