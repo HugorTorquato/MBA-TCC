@@ -9,25 +9,25 @@ public:
     virtual void emitirSom() = 0; // método abstrato
 };
 
-// Classe de mamíferos herda de Animal
+// Classes especializadas por tipo
 class Mamifero : public Animal {
 public:
     virtual void amamentar() = 0;
 };
 
-// Classe de aves herda de Animal
 class Ave : public Animal {
 public:
     virtual void voar() = 0;
 };
 
-// Classe de répteis herda de Animal
 class Reptil : public Animal {
 public:
     virtual void rastejar() = 0;
 };
 
-// Classes específicas
+// ============================================================================
+// Exemplos de animais concretos
+// ============================================================================
 class Leao : public Mamifero {};
 class Tigre : public Mamifero {};
 class Elefante : public Mamifero {};
@@ -51,16 +51,7 @@ class PatoAquatico : public Ave, public AnimalAquatico {};
 class JacareAquatico : public Reptil, public AnimalAquatico {};
 
 // ============================================================================
-// Exemplo de herança virtual (evitando duplicação de Animal)
-// ============================================================================
-class AnimalDomestico : virtual public Animal {};
-class AnimalDeEstimacao : virtual public Animal {};
-
-class Cachorro : public Mamifero, public AnimalDomestico, public AnimalDeEstimacao {};
-class Gato : public Mamifero, public AnimalDomestico, public AnimalDeEstimacao {};
-
-// ============================================================================
-// Exemplo de hierarquia administrativa (não animais, mas gestão)
+// Hierarquia administrativa (funcionários e recursos do zoológico)
 // ============================================================================
 class Recurso {
 public:
@@ -77,15 +68,8 @@ class Aquario : public Recurso {};
 class Viveiro : public Recurso {};
 
 // ============================================================================
-// Classes que combinam domínios distintos
+// Classes que representam sistemas de gestão
 // ============================================================================
-class Zoologico {
-public:
-    // Apenas borda da classe
-};
-
-class ZoologicoDigital : public Zoologico, public Recurso {};
-
 class SistemaGerenciamento {
 public:
     // Apenas borda da classe
@@ -94,3 +78,13 @@ public:
 class SistemaFinanceiro : public SistemaGerenciamento {};
 class SistemaVeterinario : public SistemaGerenciamento {};
 class SistemaVisitantes : public SistemaGerenciamento {};
+
+// ============================================================================
+// Combinação de domínios distintos
+// ============================================================================
+class Zoologico {
+public:
+    // Apenas borda da classe
+};
+
+class ZoologicoDigital : public Zoologico, public Recurso {};
