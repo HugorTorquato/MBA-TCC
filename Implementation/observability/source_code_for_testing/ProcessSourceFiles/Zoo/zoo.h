@@ -56,7 +56,7 @@ class PeixePalhaco : public Peixe {};
 // -------------------------
 class Sapo : public Anfibio {};
 class Salamandra : protected Anfibio {};
-class Rã : private Anfibio {};
+class Ra : private Anfibio {};
 class Tritao : public Anfibio {};
 class Perereca : protected Anfibio {};
 
