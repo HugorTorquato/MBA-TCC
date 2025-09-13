@@ -1,6 +1,7 @@
 #include <crow.h>
 
 #include "../../Logger/Log.h"
+#include "../../ProcessSourceFiles/ContainersInterface/ContainersInterface.h"
 #include "../../utils/inlineFreeFunctions.h"
 
 class GeneralInfo
@@ -44,6 +45,8 @@ class GeneralInfo
                                                 // dictionary in Python.
 
                     inlineFreeFunctions::deleteTempFolder("/app/temp");
+
+                    ContainersInterface::getInstance().clearClassesContainer();
                     return crow::response(200);
                 });
     }
