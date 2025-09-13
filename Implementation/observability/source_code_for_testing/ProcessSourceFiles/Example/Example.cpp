@@ -4,12 +4,12 @@ public:
     void speak();
 };
 
-class Dog : public Animal {
+class Cachorro : public Animal {
 public:
     void wagTail();
 };
 
-class Cat : public Animal {
+class Gato : public Animal {
 public:
     void purr();
 };

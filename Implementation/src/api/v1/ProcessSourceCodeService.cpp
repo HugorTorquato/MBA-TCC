@@ -82,9 +82,12 @@ nlohmann::json ProcessSourceCodeService::process(const std::string& gitUrl)
 
         classInfo["inherency"] = inherencyArray;
         classesJson.push_back(classInfo);
+
+        Logger::getInstance().log("[ProcessSourceCodeService::process] classesJson: " +
+                                  classesJson.dump());
     }
 
-    Logger::getInstance().log("[ProcessSourceCodeService::process] classesJson: " +
+    Logger::getInstance().log("[ProcessSourceCodeService::process] Final classesJson: " +
                               classesJson.dump());
     return classesJson;
 }

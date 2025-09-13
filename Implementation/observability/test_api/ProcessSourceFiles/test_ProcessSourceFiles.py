@@ -555,15 +555,45 @@ def test_v1_processSourceCode_ClassWithSingle_inheritance(request):
     assert response.status_code == 200
 
 
+def test_v1_processSourceCode_ExampleForResults(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example"
+    }
 
-# def test_v1_processSourceCode_LargerProject():
-#     input_json = {
-#         "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation"
-#     }
-#     logger.info(f"test_v1_processSourceCode_LargerProject")
-#     logger.info(f"Input JSON: {input_json}")
+    logger.info("test_v1_processSourceCode_ExampleForResults")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
 
-#     response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
-#     logger.info(f"Response: {response.status_code} - {response.text}")
-#     data = response.json()
-#     assert response.status_code == 200  
+    request.node.last_response = data  # register for JSON dump
+
+    # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
+    expected_result = [
+        {"className": "Animal", "inherency": []},
+        {"className": "Dog", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]},
+        {"className": "Cat", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
+
+
+
+def test_v1_processSourceCode_LargerProject(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation"
+    }
+    logger.info(f"test_v1_processSourceCode_LargerProject")
+    logger.info(f"Input JSON: {input_json}")
+
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    logger.info(f"Response: {response.status_code} - {response.text}")
+    data = response.json()
+    assert response.status_code == 200  
+
+    request.node.last_response = data  # register for JSON dump
