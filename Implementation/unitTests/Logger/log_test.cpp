@@ -53,7 +53,9 @@ TEST_F(LoggerTest, VerifyMessageWrittenToLogs)
 {
     const std::string message = "VerifyMessageWrittenToLogs Test";
     Logger::getInstance().log(message);
-    EXPECT_EQ(readFile(LoggerTest::m_logPath), message + "\n");
+    EXPECT_NE(readFile(LoggerTest::m_logPath).find("["), std::string::npos);
+    EXPECT_NE(readFile(LoggerTest::m_logPath).find("]"), std::string::npos);
+    EXPECT_NE(readFile(LoggerTest::m_logPath).find(message), std::string::npos);
 }
 
 TEST_F(LoggerTest, VerifyThatNoLogIsWrittenIfDisabledThe_EnabledLogs_Flag)

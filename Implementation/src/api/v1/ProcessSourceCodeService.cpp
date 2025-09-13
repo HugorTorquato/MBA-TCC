@@ -40,17 +40,6 @@ nlohmann::json ProcessSourceCodeService::process(const std::string& gitUrl)
 
         Parser parser(tokens);
         auto parserResults = parser.parseAll();
-
-        for (const auto& result : parserResults)
-        {
-            if (auto parsedResult = std::dynamic_pointer_cast<ClassST>(result))
-            {
-                ContainersInterface::getInstance().addClass(parsedResult);
-                Logger::getInstance().log(
-                    "[ProcessSourceCodeService::process] Parsed Class Name: " +
-                    parsedResult->getClassName());
-            }
-        }
     }
 
     nlohmann::json classesJson = nlohmann::json::array();

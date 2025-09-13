@@ -121,3 +121,4 @@ coverage/
 
 # ignore test output files
 **/api_test_results/
+**/Dots/
