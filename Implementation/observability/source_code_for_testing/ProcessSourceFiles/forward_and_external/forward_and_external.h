@@ -1,4 +1,5 @@
 // forward_and_external.h
 #pragma once
-class ExternalBase; // assume defined in another file
+// assume defined in another file
+class ExternalBase; 
 class Derived : public ExternalBase;

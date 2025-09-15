@@ -1,0 +1,181 @@
+digraph ClassDiagram {
+	rankdir=BT
+	node [color=lightgrey shape=box style=filled]
+	Animal
+	Mamifero
+	Ave
+	Reptil
+	Peixe
+	Anfibio
+	Leao
+	Tigre
+	Elefante
+	Gato
+	Cachorro
+	Papagaio
+	Aguia
+	Pato
+	Corvo
+	Pinguim
+	Cobra
+	Jacare
+	Lagarto
+	Tartaruga
+	Iguana
+	Tubarao
+	Tilapia
+	Salmao
+	Atum
+	PeixePalhaco
+	Sapo
+	Salamandra
+	Ra
+	Tritao
+	Perereca
+	AnimalAquatico
+	AnimalVoador
+	PatoAquatico
+	AguiaReal
+	PinguimImperador
+	SapoNadador
+	Dragao
+	Recurso
+	Jaula
+	Viveiro
+	Aquario
+	Terrario
+	Lago
+	Funcionario
+	Veterinario
+	Cuidador
+	Administrador
+	Estagiario
+	Pesquisador
+	SistemaGerenciamento
+	SistemaFinanceiro
+	SistemaVeterinario
+	SistemaVisitantes
+	SistemaIngressos
+	SistemaLogistica
+	Zoologico
+	ZoologicoUrbano
+	ZoologicoRural
+	ZoologicoDigital
+	ZoologicoTematico
+	ZoologicoAquatico
+	Onca
+	Morcego
+	Cavalo
+	Galinha
+	Arara
+	JacareDoPantanal
+	Camaleao
+	CobraCascavel
+	TubaraoBranco
+	TilapiaAfricana
+	SalmaoDoPacifico
+	PeixeBeta
+	SapoCururu
+	SalamandraTigre
+	TritaoGigante
+	PererecaVerde
+	DragaoDeKomodo
+	DragaoChines
+	DragaoNegro
+	ZoologicoVirtual
+	ZoologicoInfantil
+	ZoologicoMontanha
+	Mamifero -> Animal [label=public color=black style=solid]
+	Ave -> Animal [label=protected color=blue style=dotted]
+	Reptil -> Animal [label=private color=red style=dashed]
+	Peixe -> Animal [label=public color=black style=solid]
+	Anfibio -> Animal [label=protected color=blue style=dotted]
+	Leao -> Mamifero [label=public color=black style=solid]
+	Tigre -> Mamifero [label=protected color=blue style=dotted]
+	Elefante -> Mamifero [label=private color=red style=dashed]
+	Gato -> Mamifero [label=public color=black style=solid]
+	Cachorro -> Mamifero [label=public color=black style=solid]
+	Papagaio -> Ave [label=public color=black style=solid]
+	Aguia -> Ave [label=protected color=blue style=dotted]
+	Pato -> Ave [label=private color=red style=dashed]
+	Corvo -> Ave [label=public color=black style=solid]
+	Pinguim -> Ave [label=protected color=blue style=dotted]
+	Cobra -> Reptil [label=public color=black style=solid]
+	Jacare -> Reptil [label=protected color=blue style=dotted]
+	Lagarto -> Reptil [label=private color=red style=dashed]
+	Tartaruga -> Reptil [label=public color=black style=solid]
+	Iguana -> Reptil [label=protected color=blue style=dotted]
+	Tubarao -> Peixe [label=public color=black style=solid]
+	Tilapia -> Peixe [label=protected color=blue style=dotted]
+	Salmao -> Peixe [label=private color=red style=dashed]
+	Atum -> Peixe [label=public color=black style=solid]
+	PeixePalhaco -> Peixe [label=public color=black style=solid]
+	Sapo -> Anfibio [label=public color=black style=solid]
+	Salamandra -> Anfibio [label=protected color=blue style=dotted]
+	Ra -> Anfibio [label=private color=red style=dashed]
+	Tritao -> Anfibio [label=public color=black style=solid]
+	Perereca -> Anfibio [label=protected color=blue style=dotted]
+	PatoAquatico -> Pato [label=public color=black style=solid]
+	PatoAquatico -> AnimalAquatico [label=public color=black style=solid]
+	AguiaReal -> Aguia [label=public color=black style=solid]
+	AguiaReal -> AnimalVoador [label=public color=black style=solid]
+	PinguimImperador -> Pinguim [label=public color=black style=solid]
+	PinguimImperador -> AnimalAquatico [label=public color=black style=solid]
+	SapoNadador -> Sapo [label=public color=black style=solid]
+	SapoNadador -> AnimalAquatico [label=protected color=blue style=dotted]
+	Dragao -> Reptil [label=public color=black style=solid]
+	Dragao -> AnimalVoador [label=protected color=blue style=dotted]
+	Dragao -> AnimalAquatico [label=private color=red style=dashed]
+	Jaula -> Recurso [label=public color=black style=solid]
+	Viveiro -> Recurso [label=protected color=blue style=dotted]
+	Aquario -> Recurso [label=private color=red style=dashed]
+	Terrario -> Recurso [label=public color=black style=solid]
+	Lago -> Recurso [label=protected color=blue style=dotted]
+	Funcionario -> Recurso [label=public color=black style=solid]
+	Veterinario -> Funcionario [label=public color=black style=solid]
+	Cuidador -> Funcionario [label=protected color=blue style=dotted]
+	Administrador -> Funcionario [label=private color=red style=dashed]
+	Estagiario -> Funcionario [label=public color=black style=solid]
+	Pesquisador -> Funcionario [label=protected color=blue style=dotted]
+	SistemaFinanceiro -> SistemaGerenciamento [label=public color=black style=solid]
+	SistemaVeterinario -> SistemaGerenciamento [label=protected color=blue style=dotted]
+	SistemaVisitantes -> SistemaGerenciamento [label=private color=red style=dashed]
+	SistemaIngressos -> SistemaGerenciamento [label=public color=black style=solid]
+	SistemaLogistica -> SistemaGerenciamento [label=protected color=blue style=dotted]
+	ZoologicoUrbano -> Zoologico [label=public color=black style=solid]
+	ZoologicoUrbano -> SistemaGerenciamento [label=public color=black style=solid]
+	ZoologicoRural -> Zoologico [label=protected color=blue style=dotted]
+	ZoologicoRural -> SistemaFinanceiro [label=private color=red style=dashed]
+	ZoologicoDigital -> Zoologico [label=public color=black style=solid]
+	ZoologicoDigital -> SistemaVisitantes [label=protected color=blue style=dotted]
+	ZoologicoTematico -> Zoologico [label=private color=red style=dashed]
+	ZoologicoTematico -> SistemaIngressos [label=public color=black style=solid]
+	ZoologicoAquatico -> Zoologico [label=public color=black style=solid]
+	ZoologicoAquatico -> AnimalAquatico [label=protected color=blue style=dotted]
+	Onca -> Mamifero [label=public color=black style=solid]
+	Morcego -> Mamifero [label=protected color=blue style=dotted]
+	Morcego -> AnimalVoador [label=public color=black style=solid]
+	Cavalo -> Mamifero [label=private color=red style=dashed]
+	Galinha -> Ave [label=public color=black style=solid]
+	Arara -> Ave [label=protected color=blue style=dotted]
+	JacareDoPantanal -> Jacare [label=public color=black style=solid]
+	Camaleao -> Lagarto [label=private color=red style=dashed]
+	CobraCascavel -> Cobra [label=public color=black style=solid]
+	TubaraoBranco -> Tubarao [label=protected color=blue style=dotted]
+	TilapiaAfricana -> Tilapia [label=public color=black style=solid]
+	SalmaoDoPacifico -> Salmao [label=protected color=blue style=dotted]
+	PeixeBeta -> PeixePalhaco [label=private color=red style=dashed]
+	SapoCururu -> Sapo [label=public color=black style=solid]
+	SalamandraTigre -> Salamandra [label=private color=red style=dashed]
+	TritaoGigante -> Tritao [label=protected color=blue style=dotted]
+	PererecaVerde -> Perereca [label=public color=black style=solid]
+	DragaoDeKomodo -> Dragao [label=public color=black style=solid]
+	DragaoChines -> Dragao [label=protected color=blue style=dotted]
+	DragaoNegro -> Dragao [label=private color=red style=dashed]
+	ZoologicoVirtual -> ZoologicoDigital [label=public color=black style=solid]
+	ZoologicoInfantil -> ZoologicoTematico [label=protected color=blue style=dotted]
+	ZoologicoMontanha -> ZoologicoRural [label=private color=red style=dashed]
+	rankdir=TB
+	node [color=lightgrey fontsize=8 shape=box style=filled]
+	edge [fontsize=8]
+}

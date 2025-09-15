@@ -1,0 +1,14 @@
+digraph ClassDiagram {
+	rankdir=BT
+	node [color=lightgrey shape=box style=filled]
+	Animal
+	Cachorro
+	Gato
+	Rato
+	Cachorro -> Animal [label=private color=red style=dashed]
+	Gato -> Animal [label=public color=black style=solid]
+	Rato -> Animal [label=protected color=blue style=dotted]
+	rankdir=TB
+	node [color=lightgrey fontsize=8 shape=box style=filled]
+	edge [fontsize=8]
+}
