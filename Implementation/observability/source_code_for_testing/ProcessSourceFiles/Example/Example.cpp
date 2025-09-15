@@ -4,7 +4,7 @@ public:
     void speak();
 };
 
-class Cachorro : public Animal {
+class Cachorro : private Animal {
 public:
     void wagTail();
 };
@@ -12,4 +12,9 @@ public:
 class Gato : public Animal {
 public:
     void purr();
+};
+
+class Rato : protected Animal {
+public:
+    void squeak();
 };
