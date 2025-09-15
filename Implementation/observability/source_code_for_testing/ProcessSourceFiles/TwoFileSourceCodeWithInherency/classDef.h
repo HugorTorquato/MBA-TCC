@@ -1,13 +1,13 @@
 #pragma once
 
-class hugo {
+class ble {
 
 };
 
-class Tayna {
+class bla {
 
 };
 
-class Derived : public hugo, private Tayna {
+class blu : public ble, private bla {
 
 };
