@@ -48,7 +48,7 @@ class PeixeOssudo : public Peixe {};
 class Salmao : protected PeixeOssudo {};
 class SalmaoAtlantico : public Salmao {};
 class SalmaoDoPacifico : private SalmaoAtlantico {};
-class SalmaoGigante : public SalmaoDoPacífico {};
+class SalmaoGigante : public SalmaoDoPacifico {};
 
 // -------------------------
 // Cadeia de anfíbios
