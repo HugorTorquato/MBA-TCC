@@ -1,9 +1,8 @@
 // ============================================================================
 // Exemplo expandido para TCC - Sistema de Zoológico
-// Explora herança pública, protegida e privada.
+// Cadeias de especialização com herança pública, protegida e privada.
 // ============================================================================
 
-// Classe base genérica
 class Animal {};
 
 // -------------------------
@@ -16,132 +15,76 @@ class Peixe : public Animal {};
 class Anfibio : protected Animal {};
 
 // -------------------------
-// Mamíferos concretos
+// Cadeia de mamíferos
 // -------------------------
-class Leao : public Mamifero {};
-class Tigre : protected Mamifero {};
-class Elefante : private Mamifero {};
-class Gato : public Mamifero {};
-class Cachorro : public Mamifero {};
+class Felino : public Mamifero {};
+class GrandeFelino : protected Felino {};
+class Leao : public GrandeFelino {};
+class LeaoAfricano : public Leao {};
+class LeaoDoSerengeti : private LeaoAfricano {};
 
 // -------------------------
-// Aves concretas
+// Cadeia de aves
 // -------------------------
-class Papagaio : public Ave {};
-class Aguia : protected Ave {};
-class Pato : private Ave {};
-class Corvo : public Ave {};
-class Pinguim : protected Ave {};
+class Passaro : protected Ave {};
+class Rapina : public Passaro {};
+class Aguia : protected Rapina {};
+class AguiaReal : public Aguia {};
+class AguiaImperial : private AguiaReal {};
 
 // -------------------------
-// Répteis concretos
+// Cadeia de répteis
 // -------------------------
-class Cobra : public Reptil {};
-class Jacare : protected Reptil {};
-class Lagarto : private Reptil {};
-class Tartaruga : public Reptil {};
-class Iguana : protected Reptil {};
+class Lacertilio : private Reptil {};
+class Lagarto : public Lacertilio {};
+class Iguana : protected Lagarto {};
+class IguanaVerde : public Iguana {};
+class IguanaGigante : protected IguanaVerde {};
 
 // -------------------------
-// Peixes concretos
+// Cadeia de peixes
 // -------------------------
-class Tubarao : public Peixe {};
-class Tilapia : protected Peixe {};
-class Salmao : private Peixe {};
-class Atum : public Peixe {};
-class PeixePalhaco : public Peixe {};
+class PeixeOssudo : public Peixe {};
+class Salmao : protected PeixeOssudo {};
+class SalmaoAtlantico : public Salmao {};
+class SalmaoDoPacífico : private SalmaoAtlantico {};
+class SalmaoGigante : public SalmaoDoPacífico {};
 
 // -------------------------
-// Anfíbios concretos
+// Cadeia de anfíbios
 // -------------------------
-class Sapo : public Anfibio {};
-class Salamandra : protected Anfibio {};
-class Ra : private Anfibio {};
-class Tritao : public Anfibio {};
-class Perereca : protected Anfibio {};
+class Anuro : protected Anfibio {};
+class Sapo : public Anuro {};
+class SapoCururu : protected Sapo {};
+class SapoGigante : public SapoCururu {};
+class SapoMitologico : private SapoGigante {};
 
 // ============================================================================
-// Exemplo de múltipla herança
+// Múltipla herança
 // ============================================================================
-class AnimalAquatico {
-public:
-    virtual void nadar() = 0;
-};
+class AnimalAquatico {};
+class AnimalVoador {};
 
-class AnimalVoador {
-public:
-    virtual void voar() = 0;
-};
-
-class PatoAquatico : public Pato, public AnimalAquatico {};
-class AguiaReal : public Aguia, public AnimalVoador {};
-class PinguimImperador : public Pinguim, public AnimalAquatico {};
-class SapoNadador : public Sapo, protected AnimalAquatico {};
+class PatoAquatico : public Sapo, public AnimalAquatico {};
 class Dragao : public Reptil, protected AnimalVoador, private AnimalAquatico {};
 
 // ============================================================================
-// Recursos do zoológico
+// Recursos e sistemas
 // ============================================================================
 class Recurso {};
-
 class Jaula : public Recurso {};
 class Viveiro : protected Recurso {};
 class Aquario : private Recurso {};
-class Terrario : public Recurso {};
-class Lago : protected Recurso {};
 
-// ============================================================================
-// Funcionários
-// ============================================================================
-class Funcionario : public Recurso {};
-class Veterinario : public Funcionario {};
-class Cuidador : protected Funcionario {};
-class Administrador : private Funcionario {};
-class Estagiario : public Funcionario {};
-class Pesquisador : protected Funcionario {};
-
-// ============================================================================
-// Sistemas de gestão
-// ============================================================================
 class SistemaGerenciamento {};
 class SistemaFinanceiro : public SistemaGerenciamento {};
-class SistemaVeterinario : protected SistemaGerenciamento {};
 class SistemaVisitantes : private SistemaGerenciamento {};
-class SistemaIngressos : public SistemaGerenciamento {};
-class SistemaLogistica : protected SistemaGerenciamento {};
 
 // ============================================================================
-// Heranças cruzadas complexas
+// Zoológicos especializados
 // ============================================================================
 class Zoologico {};
 class ZoologicoUrbano : public Zoologico, public SistemaGerenciamento {};
 class ZoologicoRural : protected Zoologico, private SistemaFinanceiro {};
 class ZoologicoDigital : public Zoologico, protected SistemaVisitantes {};
-class ZoologicoTematico : private Zoologico, public SistemaIngressos {};
 class ZoologicoAquatico : public Zoologico, protected AnimalAquatico {};
-
-// ============================================================================
-// Classes adicionais para atingir ~200 linhas
-// ============================================================================
-class Onca : public Mamifero {};
-class Morcego : protected Mamifero, public AnimalVoador {};
-class Cavalo : private Mamifero {};
-class Galinha : public Ave {};
-class Arara : protected Ave {};
-class JacareDoPantanal : public Jacare {};
-class Camaleao : private Lagarto {};
-class CobraCascavel : public Cobra {};
-class TubaraoBranco : protected Tubarao {};
-class TilapiaAfricana : public Tilapia {};
-class SalmaoDoPacifico : protected Salmao {};
-class PeixeBeta : private PeixePalhaco {};
-class SapoCururu : public Sapo {};
-class SalamandraTigre : private Salamandra {};
-class TritaoGigante : protected Tritao {};
-class PererecaVerde : public Perereca {};
-class DragaoDeKomodo : public Dragao {};
-class DragaoChines : protected Dragao {};
-class DragaoNegro : private Dragao {};
-class ZoologicoVirtual : public ZoologicoDigital {};
-class ZoologicoInfantil : protected ZoologicoTematico {};
-class ZoologicoMontanha : private ZoologicoRural {};
