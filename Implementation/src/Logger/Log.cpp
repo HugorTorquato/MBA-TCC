@@ -1,8 +1,10 @@
 #include "Log.h"
 
+#include <chrono>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
-// #include <string>
+#include <sstream>
 
 #define CERR_LOGS 1
 
@@ -36,9 +38,21 @@ void Logger::setEnabledLogs(const bool enabled)
 
 void Logger::log(const std::string& msg)
 {
-    if (CERR_LOGS) std::cerr << msg << std::endl;
+    // Get current time with milliseconds
+    auto now = std::chrono::system_clock::now();
+    auto now_time = std::chrono::system_clock::to_time_t(now);
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+    // Format time as [YYYY-MM-DD HH:MM:SS.mmm]
+    std::ostringstream oss;
+    oss << "[" << std::put_time(std::localtime(&now_time), "%Y-%m-%d %H:%M:%S") << "."
+        << std::setfill('0') << std::setw(3) << ms.count() << "] " << msg;
+
+    std::string logMsg = oss.str();
+
+    if (CERR_LOGS) std::cerr << logMsg << std::endl;
     if (!m_enabledLogs) return;
 
     std::ofstream file("app.log", std::ios::app);  // Append mode
-    file << msg << std::endl;
+    file << logMsg << std::endl;
 }

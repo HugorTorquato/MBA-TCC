@@ -2,6 +2,6 @@
 
 #include "ClassDef.h"
 
-class bla : public hugo {
+class bla : public ble {
 
 };

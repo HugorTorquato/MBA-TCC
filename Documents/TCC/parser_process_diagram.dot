@@ -1,0 +1,25 @@
+// Parser Process
+digraph {
+	src [label="Source Code
+(Example.cpp)" shape=box]
+	scan [label="Scanner
+(Tokenization)" shape=box]
+	parser [label="Parser
+(Grammar Rules)" shape=box]
+	ast [label="Abstract Syntax Tree" shape=box]
+	src -> scan
+	scan -> parser
+	parser -> ast
+	Animal [label="Class: Animal" shape=ellipse]
+	speak [label="Method: speak()" shape=ellipse]
+	Animal -> speak
+	Dog [label="Class: Dog : Animal" shape=ellipse]
+	wagTail [label="Method: wagTail()" shape=ellipse]
+	Dog -> wagTail
+	Cat [label="Class: Cat : Animal" shape=ellipse]
+	purr [label="Method: purr()" shape=ellipse]
+	Cat -> purr
+	ast -> Animal
+	ast -> Dog
+	ast -> Cat
+}
