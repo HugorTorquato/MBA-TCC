@@ -155,7 +155,7 @@ def test_v1_retreveSourceFileContent_DownloadAndReadSourceFileWithOneComment_2Fi
 
 def test_v1_processSourceCode_ClassWithNoInherency(request):
     input_json = {
-        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Scanner/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/TwoFileSourceCode"
     }
 
     logger.info(f"test_v1_processSourceCode_ClassWithNoInherency")
@@ -172,7 +172,7 @@ def test_v1_processSourceCode_ClassWithNoInherency(request):
     # I need to clear the container, it's growing 2 by 2. Addng duplicated classes
     # expected result = [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]}]
     expected_result = [
-        {"className":"hugo","inherency":[]}
+        {"className":"C1","inherency":[]}
     ]
 
     #expect that data contains expected_result
@@ -213,9 +213,9 @@ def test_v1_processSourceCode_ClassWithInherency(request):
     # classesJson: [{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]},{"className":"hugo","inherency":[]},{"className":"Tayna","inherency":[]},{"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]}]
 
     expected_result = [
-        {"className":"hugo","inherency":[]},
-        {"className":"Tayna","inherency":[]},
-        {"className":"Derived","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}},{"first":{"lexeme":"private","type":"PRIVATE"},"second":{"lexeme":"Tayna","type":"IDENTIFIER"}}]}
+        {"className":"ble","inherency":[]},
+        {"className":"bla","inherency":[]},
+        {"className":"blu","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"ble","type":"IDENTIFIER"}},{"first":{"lexeme":"private","type":"PRIVATE"},"second":{"lexeme":"bla","type":"IDENTIFIER"}}]}
     ]
 
     #expect that data contains expected_result
@@ -253,8 +253,8 @@ def test_v1_processSourceCode_ClassWithInherencyDifferentFiles(request):
     request.node.last_response = data
 
     expected_result = [
-        {"className":"hugo","inherency":[]},
-        {"className":"bla","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"hugo","type":"IDENTIFIER"}}]}
+        {"className":"ble","inherency":[]},
+        {"className":"bla","inherency":[{"first":{"lexeme":"public","type":"PUBLIC"},"second":{"lexeme":"ble","type":"IDENTIFIER"}}]}
     ]
 
     #expect that data contains expected_result
@@ -570,8 +570,9 @@ def test_v1_processSourceCode_ExampleForResults(request):
     # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
     expected_result = [
         {"className": "Animal", "inherency": []},
-        {"className": "Dog", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]},
-        {"className": "Cat", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]}
+        {"className": "Cachorro", "inherency": [{"first": {"lexeme": "private", "type": "PRIVATE"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]},
+        {"className": "Gato", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]},
+        {"className": "Rato", "inherency": [{"first": {"lexeme": "protected", "type": "PROTECTED"}, "second": {"lexeme": "Animal", "type": "IDENTIFIER"}}]}
     ]
 
     for expected in expected_result:
@@ -582,6 +583,101 @@ def test_v1_processSourceCode_ExampleForResults(request):
 
     assert response.status_code == 200
 
+
+def test_v1_processSourceCode_ZooExample(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/Zoo"
+    }
+
+    logger.info("test_v1_processSourceCode_ZooExample")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+    def inh(base: str, access: str = "public"):
+        return [{
+            "first": {"lexeme": access, "type": access.upper()},
+            "second": {"lexeme": base, "type": "IDENTIFIER"}
+        }]
+
+    # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
+    expected_result = [
+        # ----------------- Bases -----------------
+        {"className": "Animal", "inherency": []},
+        {"className": "Mamifero", "inherency": inh("Animal")},
+        {"className": "Ave", "inherency": inh("Animal", "protected")},
+        {"className": "Reptil", "inherency": inh("Animal", "private")},
+        {"className": "Peixe", "inherency": inh("Animal")},
+        {"className": "Anfibio", "inherency": inh("Animal", "protected")},
+
+        # ----------------- Cadeia de Mamíferos -----------------
+        {"className": "Felino", "inherency": inh("Mamifero")},
+        {"className": "GrandeFelino", "inherency": inh("Felino", "protected")},
+        {"className": "Leao", "inherency": inh("GrandeFelino")},
+        {"className": "LeaoAfricano", "inherency": inh("Leao")},
+        {"className": "LeaoDoSerengeti", "inherency": inh("LeaoAfricano", "private")},
+
+        # ----------------- Cadeia de Aves -----------------
+        {"className": "Passaro", "inherency": inh("Ave", "protected")},
+        {"className": "Rapina", "inherency": inh("Passaro")},
+        {"className": "Aguia", "inherency": inh("Rapina", "protected")},
+        {"className": "AguiaReal", "inherency": inh("Aguia")},
+        {"className": "AguiaImperial", "inherency": inh("AguiaReal", "private")},
+
+        # ----------------- Cadeia de Répteis -----------------
+        {"className": "Lacertilio", "inherency": inh("Reptil", "private")},
+        {"className": "Lagarto", "inherency": inh("Lacertilio")},
+        {"className": "Iguana", "inherency": inh("Lagarto", "protected")},
+        {"className": "IguanaVerde", "inherency": inh("Iguana")},
+        {"className": "IguanaGigante", "inherency": inh("IguanaVerde", "protected")},
+
+        # ----------------- Cadeia de Peixes -----------------
+        {"className": "PeixeOssudo", "inherency": inh("Peixe")},
+        {"className": "Salmao", "inherency": inh("PeixeOssudo", "protected")},
+        {"className": "SalmaoAtlantico", "inherency": inh("Salmao")},
+        {"className": "SalmaoDoPacifico", "inherency": inh("SalmaoAtlantico", "private")},
+        {"className": "SalmaoGigante", "inherency": inh("SalmaoDoPacifico")},
+
+        # ----------------- Cadeia de Anfíbios -----------------
+        {"className": "Anuro", "inherency": inh("Anfibio", "protected")},
+        {"className": "Sapo", "inherency": inh("Anuro")},
+        {"className": "SapoCururu", "inherency": inh("Sapo", "protected")},
+        {"className": "SapoGigante", "inherency": inh("SapoCururu")},
+        {"className": "SapoMitologico", "inherency": inh("SapoGigante", "private")},
+
+        # ----------------- Múltipla herança -----------------
+        {"className": "PatoAquatico", "inherency": inh("Sapo") + inh("AnimalAquatico")},
+        {"className": "Dragao", "inherency": inh("Reptil") + inh("AnimalVoador", "protected") + inh("AnimalAquatico", "private")},
+
+        # ----------------- Recursos -----------------
+        {"className": "Recurso", "inherency": []},
+        {"className": "Jaula", "inherency": inh("Recurso")},
+        {"className": "Viveiro", "inherency": inh("Recurso", "protected")},
+        {"className": "Aquario", "inherency": inh("Recurso", "private")},
+
+        # ----------------- Sistemas -----------------
+        {"className": "SistemaGerenciamento", "inherency": []},
+        {"className": "SistemaFinanceiro", "inherency": inh("SistemaGerenciamento")},
+        {"className": "SistemaVisitantes", "inherency": inh("SistemaGerenciamento", "private")},
+
+        # ----------------- Zoológicos -----------------
+        {"className": "Zoologico", "inherency": []},
+        {"className": "ZoologicoUrbano", "inherency": inh("Zoologico") + inh("SistemaGerenciamento")},
+        {"className": "ZoologicoRural", "inherency": inh("Zoologico", "protected") + inh("SistemaFinanceiro", "private")},
+        {"className": "ZoologicoDigital", "inherency": inh("Zoologico") + inh("SistemaVisitantes", "protected")},
+        {"className": "ZoologicoAquatico", "inherency": inh("Zoologico") + inh("AnimalAquatico", "protected")},
+    ]
+
+
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
 
 
 def test_v1_processSourceCode_LargerProject(request):
@@ -597,3 +693,7 @@ def test_v1_processSourceCode_LargerProject(request):
     assert response.status_code == 200  
 
     request.node.last_response = data  # register for JSON dump
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+    assert response.status_code == 200
