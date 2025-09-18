@@ -55,6 +55,7 @@ def createDOTRepresentation(
 ) -> None:
     """
     Cria uma representação DOT de um diagrama de classes a partir de uma estrutura JSON.
+    Substitui todas as classes base que correspondem a "::testing::Test" por "TESTCLASS".
     """
 
     base_folder = Path(target_folder).expanduser().resolve()
@@ -81,6 +82,13 @@ def createDOTRepresentation(
         for inh in cls["inherency"]:
             base_class = inh["second"]["lexeme"]
             relation_type = inh["first"]["lexeme"]  # public/private/protected
+
+            # Substituir "::testing::Test" por "TESTCLASS"]
+            print(f"Base class before check: {base_class}")
+            if base_class == "::testing::Test":
+                base_class = "TESTCLASS"
+
+            print(f"Base class after check: {base_class}")
 
             # Diferenciar estilos
             style = "solid"

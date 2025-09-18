@@ -697,3 +697,33 @@ def test_v1_processSourceCode_LargerProject(request):
     logger.info(f"RemoveTempFolder")
     response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
     assert response.status_code == 200
+
+
+
+
+def test_v1_processSourceCode_InherencyFromMacroExample(request):
+    input_json = {
+        "url": "https://github.com/HugorTorquato/MBA-TCC/tree/Parser/Implementation/observability/source_code_for_testing/ProcessSourceFiles/MacroExample"
+    }
+
+    logger.info("test_v1_processSourceCode_InherencyFromMacroExample")
+    response = requests.post(f"{BASE_URL}/api/v1/processSourceCode", json=input_json)
+    data = response.json()
+    assert response.status_code == 200
+
+    request.node.last_response = data  # register for JSON dump
+
+    # TODO: Add virtual token into the lexeme... but how? "virtual public" new token or a "virtual" new token......
+    expected_result = [
+        {"className": "DeriviedFromMacro", "inherency": [{"first": {"lexeme": "public", "type": "PUBLIC"}, "second": {"lexeme": "::testing::Test", "type": "IDENTIFIER"}}]},
+        {"className": "DeriviedFromMacro", "inherency": [{"first": {"lexeme": "private", "type": "PRIVATE"}, "second": {"lexeme": "::testing::Test", "type": "IDENTIFIER"}}]},
+        {"className": "DeriviedFromMacro", "inherency": [{"first": {"lexeme": "protected", "type": "PROTECTED"}, "second": {"lexeme": "::testing::Test", "type": "IDENTIFIER"}}]}
+    ]
+
+    for expected in expected_result:
+        assert expected in data, f"Expected {expected} in response"
+
+    logger.info(f"RemoveTempFolder")
+    response = requests.get(f"{BASE_URL}/api/v1/RemoveTempFolder")
+
+    assert response.status_code == 200
