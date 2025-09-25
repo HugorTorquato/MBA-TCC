@@ -47,8 +47,8 @@ class IguanaGigante : protected IguanaVerde {};
 class PeixeOssudo : public Peixe {};
 class Salmao : protected PeixeOssudo {};
 class SalmaoAtlantico : public Salmao {};
-class SalmaoDoPacífico : private SalmaoAtlantico {};
-class SalmaoGigante : public SalmaoDoPacífico {};
+class SalmaoDoPacifico : private SalmaoAtlantico {};
+class SalmaoGigante : public SalmaoDoPacifico {};
 
 // -------------------------
 // Cadeia de anfíbios

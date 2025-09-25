@@ -24,6 +24,22 @@
 #    - 'wc -l' counts the total number of lines in the combined output.
 #
 # The final result is a single number: the total lines in all
+# .h, .cpp, and .py files in the specified directory tree.
+echo "Total lines (with empty):"
 find .. -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.py" \) -exec cat {} + | wc -l
-# No empty lines
+
+# Count total lines (excluding empty)
+echo "Total lines (no empty):"
 find .. -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.py" \) -exec cat {} + | grep -v '^[[:space:]]*$' | wc -l
+
+echo ""
+echo "File counts:"
+for ext in h cpp py; do
+  count=$(find .. -type f -name "*.$ext" | wc -l)
+  echo ".$ext files: $count"
+done
+
+# Count total number of files
+echo ""
+echo "Total source files:"
+find .. -type f \( -name "*.h" -o -name "*.cpp" -o -name "*.py" \) | wc -l

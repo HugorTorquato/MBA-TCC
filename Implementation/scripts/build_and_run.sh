@@ -91,7 +91,7 @@ echo "<> Running unit tests..."
 ./my_tests
 
 
-# echo "<> Starting the API..."
-# pkill api_server
-# ./api_server
+echo "<> Starting the API..."
+pkill api_server
+./api_server
 

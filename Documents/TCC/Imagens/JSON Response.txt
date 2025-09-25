@@ -1,0 +1,15 @@
+[
+  {
+    "className": "A",
+    "inherency": []
+  },
+  {
+    "className": "B",
+    "inherency": [
+      {
+        "first": { "lexeme": "public", "type": "PUBLIC" },
+        "second": { "lexeme": "A", "type": "IDENTIFIER" }
+      }
+    ]
+  }
+]

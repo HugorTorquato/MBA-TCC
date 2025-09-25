@@ -55,25 +55,11 @@ def createDOTRepresentation(
 ) -> None:
     """
     Cria uma representação DOT de um diagrama de classes a partir de uma estrutura JSON.
+    Substitui todas as classes base que correspondem a "::testing::Test" por "TESTCLASS".
     """
-
-    # Exemplo de saída do parser
-    # classesJson = [
-    #     {"className":"Animal","inherency":[]},
-    #     {"className":"Dog","inherency":[
-    #         {"first":{"lexeme":"public","type":"PUBLIC"},
-    #         "second":{"lexeme":"Animal","type":"IDENTIFIER"}}
-    #     ]}
-    # ]
-
-    # Criar grafo dirigido
-
-    print(f"[createDOTRepresentation]")
 
     base_folder = Path(target_folder).expanduser().resolve()
     ensure_dir(base_folder)
-
-    print(f"[createDOTRepresentation]2")
 
     ts = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     pid = os.getpid()
@@ -81,28 +67,49 @@ def createDOTRepresentation(
     filename = f"{test_name}_{ts}_{pid}{suffix}"
     path = base_folder / filename
 
-    print(f"[createDOTRepresentation]3")
-
     dot = Digraph("ClassDiagram", format="png")
+
+    # Configurações visuais globais
+    dot.attr(rankdir="BT")  # mostra heranças de cima para baixo
+    dot.attr("node", shape="box", style="filled", color="lightgrey")
 
     # Adicionar nós para cada classe
     for cls in classesJson:
-        dot.node(cls["className"], shape="box")
-
-    print(f"[createDOTRepresentation]4")
+        dot.node(cls["className"])
 
     # Adicionar arestas de herança
     for cls in classesJson:
         for inh in cls["inherency"]:
             base_class = inh["second"]["lexeme"]
             relation_type = inh["first"]["lexeme"]  # public/private/protected
-            dot.edge(cls["className"], base_class, label=relation_type)
 
-    print(f"[createDOTRepresentation]5")
+            # Substituir "::testing::Test" por "TESTCLASS"]
+            print(f"Base class before check: {base_class}")
+            if base_class == "::testing::Test":
+                base_class = "TESTCLASS"
+
+            print(f"Base class after check: {base_class}")
+
+            # Diferenciar estilos
+            style = "solid"
+            color = "black"
+            if relation_type == "private":
+                style = "dashed"
+                color = "red"
+            elif relation_type == "protected":
+                style = "dotted"
+                color = "blue"
+
+            dot.edge(cls["className"], base_class, label=relation_type,
+                     style=style, color=color)
+
     # Exportar
+    dot.attr(rankdir="TB")
+    dot.attr("node", shape="box", style="filled", color="lightgrey", fontsize="8") # Fonte menor
+    dot.attr("edge", fontsize="8") # Fonte menor na aresta
+
+    dot.render(f"{path}", format="pdf", cleanup=True)
     dot.render(f"{path}", format="png", cleanup=True)
-    print(f"[createDOTRepresentation]6")
     dot.save(f"{path}.dot")
-    print(f"[createDOTRepresentation]7")
 
     print(f"Arquivos gerados: {path}.png e {path}.dot")
