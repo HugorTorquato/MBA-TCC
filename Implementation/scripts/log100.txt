@@ -1,0 +1,854 @@
+[2025-09-11 10:55:48.227] [ProcessSourceCodeService::process] token: Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.229] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.230] [ProcessSourceCodeService::process] token: Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.232] [ProcessSourceCodeService::process] token: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.234] [ProcessSourceCodeService::process] token: Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.236] [ProcessSourceCodeService::process] token: Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.238] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.240] [ProcessSourceCodeService::process] token: Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.243] [ProcessSourceCodeService::process] token: Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.247] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.249] [ProcessSourceCodeService::process] token: Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.250] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.252] [ProcessSourceCodeService::process] token: Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 6, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.254] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: Dog, LineFile: [LineFile] Line: 6, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.256] [ProcessSourceCodeService::process] token: Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 6, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.258] [ProcessSourceCodeService::process] token: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.261] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.263] [ProcessSourceCodeService::process] token: Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.264] [ProcessSourceCodeService::process] token: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.266] [ProcessSourceCodeService::process] token: Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.268] [ProcessSourceCodeService::process] token: Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.270] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.272] [ProcessSourceCodeService::process] token: Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.274] [ProcessSourceCodeService::process] token: Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.276] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.278] [ProcessSourceCodeService::process] token: Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 9, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.280] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.282] [ProcessSourceCodeService::process] token: Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 11, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.284] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: Cat, LineFile: [LineFile] Line: 11, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.286] [ProcessSourceCodeService::process] token: Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 11, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.288] [ProcessSourceCodeService::process] token: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.290] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.292] [ProcessSourceCodeService::process] token: Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.294] [ProcessSourceCodeService::process] token: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.297] [ProcessSourceCodeService::process] token: Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.299] [ProcessSourceCodeService::process] token: Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.302] [ProcessSourceCodeService::process] token: Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.304] [ProcessSourceCodeService::process] token: Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.306] [ProcessSourceCodeService::process] token: Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.308] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.310] [ProcessSourceCodeService::process] token: Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 14, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.312] [ProcessSourceCodeService::process] token: Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.314] [ProcessSourceCodeService::process] token: Token Type: END_OF_FILE, Lexeme: , LineFile: [LineFile] Line: 14, Col: 3, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.317]  [Parser][Parser] Constructed with m_tokens.size()=43
+[2025-09-11 10:55:48.319]  [Parser][parse] Starting parse process.
+[2025-09-11 10:55:48.321]  [Parser][parse] m_current=0
+[2025-09-11 10:55:48.322]  [Parser][peekCurrentToken] m_current=0
+[2025-09-11 10:55:48.324]  [Parser][peek] tokens.size()=43, current=0
+[2025-09-11 10:55:48.326]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.328]  [Parser][peekCurrentToken] m_current=0
+[2025-09-11 10:55:48.330]  [Parser][peek] tokens.size()=43, current=0
+[2025-09-11 10:55:48.332]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.334]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:48.338]  [Parser][match] Checking token type: 1 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 39, token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 1, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=0
+[2025-09-11 10:55:48.342]  [Parser][advance] current(before)=0
+[2025-09-11 10:55:48.345]  [Parser][advance] current(after)=1
+[2025-09-11 10:55:48.347]  [Parser][match] matched type=CLASS
+[2025-09-11 10:55:48.349]  [Parser][parse] Class token found, parsing class.
+[2025-09-11 10:55:48.351]  [Parser][classDeclaration] m_current=1
+[2025-09-11 10:55:48.353]  [Parser][consume] type=IDENTIFIER, m_current=1
+[2025-09-11 10:55:48.355]  [Parser][peekCurrentToken] m_current=1
+[2025-09-11 10:55:48.357]  [Parser][peek] tokens.size()=43, current=1
+[2025-09-11 10:55:48.442]  [Parser][peekCurrentToken] m_current=1
+[2025-09-11 10:55:48.474]  [Parser][peek] tokens.size()=43, current=1
+[2025-09-11 10:55:48.518]  [Parser][check] TokenToken Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp -> Type=IDENTIFIER, m_current=1
+[2025-09-11 10:55:48.536]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.588]  [Parser][check] Checking token type: IDENTIFIER against expected type: IDENTIFIER Result : 1
+[2025-09-11 10:55:48.671]  [Parser][consume] Consumed token: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.738]  [Parser][advance] m_current(before)=1
+[2025-09-11 10:55:48.751]  [Parser][peekCurrentToken] m_current=1
+[2025-09-11 10:55:48.771]  [Parser][peek] tokens.size()=43, current=1
+[2025-09-11 10:55:48.788]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 1, Col: 8, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:48.850]  [Parser][advance] current(before)=1
+[2025-09-11 10:55:48.925]  [Parser][advance] current(after)=2
+[2025-09-11 10:55:48.979]  [Parser][advance] m_current(after)=2
+[2025-09-11 10:55:49.017]  [Parser][previous] m_current=2
+[2025-09-11 10:55:49.024]  [Parser][peekIndex] tokenIndex=1
+[2025-09-11 10:55:49.031]  [Parser][peek] tokens.size()=43, current=1
+[2025-09-11 10:55:49.040]  [Parser][peekCurrentToken] m_current=2
+[2025-09-11 10:55:49.046]  [Parser][peek] tokens.size()=43, current=2
+[2025-09-11 10:55:49.049]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:49.088]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:49.160]  [Parser][match] Checking token type: 0 typesStr : COLON  typeToMatch: 11, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=2
+[2025-09-11 10:55:49.198]  [Parser][match] type mismatch: expected=COLON, found=LEFT_BRACE
+[2025-09-11 10:55:49.231]  [Parser][match] tokenTypesToMatch=COLON , token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 2
+[2025-09-11 10:55:49.286]  [Parser][peekCurrentToken] m_current=2
+[2025-09-11 10:55:49.329]  [Parser][peek] tokens.size()=43, current=2
+[2025-09-11 10:55:49.344]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:49.356]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:49.403]  [Parser][match] Checking token type: 1 typesStr : LEFT_BRACE  typeToMatch: 2, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 1, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=2
+[2025-09-11 10:55:49.428]  [Parser][advance] current(before)=2
+[2025-09-11 10:55:49.456]  [Parser][advance] current(after)=3
+[2025-09-11 10:55:49.478]  [Parser][match] matched type=LEFT_BRACE
+[2025-09-11 10:55:49.635]  [Parser][classDeclaration] Class body found.
+[2025-09-11 10:55:49.724]  [Parser][peekCurrentToken] m_current=3
+[2025-09-11 10:55:49.820]  [Parser][peek] tokens.size()=43, current=3
+[2025-09-11 10:55:50.093]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.167]  [Parser][peekCurrentToken] m_current=3
+[2025-09-11 10:55:50.180]  [Parser][peek] tokens.size()=43, current=3
+[2025-09-11 10:55:50.183]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.186]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.204]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=3
+[2025-09-11 10:55:50.220]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=PUBLIC
+[2025-09-11 10:55:50.247]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 3
+[2025-09-11 10:55:50.256]  [Parser][advance] m_current(before)=3
+[2025-09-11 10:55:50.288]  [Parser][peekCurrentToken] m_current=3
+[2025-09-11 10:55:50.294]  [Parser][peek] tokens.size()=43, current=3
+[2025-09-11 10:55:50.297]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 2, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.299]  [Parser][advance] current(before)=3
+[2025-09-11 10:55:50.301]  [Parser][advance] current(after)=4
+[2025-09-11 10:55:50.304]  [Parser][advance] m_current(after)=4
+[2025-09-11 10:55:50.310]  [Parser][previous] m_current=4
+[2025-09-11 10:55:50.317]  [Parser][peekIndex] tokenIndex=3
+[2025-09-11 10:55:50.322]  [Parser][peek] tokens.size()=43, current=3
+[2025-09-11 10:55:50.324]  [Parser][peekCurrentToken] m_current=4
+[2025-09-11 10:55:50.326]  [Parser][peek] tokens.size()=43, current=4
+[2025-09-11 10:55:50.329]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.333]  [Parser][peekCurrentToken] m_current=4
+[2025-09-11 10:55:50.336]  [Parser][peek] tokens.size()=43, current=4
+[2025-09-11 10:55:50.337]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.339]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.342]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 11, token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=4
+[2025-09-11 10:55:50.345]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=COLON
+[2025-09-11 10:55:50.349]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 4
+[2025-09-11 10:55:50.352]  [Parser][advance] m_current(before)=4
+[2025-09-11 10:55:50.354]  [Parser][peekCurrentToken] m_current=4
+[2025-09-11 10:55:50.355]  [Parser][peek] tokens.size()=43, current=4
+[2025-09-11 10:55:50.357]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 2, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.360]  [Parser][advance] current(before)=4
+[2025-09-11 10:55:50.362]  [Parser][advance] current(after)=5
+[2025-09-11 10:55:50.364]  [Parser][advance] m_current(after)=5
+[2025-09-11 10:55:50.367]  [Parser][previous] m_current=5
+[2025-09-11 10:55:50.369]  [Parser][peekIndex] tokenIndex=4
+[2025-09-11 10:55:50.371]  [Parser][peek] tokens.size()=43, current=4
+[2025-09-11 10:55:50.372]  [Parser][peekCurrentToken] m_current=5
+[2025-09-11 10:55:50.374]  [Parser][peek] tokens.size()=43, current=5
+[2025-09-11 10:55:50.376]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.380]  [Parser][peekCurrentToken] m_current=5
+[2025-09-11 10:55:50.391]  [Parser][peek] tokens.size()=43, current=5
+[2025-09-11 10:55:50.394]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.396]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.398]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 109, token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=5
+[2025-09-11 10:55:50.400]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=VOID
+[2025-09-11 10:55:50.402]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 5
+[2025-09-11 10:55:50.404]  [Parser][advance] m_current(before)=5
+[2025-09-11 10:55:50.406]  [Parser][peekCurrentToken] m_current=5
+[2025-09-11 10:55:50.409]  [Parser][peek] tokens.size()=43, current=5
+[2025-09-11 10:55:50.411]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 3, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.414]  [Parser][advance] current(before)=5
+[2025-09-11 10:55:50.419]  [Parser][advance] current(after)=6
+[2025-09-11 10:55:50.423]  [Parser][advance] m_current(after)=6
+[2025-09-11 10:55:50.425]  [Parser][previous] m_current=6
+[2025-09-11 10:55:50.428]  [Parser][peekIndex] tokenIndex=5
+[2025-09-11 10:55:50.430]  [Parser][peek] tokens.size()=43, current=5
+[2025-09-11 10:55:50.434]  [Parser][peekCurrentToken] m_current=6
+[2025-09-11 10:55:50.438]  [Parser][peek] tokens.size()=43, current=6
+[2025-09-11 10:55:50.443]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.448]  [Parser][peekCurrentToken] m_current=6
+[2025-09-11 10:55:50.451]  [Parser][peek] tokens.size()=43, current=6
+[2025-09-11 10:55:50.460]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.463]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.467]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 20, token=Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=6
+[2025-09-11 10:55:50.469]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=IDENTIFIER
+[2025-09-11 10:55:50.477]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 6
+[2025-09-11 10:55:50.484]  [Parser][peekCurrentToken] m_current=6
+[2025-09-11 10:55:50.502]  [Parser][peek] tokens.size()=43, current=6
+[2025-09-11 10:55:50.516]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: speak, LineFile: [LineFile] Line: 3, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.523]  [Parser][advance] current(before)=6
+[2025-09-11 10:55:50.536]  [Parser][advance] current(after)=7
+[2025-09-11 10:55:50.558]  [Parser][advance] m_current(after)=7
+[2025-09-11 10:55:50.603]  [Parser][previous] m_current=7
+[2025-09-11 10:55:50.633]  [Parser][peekIndex] tokenIndex=6
+[2025-09-11 10:55:50.650]  [Parser][peek] tokens.size()=43, current=6
+[2025-09-11 10:55:50.653]  [Parser][peekCurrentToken] m_current=7
+[2025-09-11 10:55:50.657]  [Parser][peek] tokens.size()=43, current=7
+[2025-09-11 10:55:50.660]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.663]  [Parser][peekCurrentToken] m_current=7
+[2025-09-11 10:55:50.665]  [Parser][peek] tokens.size()=43, current=7
+[2025-09-11 10:55:50.667]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.672]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.674]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 0, token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=7
+[2025-09-11 10:55:50.677]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=LEFT_PAREN
+[2025-09-11 10:55:50.679]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 7
+[2025-09-11 10:55:50.682]  [Parser][advance] m_current(before)=7
+[2025-09-11 10:55:50.691]  [Parser][peekCurrentToken] m_current=7
+[2025-09-11 10:55:50.696]  [Parser][peek] tokens.size()=43, current=7
+[2025-09-11 10:55:50.699]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 3, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.702]  [Parser][advance] current(before)=7
+[2025-09-11 10:55:50.704]  [Parser][advance] current(after)=8
+[2025-09-11 10:55:50.705]  [Parser][advance] m_current(after)=8
+[2025-09-11 10:55:50.707]  [Parser][previous] m_current=8
+[2025-09-11 10:55:50.710]  [Parser][peekIndex] tokenIndex=7
+[2025-09-11 10:55:50.712]  [Parser][peek] tokens.size()=43, current=7
+[2025-09-11 10:55:50.714]  [Parser][peekCurrentToken] m_current=8
+[2025-09-11 10:55:50.717]  [Parser][peek] tokens.size()=43, current=8
+[2025-09-11 10:55:50.718]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.721]  [Parser][peekCurrentToken] m_current=8
+[2025-09-11 10:55:50.723]  [Parser][peek] tokens.size()=43, current=8
+[2025-09-11 10:55:50.725]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.727]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.729]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 1, token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=8
+[2025-09-11 10:55:50.731]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=RIGHT_PAREN
+[2025-09-11 10:55:50.733]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 8
+[2025-09-11 10:55:50.736]  [Parser][advance] m_current(before)=8
+[2025-09-11 10:55:50.748]  [Parser][peekCurrentToken] m_current=8
+[2025-09-11 10:55:50.750]  [Parser][peek] tokens.size()=43, current=8
+[2025-09-11 10:55:50.752]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 3, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.754]  [Parser][advance] current(before)=8
+[2025-09-11 10:55:50.756]  [Parser][advance] current(after)=9
+[2025-09-11 10:55:50.757]  [Parser][advance] m_current(after)=9
+[2025-09-11 10:55:50.760]  [Parser][previous] m_current=9
+[2025-09-11 10:55:50.763]  [Parser][peekIndex] tokenIndex=8
+[2025-09-11 10:55:50.764]  [Parser][peek] tokens.size()=43, current=8
+[2025-09-11 10:55:50.767]  [Parser][peekCurrentToken] m_current=9
+[2025-09-11 10:55:50.768]  [Parser][peek] tokens.size()=43, current=9
+[2025-09-11 10:55:50.770]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.772]  [Parser][peekCurrentToken] m_current=9
+[2025-09-11 10:55:50.774]  [Parser][peek] tokens.size()=43, current=9
+[2025-09-11 10:55:50.776]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.779]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.781]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=9
+[2025-09-11 10:55:50.783]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=SEMICOLON
+[2025-09-11 10:55:50.784]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 9
+[2025-09-11 10:55:50.786]  [Parser][advance] m_current(before)=9
+[2025-09-11 10:55:50.788]  [Parser][peekCurrentToken] m_current=9
+[2025-09-11 10:55:50.790]  [Parser][peek] tokens.size()=43, current=9
+[2025-09-11 10:55:50.792]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 3, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.795]  [Parser][advance] current(before)=9
+[2025-09-11 10:55:50.797]  [Parser][advance] current(after)=10
+[2025-09-11 10:55:50.799]  [Parser][advance] m_current(after)=10
+[2025-09-11 10:55:50.801]  [Parser][previous] m_current=10
+[2025-09-11 10:55:50.803]  [Parser][peekIndex] tokenIndex=9
+[2025-09-11 10:55:50.805]  [Parser][peek] tokens.size()=43, current=9
+[2025-09-11 10:55:50.807]  [Parser][peekCurrentToken] m_current=10
+[2025-09-11 10:55:50.809]  [Parser][peek] tokens.size()=43, current=10
+[2025-09-11 10:55:50.812]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.814]  [Parser][peekCurrentToken] m_current=10
+[2025-09-11 10:55:50.816]  [Parser][peek] tokens.size()=43, current=10
+[2025-09-11 10:55:50.818]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.820]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.822]  [Parser][match] Checking token type: 1 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 3, token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 4, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=10
+[2025-09-11 10:55:50.824]  [Parser][advance] current(before)=10
+[2025-09-11 10:55:50.827]  [Parser][advance] current(after)=11
+[2025-09-11 10:55:50.829]  [Parser][match] matched type=RIGHT_BRACE
+[2025-09-11 10:55:50.831]  [Parser][previous] m_current=11
+[2025-09-11 10:55:50.833]  [Parser][peekIndex] tokenIndex=10
+[2025-09-11 10:55:50.835]  [Parser][peek] tokens.size()=43, current=10
+[2025-09-11 10:55:50.837] [Parser][ClassDeclaraton] previousToken->getTypeEnum() : RIGHT_BRACE Result: 0
+[2025-09-11 10:55:50.839] [ContainersInterface::getInstance]
+[2025-09-11 10:55:50.840] [ContainersInterface::addClass] class IDENTIFIER Animal
+[2025-09-11 10:55:50.842]  [Parser][peekCurrentToken] m_current=11
+[2025-09-11 10:55:50.844]  [Parser][peek] tokens.size()=43, current=11
+[2025-09-11 10:55:50.846]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.848]  [Parser][peekCurrentToken] m_current=11
+[2025-09-11 10:55:50.850]  [Parser][peek] tokens.size()=43, current=11
+[2025-09-11 10:55:50.852]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.853]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.855]  [Parser][match] Checking token type: 0 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=11
+[2025-09-11 10:55:50.857]  [Parser][match] type mismatch: expected=CLASS, found=SEMICOLON
+[2025-09-11 10:55:50.859]  [Parser][match] tokenTypesToMatch=CLASS , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 11
+[2025-09-11 10:55:50.861]  [Parser][peekCurrentToken] m_current=11
+[2025-09-11 10:55:50.863]  [Parser][peek] tokens.size()=43, current=11
+[2025-09-11 10:55:50.865]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 4, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.866]  [Parser][advance] current(before)=11
+[2025-09-11 10:55:50.868]  [Parser][advance] current(after)=12
+[2025-09-11 10:55:50.870]  [Parser][peekCurrentToken] m_current=12
+[2025-09-11 10:55:50.872]  [Parser][peek] tokens.size()=43, current=12
+[2025-09-11 10:55:50.873]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 6, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.876]  [Parser][peekCurrentToken] m_current=12
+[2025-09-11 10:55:50.878]  [Parser][peek] tokens.size()=43, current=12
+[2025-09-11 10:55:50.880]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 6, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.883]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.885]  [Parser][match] Checking token type: 1 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 39, token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 6, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=12
+[2025-09-11 10:55:50.887]  [Parser][advance] current(before)=12
+[2025-09-11 10:55:50.889]  [Parser][advance] current(after)=13
+[2025-09-11 10:55:50.891]  [Parser][match] matched type=CLASS
+[2025-09-11 10:55:50.892]  [Parser][parse] Class token found, parsing class.
+[2025-09-11 10:55:50.895]  [Parser][classDeclaration] m_current=13
+[2025-09-11 10:55:50.896]  [Parser][consume] type=IDENTIFIER, m_current=13
+[2025-09-11 10:55:50.899]  [Parser][peekCurrentToken] m_current=13
+[2025-09-11 10:55:50.900]  [Parser][peek] tokens.size()=43, current=13
+[2025-09-11 10:55:50.902]  [Parser][peekCurrentToken] m_current=13
+[2025-09-11 10:55:50.904]  [Parser][peek] tokens.size()=43, current=13
+[2025-09-11 10:55:50.906]  [Parser][check] TokenToken Type: IDENTIFIER, Lexeme: Dog, LineFile: [LineFile] Line: 6, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp -> Type=IDENTIFIER, m_current=13
+[2025-09-11 10:55:50.909]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Dog, LineFile: [LineFile] Line: 6, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.911]  [Parser][check] Checking token type: IDENTIFIER against expected type: IDENTIFIER Result : 1
+[2025-09-11 10:55:50.913]  [Parser][consume] Consumed token: Token Type: IDENTIFIER, Lexeme: Dog, LineFile: [LineFile] Line: 6, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.919]  [Parser][advance] m_current(before)=13
+[2025-09-11 10:55:50.922]  [Parser][peekCurrentToken] m_current=13
+[2025-09-11 10:55:50.930]  [Parser][peek] tokens.size()=43, current=13
+[2025-09-11 10:55:50.937]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Dog, LineFile: [LineFile] Line: 6, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.939]  [Parser][advance] current(before)=13
+[2025-09-11 10:55:50.940]  [Parser][advance] current(after)=14
+[2025-09-11 10:55:50.942]  [Parser][advance] m_current(after)=14
+[2025-09-11 10:55:50.945]  [Parser][previous] m_current=14
+[2025-09-11 10:55:50.947]  [Parser][peekIndex] tokenIndex=13
+[2025-09-11 10:55:50.950]  [Parser][peek] tokens.size()=43, current=13
+[2025-09-11 10:55:50.952]  [Parser][peekCurrentToken] m_current=14
+[2025-09-11 10:55:50.954]  [Parser][peek] tokens.size()=43, current=14
+[2025-09-11 10:55:50.956]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 6, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:50.964]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:50.966]  [Parser][match] Checking token type: 1 typesStr : COLON  typeToMatch: 11, token->getTypeEnum(): 11, token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 6, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=14
+[2025-09-11 10:55:50.970]  [Parser][advance] current(before)=14
+[2025-09-11 10:55:50.972]  [Parser][advance] current(after)=15
+[2025-09-11 10:55:50.975]  [Parser][match] matched type=COLON
+[2025-09-11 10:55:50.977]  [Parser][classDeclaration] Found inheritance structure.
+[2025-09-11 10:55:50.979]  [Parser][previous] m_current=15
+[2025-09-11 10:55:50.981]  [Parser][peekIndex] tokenIndex=14
+[2025-09-11 10:55:50.983]  [Parser][peek] tokens.size()=43, current=14
+[2025-09-11 10:55:50.985]  [Parser][peekCurrentToken] m_current=15
+[2025-09-11 10:55:50.987]  [Parser][peek] tokens.size()=43, current=15
+[2025-09-11 10:55:50.991] [Parser][classDeclaration] previousToken->getTypeEnum() : COLON currentToken: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp Result: 0
+[2025-09-11 10:55:51.023]  [Parser][peekCurrentToken] m_current=15
+[2025-09-11 10:55:51.039]  [Parser][peek] tokens.size()=43, current=15
+[2025-09-11 10:55:51.060]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.067]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.070]  [Parser][match] Checking token type: 0 typesStr : COMMA  typeToMatch: 4, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=15
+[2025-09-11 10:55:51.073]  [Parser][match] type mismatch: expected=COMMA, found=PUBLIC
+[2025-09-11 10:55:51.079]  [Parser][match] tokenTypesToMatch=COMMA , token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 15
+[2025-09-11 10:55:51.081]  [Parser][previous] m_current=15
+[2025-09-11 10:55:51.088]  [Parser][peekIndex] tokenIndex=14
+[2025-09-11 10:55:51.104]  [Parser][peek] tokens.size()=43, current=14
+[2025-09-11 10:55:51.108]  [Parser][classDeclaration] Found parent class.
+[2025-09-11 10:55:51.116]  [Parser][peekCurrentToken] m_current=15
+[2025-09-11 10:55:51.119]  [Parser][peek] tokens.size()=43, current=15
+[2025-09-11 10:55:51.121]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.124]  [Parser][match] tokenTypesToMatch.size()=3
+[2025-09-11 10:55:51.127]  [Parser][match] Checking token type: 1 typesStr : PUBLIC  typeToMatch: 83, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=15
+[2025-09-11 10:55:51.129]  [Parser][advance] current(before)=15
+[2025-09-11 10:55:51.131]  [Parser][advance] current(after)=16
+[2025-09-11 10:55:51.133]  [Parser][match] matched type=PUBLIC
+[2025-09-11 10:55:51.153]  [Parser][classDeclaration] Parent class access type found.
+[2025-09-11 10:55:51.155]  [Parser][previous] m_current=16
+[2025-09-11 10:55:51.158]  [Parser][peekIndex] tokenIndex=15
+[2025-09-11 10:55:51.160]  [Parser][peek] tokens.size()=43, current=15
+[2025-09-11 10:55:51.162]  [Parser][peekCurrentToken] m_current=16
+[2025-09-11 10:55:51.164]  [Parser][peek] tokens.size()=43, current=16
+[2025-09-11 10:55:51.166]  [Parser][peekCurrentToken] m_current=16
+[2025-09-11 10:55:51.168]  [Parser][peek] tokens.size()=43, current=16
+[2025-09-11 10:55:51.170]  [Parser][ClassDeclaration] peekCurrentToken() value : Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.172]  [Parser][peekCurrentToken] m_current=16
+[2025-09-11 10:55:51.174]  [Parser][peek] tokens.size()=43, current=16
+[2025-09-11 10:55:51.176]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.178]  [Parser][match] tokenTypesToMatch.size()=2
+[2025-09-11 10:55:51.180]  [Parser][match] Checking token type: 1 typesStr : IDENTIFIER  typeToMatch: 20, token->getTypeEnum(): 20, token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=16
+[2025-09-11 10:55:51.181]  [Parser][advance] current(before)=16
+[2025-09-11 10:55:51.183]  [Parser][advance] current(after)=17
+[2025-09-11 10:55:51.185]  [Parser][match] matched type=IDENTIFIER
+[2025-09-11 10:55:51.187]  [Parser][previous] m_current=17
+[2025-09-11 10:55:51.190]  [Parser][peekIndex] tokenIndex=16
+[2025-09-11 10:55:51.193]  [Parser][peek] tokens.size()=43, current=16
+[2025-09-11 10:55:51.203]  [Parser][ClassDeclaration] classIdentifierToAppend is valid : Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.205]  [Parser][ClassDeclaration] groupedTokenTypes -> Animal
+[2025-09-11 10:55:51.210]  [Parser][peekCurrentToken] m_current=17
+[2025-09-11 10:55:51.213]  [Parser][peek] tokens.size()=43, current=17
+[2025-09-11 10:55:51.215]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.218]  [Parser][match] tokenTypesToMatch.size()=2
+[2025-09-11 10:55:51.220]  [Parser][match] Checking token type: 0 typesStr : IDENTIFIER  typeToMatch: 20, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=17
+[2025-09-11 10:55:51.222]  [Parser][match] type mismatch: expected=IDENTIFIER, found=LEFT_BRACE
+[2025-09-11 10:55:51.224]  [Parser][match] Checking token type: 0 typesStr : IDENTIFIER COLON  typeToMatch: 11, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=17
+[2025-09-11 10:55:51.226]  [Parser][match] type mismatch: expected=COLON, found=LEFT_BRACE
+[2025-09-11 10:55:51.228]  [Parser][match] tokenTypesToMatch=IDENTIFIER COLON , token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 17
+[2025-09-11 10:55:51.230]  [Parser][ClassDeclaration] Final groupedTokenTypes -> Animal
+[2025-09-11 10:55:51.232]  [Parser][ClassDeclaration] not empty -> Animal
+[2025-09-11 10:55:51.234] Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.236] [ClassST::addInherencyToClassObject] Adding base class to inherency array: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.239]  [Parser][classDeclaration] Parent class access type: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, Parent class name: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 6, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.241]  [Parser][peekCurrentToken] m_current=17
+[2025-09-11 10:55:51.243]  [Parser][peek] tokens.size()=43, current=17
+[2025-09-11 10:55:51.248]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.250]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.252]  [Parser][match] Checking token type: 0 typesStr : COMMA  typeToMatch: 4, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=17
+[2025-09-11 10:55:51.254]  [Parser][match] type mismatch: expected=COMMA, found=LEFT_BRACE
+[2025-09-11 10:55:51.256]  [Parser][match] tokenTypesToMatch=COMMA , token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 17
+[2025-09-11 10:55:51.258]  [Parser][previous] m_current=17
+[2025-09-11 10:55:51.260]  [Parser][peekIndex] tokenIndex=16
+[2025-09-11 10:55:51.262]  [Parser][peek] tokens.size()=43, current=16
+[2025-09-11 10:55:51.264]  [Parser][peekCurrentToken] m_current=17
+[2025-09-11 10:55:51.266]  [Parser][peek] tokens.size()=43, current=17
+[2025-09-11 10:55:51.267]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.269]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.271]  [Parser][match] Checking token type: 1 typesStr : LEFT_BRACE  typeToMatch: 2, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 6, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=17
+[2025-09-11 10:55:51.273]  [Parser][advance] current(before)=17
+[2025-09-11 10:55:51.275]  [Parser][advance] current(after)=18
+[2025-09-11 10:55:51.280]  [Parser][match] matched type=LEFT_BRACE
+[2025-09-11 10:55:51.284]  [Parser][classDeclaration] Class body found.
+[2025-09-11 10:55:51.287]  [Parser][peekCurrentToken] m_current=18
+[2025-09-11 10:55:51.289]  [Parser][peek] tokens.size()=43, current=18
+[2025-09-11 10:55:51.291]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.294]  [Parser][peekCurrentToken] m_current=18
+[2025-09-11 10:55:51.296]  [Parser][peek] tokens.size()=43, current=18
+[2025-09-11 10:55:51.298]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.300]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.302]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=18
+[2025-09-11 10:55:51.304]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=PUBLIC
+[2025-09-11 10:55:51.307]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 18
+[2025-09-11 10:55:51.310]  [Parser][advance] m_current(before)=18
+[2025-09-11 10:55:51.312]  [Parser][peekCurrentToken] m_current=18
+[2025-09-11 10:55:51.314]  [Parser][peek] tokens.size()=43, current=18
+[2025-09-11 10:55:51.316]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 7, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.318]  [Parser][advance] current(before)=18
+[2025-09-11 10:55:51.320]  [Parser][advance] current(after)=19
+[2025-09-11 10:55:51.322]  [Parser][advance] m_current(after)=19
+[2025-09-11 10:55:51.332]  [Parser][previous] m_current=19
+[2025-09-11 10:55:51.345]  [Parser][peekIndex] tokenIndex=18
+[2025-09-11 10:55:51.348]  [Parser][peek] tokens.size()=43, current=18
+[2025-09-11 10:55:51.350]  [Parser][peekCurrentToken] m_current=19
+[2025-09-11 10:55:51.352]  [Parser][peek] tokens.size()=43, current=19
+[2025-09-11 10:55:51.354]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.356]  [Parser][peekCurrentToken] m_current=19
+[2025-09-11 10:55:51.358]  [Parser][peek] tokens.size()=43, current=19
+[2025-09-11 10:55:51.360]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.363]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.366]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 11, token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=19
+[2025-09-11 10:55:51.368]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=COLON
+[2025-09-11 10:55:51.371]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 19
+[2025-09-11 10:55:51.373]  [Parser][advance] m_current(before)=19
+[2025-09-11 10:55:51.376]  [Parser][peekCurrentToken] m_current=19
+[2025-09-11 10:55:51.378]  [Parser][peek] tokens.size()=43, current=19
+[2025-09-11 10:55:51.380]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 7, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.383]  [Parser][advance] current(before)=19
+[2025-09-11 10:55:51.387]  [Parser][advance] current(after)=20
+[2025-09-11 10:55:51.390]  [Parser][advance] m_current(after)=20
+[2025-09-11 10:55:51.392]  [Parser][previous] m_current=20
+[2025-09-11 10:55:51.395]  [Parser][peekIndex] tokenIndex=19
+[2025-09-11 10:55:51.397]  [Parser][peek] tokens.size()=43, current=19
+[2025-09-11 10:55:51.399]  [Parser][peekCurrentToken] m_current=20
+[2025-09-11 10:55:51.401]  [Parser][peek] tokens.size()=43, current=20
+[2025-09-11 10:55:51.403]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.415]  [Parser][peekCurrentToken] m_current=20
+[2025-09-11 10:55:51.419]  [Parser][peek] tokens.size()=43, current=20
+[2025-09-11 10:55:51.421]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.423]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.426]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 109, token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=20
+[2025-09-11 10:55:51.428]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=VOID
+[2025-09-11 10:55:51.430]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 20
+[2025-09-11 10:55:51.432]  [Parser][advance] m_current(before)=20
+[2025-09-11 10:55:51.435]  [Parser][peekCurrentToken] m_current=20
+[2025-09-11 10:55:51.438]  [Parser][peek] tokens.size()=43, current=20
+[2025-09-11 10:55:51.439]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 8, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.441]  [Parser][advance] current(before)=20
+[2025-09-11 10:55:51.444]  [Parser][advance] current(after)=21
+[2025-09-11 10:55:51.446]  [Parser][advance] m_current(after)=21
+[2025-09-11 10:55:51.448]  [Parser][previous] m_current=21
+[2025-09-11 10:55:51.450]  [Parser][peekIndex] tokenIndex=20
+[2025-09-11 10:55:51.452]  [Parser][peek] tokens.size()=43, current=20
+[2025-09-11 10:55:51.454]  [Parser][peekCurrentToken] m_current=21
+[2025-09-11 10:55:51.456]  [Parser][peek] tokens.size()=43, current=21
+[2025-09-11 10:55:51.459]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.463]  [Parser][peekCurrentToken] m_current=21
+[2025-09-11 10:55:51.490]  [Parser][peek] tokens.size()=43, current=21
+[2025-09-11 10:55:51.497]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.500]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.509]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 20, token=Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=21
+[2025-09-11 10:55:51.533]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=IDENTIFIER
+[2025-09-11 10:55:51.543]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 21
+[2025-09-11 10:55:51.559]  [Parser][advance] m_current(before)=21
+[2025-09-11 10:55:51.597]  [Parser][peekCurrentToken] m_current=21
+[2025-09-11 10:55:51.601]  [Parser][peek] tokens.size()=43, current=21
+[2025-09-11 10:55:51.603]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: wagTail, LineFile: [LineFile] Line: 8, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.617]  [Parser][advance] current(before)=21
+[2025-09-11 10:55:51.628]  [Parser][advance] current(after)=22
+[2025-09-11 10:55:51.638]  [Parser][advance] m_current(after)=22
+[2025-09-11 10:55:51.655]  [Parser][previous] m_current=22
+[2025-09-11 10:55:51.660]  [Parser][peekIndex] tokenIndex=21
+[2025-09-11 10:55:51.668]  [Parser][peek] tokens.size()=43, current=21
+[2025-09-11 10:55:51.682]  [Parser][peekCurrentToken] m_current=22
+[2025-09-11 10:55:51.694]  [Parser][peek] tokens.size()=43, current=22
+[2025-09-11 10:55:51.696]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.698]  [Parser][peekCurrentToken] m_current=22
+[2025-09-11 10:55:51.700]  [Parser][peek] tokens.size()=43, current=22
+[2025-09-11 10:55:51.702]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.704]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.707]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 0, token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=22
+[2025-09-11 10:55:51.711]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=LEFT_PAREN
+[2025-09-11 10:55:51.714]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 22
+[2025-09-11 10:55:51.716]  [Parser][advance] m_current(before)=22
+[2025-09-11 10:55:51.718]  [Parser][peekCurrentToken] m_current=22
+[2025-09-11 10:55:51.719]  [Parser][peek] tokens.size()=43, current=22
+[2025-09-11 10:55:51.741]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 8, Col: 17, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.745]  [Parser][advance] current(before)=22
+[2025-09-11 10:55:51.748]  [Parser][advance] current(after)=23
+[2025-09-11 10:55:51.750]  [Parser][advance] m_current(after)=23
+[2025-09-11 10:55:51.751]  [Parser][previous] m_current=23
+[2025-09-11 10:55:51.753]  [Parser][peekIndex] tokenIndex=22
+[2025-09-11 10:55:51.756]  [Parser][peek] tokens.size()=43, current=22
+[2025-09-11 10:55:51.757]  [Parser][peekCurrentToken] m_current=23
+[2025-09-11 10:55:51.760]  [Parser][peek] tokens.size()=43, current=23
+[2025-09-11 10:55:51.762]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.764]  [Parser][peekCurrentToken] m_current=23
+[2025-09-11 10:55:51.766]  [Parser][peek] tokens.size()=43, current=23
+[2025-09-11 10:55:51.768]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.770]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.771]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 1, token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=23
+[2025-09-11 10:55:51.773]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=RIGHT_PAREN
+[2025-09-11 10:55:51.775]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 23
+[2025-09-11 10:55:51.778]  [Parser][advance] m_current(before)=23
+[2025-09-11 10:55:51.780]  [Parser][peekCurrentToken] m_current=23
+[2025-09-11 10:55:51.782]  [Parser][peek] tokens.size()=43, current=23
+[2025-09-11 10:55:51.783]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 8, Col: 18, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.785]  [Parser][advance] current(before)=23
+[2025-09-11 10:55:51.787]  [Parser][advance] current(after)=24
+[2025-09-11 10:55:51.789]  [Parser][advance] m_current(after)=24
+[2025-09-11 10:55:51.791]  [Parser][previous] m_current=24
+[2025-09-11 10:55:51.793]  [Parser][peekIndex] tokenIndex=23
+[2025-09-11 10:55:51.795]  [Parser][peek] tokens.size()=43, current=23
+[2025-09-11 10:55:51.797]  [Parser][peekCurrentToken] m_current=24
+[2025-09-11 10:55:51.799]  [Parser][peek] tokens.size()=43, current=24
+[2025-09-11 10:55:51.801]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.803]  [Parser][peekCurrentToken] m_current=24
+[2025-09-11 10:55:51.805]  [Parser][peek] tokens.size()=43, current=24
+[2025-09-11 10:55:51.807]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.809]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.812]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=24
+[2025-09-11 10:55:51.814]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=SEMICOLON
+[2025-09-11 10:55:51.817]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 24
+[2025-09-11 10:55:51.819]  [Parser][advance] m_current(before)=24
+[2025-09-11 10:55:51.821]  [Parser][peekCurrentToken] m_current=24
+[2025-09-11 10:55:51.823]  [Parser][peek] tokens.size()=43, current=24
+[2025-09-11 10:55:51.825]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 8, Col: 19, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.827]  [Parser][advance] current(before)=24
+[2025-09-11 10:55:51.829]  [Parser][advance] current(after)=25
+[2025-09-11 10:55:51.831]  [Parser][advance] m_current(after)=25
+[2025-09-11 10:55:51.833]  [Parser][previous] m_current=25
+[2025-09-11 10:55:51.835]  [Parser][peekIndex] tokenIndex=24
+[2025-09-11 10:55:51.837]  [Parser][peek] tokens.size()=43, current=24
+[2025-09-11 10:55:51.839]  [Parser][peekCurrentToken] m_current=25
+[2025-09-11 10:55:51.841]  [Parser][peek] tokens.size()=43, current=25
+[2025-09-11 10:55:51.843]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 9, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.845]  [Parser][peekCurrentToken] m_current=25
+[2025-09-11 10:55:51.847]  [Parser][peek] tokens.size()=43, current=25
+[2025-09-11 10:55:51.849]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 9, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.851]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.853]  [Parser][match] Checking token type: 1 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 3, token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 9, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=25
+[2025-09-11 10:55:51.854]  [Parser][advance] current(before)=25
+[2025-09-11 10:55:51.856]  [Parser][advance] current(after)=26
+[2025-09-11 10:55:51.858]  [Parser][match] matched type=RIGHT_BRACE
+[2025-09-11 10:55:51.861]  [Parser][previous] m_current=26
+[2025-09-11 10:55:51.867]  [Parser][peekIndex] tokenIndex=25
+[2025-09-11 10:55:51.869]  [Parser][peek] tokens.size()=43, current=25
+[2025-09-11 10:55:51.871] [Parser][ClassDeclaraton] previousToken->getTypeEnum() : RIGHT_BRACE Result: 0
+[2025-09-11 10:55:51.873] [ContainersInterface::getInstance]
+[2025-09-11 10:55:51.876] [ContainersInterface::addClass] class IDENTIFIER Dog
+[2025-09-11 10:55:51.878]  [Parser][peekCurrentToken] m_current=26
+[2025-09-11 10:55:51.880]  [Parser][peek] tokens.size()=43, current=26
+[2025-09-11 10:55:51.882]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.884]  [Parser][peekCurrentToken] m_current=26
+[2025-09-11 10:55:51.886]  [Parser][peek] tokens.size()=43, current=26
+[2025-09-11 10:55:51.888]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.890]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.892]  [Parser][match] Checking token type: 0 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=26
+[2025-09-11 10:55:51.893]  [Parser][match] type mismatch: expected=CLASS, found=SEMICOLON
+[2025-09-11 10:55:51.895]  [Parser][match] tokenTypesToMatch=CLASS , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 26
+[2025-09-11 10:55:51.897]  [Parser][peekCurrentToken] m_current=26
+[2025-09-11 10:55:51.899]  [Parser][peek] tokens.size()=43, current=26
+[2025-09-11 10:55:51.901]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 9, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.902]  [Parser][advance] current(before)=26
+[2025-09-11 10:55:51.904]  [Parser][advance] current(after)=27
+[2025-09-11 10:55:51.906]  [Parser][peekCurrentToken] m_current=27
+[2025-09-11 10:55:51.908]  [Parser][peek] tokens.size()=43, current=27
+[2025-09-11 10:55:51.910]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 11, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.911]  [Parser][peekCurrentToken] m_current=27
+[2025-09-11 10:55:51.913]  [Parser][peek] tokens.size()=43, current=27
+[2025-09-11 10:55:51.915]  [Parser][isAtEnd] token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 11, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.917]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.919]  [Parser][match] Checking token type: 1 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 39, token=Token Type: CLASS, Lexeme: class, LineFile: [LineFile] Line: 11, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=27
+[2025-09-11 10:55:51.921]  [Parser][advance] current(before)=27
+[2025-09-11 10:55:51.923]  [Parser][advance] current(after)=28
+[2025-09-11 10:55:51.925]  [Parser][match] matched type=CLASS
+[2025-09-11 10:55:51.927]  [Parser][parse] Class token found, parsing class.
+[2025-09-11 10:55:51.929]  [Parser][classDeclaration] m_current=28
+[2025-09-11 10:55:51.930]  [Parser][consume] type=IDENTIFIER, m_current=28
+[2025-09-11 10:55:51.932]  [Parser][peekCurrentToken] m_current=28
+[2025-09-11 10:55:51.934]  [Parser][peek] tokens.size()=43, current=28
+[2025-09-11 10:55:51.936]  [Parser][peekCurrentToken] m_current=28
+[2025-09-11 10:55:51.938]  [Parser][peek] tokens.size()=43, current=28
+[2025-09-11 10:55:51.939]  [Parser][check] TokenToken Type: IDENTIFIER, Lexeme: Cat, LineFile: [LineFile] Line: 11, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp -> Type=IDENTIFIER, m_current=28
+[2025-09-11 10:55:51.941]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Cat, LineFile: [LineFile] Line: 11, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.943]  [Parser][check] Checking token type: IDENTIFIER against expected type: IDENTIFIER Result : 1
+[2025-09-11 10:55:51.945]  [Parser][consume] Consumed token: Token Type: IDENTIFIER, Lexeme: Cat, LineFile: [LineFile] Line: 11, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.947]  [Parser][advance] m_current(before)=28
+[2025-09-11 10:55:51.949]  [Parser][peekCurrentToken] m_current=28
+[2025-09-11 10:55:51.950]  [Parser][peek] tokens.size()=43, current=28
+[2025-09-11 10:55:51.952]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Cat, LineFile: [LineFile] Line: 11, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.954]  [Parser][advance] current(before)=28
+[2025-09-11 10:55:51.957]  [Parser][advance] current(after)=29
+[2025-09-11 10:55:51.959]  [Parser][advance] m_current(after)=29
+[2025-09-11 10:55:51.962]  [Parser][previous] m_current=29
+[2025-09-11 10:55:51.965]  [Parser][peekIndex] tokenIndex=28
+[2025-09-11 10:55:51.968]  [Parser][peek] tokens.size()=43, current=28
+[2025-09-11 10:55:51.971]  [Parser][peekCurrentToken] m_current=29
+[2025-09-11 10:55:51.973]  [Parser][peek] tokens.size()=43, current=29
+[2025-09-11 10:55:51.975]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 11, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:51.978]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:51.980]  [Parser][match] Checking token type: 1 typesStr : COLON  typeToMatch: 11, token->getTypeEnum(): 11, token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 11, Col: 11, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=29
+[2025-09-11 10:55:51.982]  [Parser][advance] current(before)=29
+[2025-09-11 10:55:51.984]  [Parser][advance] current(after)=30
+[2025-09-11 10:55:51.990]  [Parser][match] matched type=COLON
+[2025-09-11 10:55:51.994]  [Parser][classDeclaration] Found inheritance structure.
+[2025-09-11 10:55:51.997]  [Parser][previous] m_current=30
+[2025-09-11 10:55:51.999]  [Parser][peekIndex] tokenIndex=29
+[2025-09-11 10:55:52.038]  [Parser][peek] tokens.size()=43, current=29
+[2025-09-11 10:55:52.048]  [Parser][peekCurrentToken] m_current=30
+[2025-09-11 10:55:52.060]  [Parser][peek] tokens.size()=43, current=30
+[2025-09-11 10:55:52.074] [Parser][classDeclaration] previousToken->getTypeEnum() : COLON currentToken: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp Result: 0
+[2025-09-11 10:55:52.086]  [Parser][peekCurrentToken] m_current=30
+[2025-09-11 10:55:52.088]  [Parser][peek] tokens.size()=43, current=30
+[2025-09-11 10:55:52.098]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.107]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.123]  [Parser][match] Checking token type: 0 typesStr : COMMA  typeToMatch: 4, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=30
+[2025-09-11 10:55:52.138]  [Parser][match] type mismatch: expected=COMMA, found=PUBLIC
+[2025-09-11 10:55:52.140]  [Parser][match] tokenTypesToMatch=COMMA , token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 30
+[2025-09-11 10:55:52.150]  [Parser][previous] m_current=30
+[2025-09-11 10:55:52.152]  [Parser][peekIndex] tokenIndex=29
+[2025-09-11 10:55:52.155]  [Parser][peek] tokens.size()=43, current=29
+[2025-09-11 10:55:52.157]  [Parser][classDeclaration] Found parent class.
+[2025-09-11 10:55:52.163]  [Parser][peekCurrentToken] m_current=30
+[2025-09-11 10:55:52.172]  [Parser][peek] tokens.size()=43, current=30
+[2025-09-11 10:55:52.174]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.180]  [Parser][match] tokenTypesToMatch.size()=3
+[2025-09-11 10:55:52.182]  [Parser][match] Checking token type: 1 typesStr : PUBLIC  typeToMatch: 83, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=30
+[2025-09-11 10:55:52.184]  [Parser][advance] current(before)=30
+[2025-09-11 10:55:52.187]  [Parser][advance] current(after)=31
+[2025-09-11 10:55:52.189]  [Parser][match] matched type=PUBLIC
+[2025-09-11 10:55:52.191]  [Parser][classDeclaration] Parent class access type found.
+[2025-09-11 10:55:52.197]  [Parser][previous] m_current=31
+[2025-09-11 10:55:52.199]  [Parser][peekIndex] tokenIndex=30
+[2025-09-11 10:55:52.202]  [Parser][peek] tokens.size()=43, current=30
+[2025-09-11 10:55:52.204]  [Parser][peekCurrentToken] m_current=31
+[2025-09-11 10:55:52.206]  [Parser][peek] tokens.size()=43, current=31
+[2025-09-11 10:55:52.207]  [Parser][peekCurrentToken] m_current=31
+[2025-09-11 10:55:52.210]  [Parser][peek] tokens.size()=43, current=31
+[2025-09-11 10:55:52.239]  [Parser][ClassDeclaration] peekCurrentToken() value : Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.241]  [Parser][peekCurrentToken] m_current=31
+[2025-09-11 10:55:52.255]  [Parser][peek] tokens.size()=43, current=31
+[2025-09-11 10:55:52.259]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.263]  [Parser][match] tokenTypesToMatch.size()=2
+[2025-09-11 10:55:52.268]  [Parser][match] Checking token type: 1 typesStr : IDENTIFIER  typeToMatch: 20, token->getTypeEnum(): 20, token=Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=31
+[2025-09-11 10:55:52.270]  [Parser][advance] current(before)=31
+[2025-09-11 10:55:52.272]  [Parser][advance] current(after)=32
+[2025-09-11 10:55:52.274]  [Parser][match] matched type=IDENTIFIER
+[2025-09-11 10:55:52.278]  [Parser][previous] m_current=32
+[2025-09-11 10:55:52.281]  [Parser][peekIndex] tokenIndex=31
+[2025-09-11 10:55:52.284]  [Parser][peek] tokens.size()=43, current=31
+[2025-09-11 10:55:52.286]  [Parser][ClassDeclaration] classIdentifierToAppend is valid : Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 20, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.288]  [Parser][ClassDeclaration] groupedTokenTypes -> Animal
+[2025-09-11 10:55:52.291]  [Parser][peekCurrentToken] m_current=32
+[2025-09-11 10:55:52.293]  [Parser][peek] tokens.size()=43, current=32
+[2025-09-11 10:55:52.299]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.305]  [Parser][match] tokenTypesToMatch.size()=2
+[2025-09-11 10:55:52.315]  [Parser][match] Checking token type: 0 typesStr : IDENTIFIER  typeToMatch: 20, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=32
+[2025-09-11 10:55:52.320]  [Parser][match] type mismatch: expected=IDENTIFIER, found=LEFT_BRACE
+[2025-09-11 10:55:52.323]  [Parser][match] Checking token type: 0 typesStr : IDENTIFIER COLON  typeToMatch: 11, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=32
+[2025-09-11 10:55:52.325]  [Parser][match] type mismatch: expected=COLON, found=LEFT_BRACE
+[2025-09-11 10:55:52.334]  [Parser][match] tokenTypesToMatch=IDENTIFIER COLON , token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 32
+[2025-09-11 10:55:52.336]  [Parser][ClassDeclaration] Final groupedTokenTypes -> Animal
+[2025-09-11 10:55:52.338]  [Parser][ClassDeclaration] not empty -> Animal
+[2025-09-11 10:55:52.340] Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.344] [ClassST::addInherencyToClassObject] Adding base class to inherency array: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.349]  [Parser][classDeclaration] Parent class access type: Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, Parent class name: Token Type: IDENTIFIER, Lexeme: Animal, LineFile: [LineFile] Line: 11, Col: 13, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.351]  [Parser][peekCurrentToken] m_current=32
+[2025-09-11 10:55:52.354]  [Parser][peek] tokens.size()=43, current=32
+[2025-09-11 10:55:52.357]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.369]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.373]  [Parser][match] Checking token type: 0 typesStr : COMMA  typeToMatch: 4, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=32
+[2025-09-11 10:55:52.378]  [Parser][match] type mismatch: expected=COMMA, found=LEFT_BRACE
+[2025-09-11 10:55:52.380]  [Parser][match] tokenTypesToMatch=COMMA , token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 32
+[2025-09-11 10:55:52.383]  [Parser][previous] m_current=32
+[2025-09-11 10:55:52.386]  [Parser][peekIndex] tokenIndex=31
+[2025-09-11 10:55:52.388]  [Parser][peek] tokens.size()=43, current=31
+[2025-09-11 10:55:52.391]  [Parser][peekCurrentToken] m_current=32
+[2025-09-11 10:55:52.393]  [Parser][peek] tokens.size()=43, current=32
+[2025-09-11 10:55:52.395]  [Parser][isAtEnd] token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.397]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.400]  [Parser][match] Checking token type: 1 typesStr : LEFT_BRACE  typeToMatch: 2, token->getTypeEnum(): 2, token=Token Type: LEFT_BRACE, Lexeme: {, LineFile: [LineFile] Line: 11, Col: 27, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=32
+[2025-09-11 10:55:52.402]  [Parser][advance] current(before)=32
+[2025-09-11 10:55:52.404]  [Parser][advance] current(after)=33
+[2025-09-11 10:55:52.406]  [Parser][match] matched type=LEFT_BRACE
+[2025-09-11 10:55:52.407]  [Parser][classDeclaration] Class body found.
+[2025-09-11 10:55:52.410]  [Parser][peekCurrentToken] m_current=33
+[2025-09-11 10:55:52.412]  [Parser][peek] tokens.size()=43, current=33
+[2025-09-11 10:55:52.415]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.417]  [Parser][peekCurrentToken] m_current=33
+[2025-09-11 10:55:52.419]  [Parser][peek] tokens.size()=43, current=33
+[2025-09-11 10:55:52.421]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.422]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.424]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 83, token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=33
+[2025-09-11 10:55:52.426]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=PUBLIC
+[2025-09-11 10:55:52.429]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 33
+[2025-09-11 10:55:52.431]  [Parser][advance] m_current(before)=33
+[2025-09-11 10:55:52.433]  [Parser][peekCurrentToken] m_current=33
+[2025-09-11 10:55:52.435]  [Parser][peek] tokens.size()=43, current=33
+[2025-09-11 10:55:52.437]  [Parser][isAtEnd] token=Token Type: PUBLIC, Lexeme: public, LineFile: [LineFile] Line: 12, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.439]  [Parser][advance] current(before)=33
+[2025-09-11 10:55:52.441]  [Parser][advance] current(after)=34
+[2025-09-11 10:55:52.442]  [Parser][advance] m_current(after)=34
+[2025-09-11 10:55:52.445]  [Parser][previous] m_current=34
+[2025-09-11 10:55:52.448]  [Parser][peekIndex] tokenIndex=33
+[2025-09-11 10:55:52.450]  [Parser][peek] tokens.size()=43, current=33
+[2025-09-11 10:55:52.452]  [Parser][peekCurrentToken] m_current=34
+[2025-09-11 10:55:52.454]  [Parser][peek] tokens.size()=43, current=34
+[2025-09-11 10:55:52.456]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.458]  [Parser][peekCurrentToken] m_current=34
+[2025-09-11 10:55:52.461]  [Parser][peek] tokens.size()=43, current=34
+[2025-09-11 10:55:52.464]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.467]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.471]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 11, token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=34
+[2025-09-11 10:55:52.473]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=COLON
+[2025-09-11 10:55:52.475]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 34
+[2025-09-11 10:55:52.479]  [Parser][advance] m_current(before)=34
+[2025-09-11 10:55:52.490]  [Parser][peekCurrentToken] m_current=34
+[2025-09-11 10:55:52.499]  [Parser][peek] tokens.size()=43, current=34
+[2025-09-11 10:55:52.502]  [Parser][isAtEnd] token=Token Type: COLON, Lexeme: :, LineFile: [LineFile] Line: 12, Col: 7, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.506]  [Parser][advance] current(before)=34
+[2025-09-11 10:55:52.510]  [Parser][advance] current(after)=35
+[2025-09-11 10:55:52.532]  [Parser][advance] m_current(after)=35
+[2025-09-11 10:55:52.544]  [Parser][previous] m_current=35
+[2025-09-11 10:55:52.547]  [Parser][peekIndex] tokenIndex=34
+[2025-09-11 10:55:52.550]  [Parser][peek] tokens.size()=43, current=34
+[2025-09-11 10:55:52.581]  [Parser][peekCurrentToken] m_current=35
+[2025-09-11 10:55:52.608]  [Parser][peek] tokens.size()=43, current=35
+[2025-09-11 10:55:52.645]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.656]  [Parser][peekCurrentToken] m_current=35
+[2025-09-11 10:55:52.658]  [Parser][peek] tokens.size()=43, current=35
+[2025-09-11 10:55:52.662]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.665]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.667]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 109, token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=35
+[2025-09-11 10:55:52.670]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=VOID
+[2025-09-11 10:55:52.671]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 35
+[2025-09-11 10:55:52.673]  [Parser][advance] m_current(before)=35
+[2025-09-11 10:55:52.677]  [Parser][peekCurrentToken] m_current=35
+[2025-09-11 10:55:52.681]  [Parser][peek] tokens.size()=43, current=35
+[2025-09-11 10:55:52.683]  [Parser][isAtEnd] token=Token Type: VOID, Lexeme: void, LineFile: [LineFile] Line: 13, Col: 5, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.686]  [Parser][advance] current(before)=35
+[2025-09-11 10:55:52.687]  [Parser][advance] current(after)=36
+[2025-09-11 10:55:52.689]  [Parser][advance] m_current(after)=36
+[2025-09-11 10:55:52.691]  [Parser][previous] m_current=36
+[2025-09-11 10:55:52.695]  [Parser][peekIndex] tokenIndex=35
+[2025-09-11 10:55:52.702]  [Parser][peek] tokens.size()=43, current=35
+[2025-09-11 10:55:52.704]  [Parser][peekCurrentToken] m_current=36
+[2025-09-11 10:55:52.706]  [Parser][peek] tokens.size()=43, current=36
+[2025-09-11 10:55:52.708]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.710]  [Parser][peekCurrentToken] m_current=36
+[2025-09-11 10:55:52.712]  [Parser][peek] tokens.size()=43, current=36
+[2025-09-11 10:55:52.717]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.719]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.721]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 20, token=Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=36
+[2025-09-11 10:55:52.723]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=IDENTIFIER
+[2025-09-11 10:55:52.725]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 36
+[2025-09-11 10:55:52.727]  [Parser][advance] m_current(before)=36
+[2025-09-11 10:55:52.729]  [Parser][peekCurrentToken] m_current=36
+[2025-09-11 10:55:52.730]  [Parser][peek] tokens.size()=43, current=36
+[2025-09-11 10:55:52.733]  [Parser][isAtEnd] token=Token Type: IDENTIFIER, Lexeme: purr, LineFile: [LineFile] Line: 13, Col: 10, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.735]  [Parser][advance] current(before)=36
+[2025-09-11 10:55:52.736]  [Parser][advance] current(after)=37
+[2025-09-11 10:55:52.741]  [Parser][advance] m_current(after)=37
+[2025-09-11 10:55:52.743]  [Parser][previous] m_current=37
+[2025-09-11 10:55:52.746]  [Parser][peekIndex] tokenIndex=36
+[2025-09-11 10:55:52.748]  [Parser][peek] tokens.size()=43, current=36
+[2025-09-11 10:55:52.750]  [Parser][peekCurrentToken] m_current=37
+[2025-09-11 10:55:52.752]  [Parser][peek] tokens.size()=43, current=37
+[2025-09-11 10:55:52.754]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.756]  [Parser][peekCurrentToken] m_current=37
+[2025-09-11 10:55:52.758]  [Parser][peek] tokens.size()=43, current=37
+[2025-09-11 10:55:52.760]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.763]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.765]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 0, token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=37
+[2025-09-11 10:55:52.767]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=LEFT_PAREN
+[2025-09-11 10:55:52.769]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 37
+[2025-09-11 10:55:52.771]  [Parser][advance] m_current(before)=37
+[2025-09-11 10:55:52.773]  [Parser][peekCurrentToken] m_current=37
+[2025-09-11 10:55:52.775]  [Parser][peek] tokens.size()=43, current=37
+[2025-09-11 10:55:52.777]  [Parser][isAtEnd] token=Token Type: LEFT_PAREN, Lexeme: (, LineFile: [LineFile] Line: 13, Col: 14, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.778]  [Parser][advance] current(before)=37
+[2025-09-11 10:55:52.780]  [Parser][advance] current(after)=38
+[2025-09-11 10:55:52.782]  [Parser][advance] m_current(after)=38
+[2025-09-11 10:55:52.784]  [Parser][previous] m_current=38
+[2025-09-11 10:55:52.786]  [Parser][peekIndex] tokenIndex=37
+[2025-09-11 10:55:52.788]  [Parser][peek] tokens.size()=43, current=37
+[2025-09-11 10:55:52.789]  [Parser][peekCurrentToken] m_current=38
+[2025-09-11 10:55:52.791]  [Parser][peek] tokens.size()=43, current=38
+[2025-09-11 10:55:52.793]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.795]  [Parser][peekCurrentToken] m_current=38
+[2025-09-11 10:55:52.796]  [Parser][peek] tokens.size()=43, current=38
+[2025-09-11 10:55:52.798]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.800]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.802]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 1, token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=38
+[2025-09-11 10:55:52.804]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=RIGHT_PAREN
+[2025-09-11 10:55:52.806]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 38
+[2025-09-11 10:55:52.808]  [Parser][advance] m_current(before)=38
+[2025-09-11 10:55:52.810]  [Parser][peekCurrentToken] m_current=38
+[2025-09-11 10:55:52.813]  [Parser][peek] tokens.size()=43, current=38
+[2025-09-11 10:55:52.821]  [Parser][isAtEnd] token=Token Type: RIGHT_PAREN, Lexeme: ), LineFile: [LineFile] Line: 13, Col: 15, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.831]  [Parser][advance] current(before)=38
+[2025-09-11 10:55:52.835]  [Parser][advance] current(after)=39
+[2025-09-11 10:55:52.838]  [Parser][advance] m_current(after)=39
+[2025-09-11 10:55:52.841]  [Parser][previous] m_current=39
+[2025-09-11 10:55:52.845]  [Parser][peekIndex] tokenIndex=38
+[2025-09-11 10:55:52.850]  [Parser][peek] tokens.size()=43, current=38
+[2025-09-11 10:55:52.855]  [Parser][peekCurrentToken] m_current=39
+[2025-09-11 10:55:52.858]  [Parser][peek] tokens.size()=43, current=39
+[2025-09-11 10:55:52.863]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.870]  [Parser][peekCurrentToken] m_current=39
+[2025-09-11 10:55:52.873]  [Parser][peek] tokens.size()=43, current=39
+[2025-09-11 10:55:52.899]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.925]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:52.938]  [Parser][match] Checking token type: 0 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=39
+[2025-09-11 10:55:52.944]  [Parser][match] type mismatch: expected=RIGHT_BRACE, found=SEMICOLON
+[2025-09-11 10:55:52.954]  [Parser][match] tokenTypesToMatch=RIGHT_BRACE , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 39
+[2025-09-11 10:55:52.958]  [Parser][advance] m_current(before)=39
+[2025-09-11 10:55:52.960]  [Parser][peekCurrentToken] m_current=39
+[2025-09-11 10:55:52.964]  [Parser][peek] tokens.size()=43, current=39
+[2025-09-11 10:55:52.967]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 13, Col: 16, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:52.972]  [Parser][advance] current(before)=39
+[2025-09-11 10:55:52.985]  [Parser][advance] current(after)=40
+[2025-09-11 10:55:53.015]  [Parser][advance] m_current(after)=40
+[2025-09-11 10:55:53.023]  [Parser][previous] m_current=40
+[2025-09-11 10:55:53.028]  [Parser][peekIndex] tokenIndex=39
+[2025-09-11 10:55:53.061]  [Parser][peek] tokens.size()=43, current=39
+[2025-09-11 10:55:53.224]  [Parser][peekCurrentToken] m_current=40
+[2025-09-11 10:55:53.286]  [Parser][peek] tokens.size()=43, current=40
+[2025-09-11 10:55:53.306]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 14, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:53.357]  [Parser][peekCurrentToken] m_current=40
+[2025-09-11 10:55:53.382]  [Parser][peek] tokens.size()=43, current=40
+[2025-09-11 10:55:53.390]  [Parser][isAtEnd] token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 14, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:53.395]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:53.406]  [Parser][match] Checking token type: 1 typesStr : RIGHT_BRACE  typeToMatch: 3, token->getTypeEnum(): 3, token=Token Type: RIGHT_BRACE, Lexeme: }, LineFile: [LineFile] Line: 14, Col: 1, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=40
+[2025-09-11 10:55:53.416]  [Parser][advance] current(before)=40
+[2025-09-11 10:55:53.431]  [Parser][advance] current(after)=41
+[2025-09-11 10:55:53.437]  [Parser][match] matched type=RIGHT_BRACE
+[2025-09-11 10:55:53.446]  [Parser][previous] m_current=41
+[2025-09-11 10:55:53.450]  [Parser][peekIndex] tokenIndex=40
+[2025-09-11 10:55:53.490]  [Parser][peek] tokens.size()=43, current=40
+[2025-09-11 10:55:53.517] [Parser][ClassDeclaraton] previousToken->getTypeEnum() : RIGHT_BRACE Result: 0
+[2025-09-11 10:55:53.551] [ContainersInterface::getInstance]
+[2025-09-11 10:55:53.614] [ContainersInterface::addClass] class IDENTIFIER Cat
+[2025-09-11 10:55:53.630]  [Parser][peekCurrentToken] m_current=41
+[2025-09-11 10:55:53.637]  [Parser][peek] tokens.size()=43, current=41
+[2025-09-11 10:55:53.650]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:53.652]  [Parser][peekCurrentToken] m_current=41
+[2025-09-11 10:55:53.655]  [Parser][peek] tokens.size()=43, current=41
+[2025-09-11 10:55:53.657]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:53.659]  [Parser][match] tokenTypesToMatch.size()=1
+[2025-09-11 10:55:53.664]  [Parser][match] Checking token type: 0 typesStr : CLASS  typeToMatch: 39, token->getTypeEnum(): 8, token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current=41
+[2025-09-11 10:55:53.667]  [Parser][match] type mismatch: expected=CLASS, found=SEMICOLON
+[2025-09-11 10:55:53.669]  [Parser][match] tokenTypesToMatch=CLASS , token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp, current = 41
+[2025-09-11 10:55:53.671]  [Parser][peekCurrentToken] m_current=41
+[2025-09-11 10:55:53.684]  [Parser][peek] tokens.size()=43, current=41
+[2025-09-11 10:55:53.704]  [Parser][isAtEnd] token=Token Type: SEMICOLON, Lexeme: ;, LineFile: [LineFile] Line: 14, Col: 2, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
+[2025-09-11 10:55:53.712]  [Parser][advance] current(before)=41
+[2025-09-11 10:55:53.734]  [Parser][advance] current(after)=42
+[2025-09-11 10:55:53.773]  [Parser][peekCurrentToken] m_current=42
+[2025-09-11 10:55:53.778]  [Parser][peek] tokens.size()=43, current=42
+[2025-09-11 10:55:53.782]  [Parser][isAtEnd] token=Token Type: END_OF_FILE, Lexeme: , LineFile: [LineFile] Line: 14, Col: 3, End Line: 0, End Col: 0 with file name: Example.cpp:Implementation/observability/source_code_for_testing/ProcessSourceFiles/Example/Example.cpp
